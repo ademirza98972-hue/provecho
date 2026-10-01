@@ -26,9 +26,14 @@ class CardRedirectController extends Controller
             return response()->view('card.activate', ['card' => $card]);
         }
 
-        return response()
-            ->view('card.go', ['url' => $card->google_url])
-            ->header('Cache-Control', 'no-store');
+        // 302 server-side redirect — bukan halaman HTML perantara.
+        // Halaman perantara (go.blade.php) berstatus HTTP 200, yang lebih agresif
+        // di-cache browser/WebView dari HP, sehingga ganti link setelah reset
+        // tidak berlaku sampai cache manual dihapus. HTTP 302 + no-store
+        // memastikan browser selalu bertanya ke server untuk URL terbaru.
+        return redirect($card->google_url, 302)
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, private')
+            ->header('Pragma', 'no-cache');
     }
 
     /**

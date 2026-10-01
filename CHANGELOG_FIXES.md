@@ -1,3 +1,17 @@
+### Fix #5 — Card Setelah Reset Tetap Buka Maps Lama: Client-Side Redirect Ter-cache Browser
+
+| | |
+|---|---|
+| **Tanggal** | 2026-10-01 |
+| **File** | `app/Http/Controllers/CardRedirectController.php` |
+| **Masalah** | Card PV2529C6 sudah direset dan diaktifkan ulang dengan Google Maps baru, tapi saat scan tetap membuka link Maps yang lama. |
+| **Akar** | Fix #4 mengganti 301 ke halaman HTML perantara (`go.blade.php`) yang melakukan redirect via `<meta http-equiv="refresh">` + `window.location.replace()`. Halaman ini berstatus **HTTP 200** — browser/WebView di HP meng-cache body HTML-nya (yang berisi URL lama) lebih agresif daripada response 3xx. `Cache-Control: no-store` saja pada response 200 tidak cukup: beberapa mobile browser, terutama WebView yang dipanggil dari NFC tap, mengabaikan header ini untuk navigasi utama. Hasilnya, scan berikutnya langsung menampilkan halaman HTML tersimpan tanpa bertanya ke server. |
+| **Fix** | Ganti client-side redirect (view `go.blade.php` HTTP 200) ke proper **HTTP 302 server-side redirect** langsung ke `google_url`. Header cache diperkuat: `no-store, no-cache, must-revalidate, private` + `Pragma: no-cache`. Browser tidak menyimpan 302 + no-store, jadi setiap scan pasti bertanya ke server dan mendapat URL terbaru. |
+| **Verifikasi** | `curl -sI /c/PV2529C6` → `302 Found`, `Location: <url baru>`, `Cache-Control: no-store, no-cache, must-revalidate, private`, `Pragma: no-cache`. Setelah reset + aktivasi ulang, scan langsung membuka URL baru tanpa perlu clear cache browser. |
+| **Pelajaran** | HTTP 200 dengan client-side redirect (`meta refresh` / `window.location.replace`) bukan pengganti yang setara dengan HTTP 302 untuk redirect. Secara caching: 200 adalah response "berhasil" yang browser boleh cache body-nya; 302 adalah instruksi "cari di sana" yang browser tahu tidak boleh disimpan (apalagi dengan `no-store`). Untuk URL yang bisa berubah kapan saja (card bisa direset), server-side 302 adalah satu-satunya pilihan yang benar. |
+| **Log Keyword** | `302`, `no-store`, `no-cache`, `must-revalidate`, `Pragma`, `go.blade.php` |
+| **Deploy** | Tidak ada migrasi. Langsung efektif setelah deploy. User yang browser-nya sudah meng-cache halaman lama mungkin perlu satu kali clear cache atau buka di incognito — setelah itu cache tidak lagi jadi masalah. |
+
 ### Fix #4 — 301 Redirect Bikin Nonaktifkan Tidak Mempan + Card Disabled Jalan Buntu
 
 | | |
