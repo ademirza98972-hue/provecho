@@ -176,47 +176,6 @@
     .pagination a:hover { background: var(--bg); color: var(--text); }
     .pagination .active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-    /* ── notifications ── */
-    .notif-wrap { position: relative; }
-    .notif-btn {
-        position: relative; background: none; border: none; cursor: pointer;
-        color: var(--muted); padding: 6px; border-radius: 7px; display: grid; place-items: center;
-        transition: background .12s, color .12s;
-    }
-    .notif-btn:hover { background: #F3F4F6; color: var(--text); }
-    .notif-badge {
-        position: absolute; top: 1px; right: 1px;
-        background: var(--bad); color: #fff;
-        font-size: 10px; font-weight: 700; line-height: 1;
-        padding: 2px 5px; border-radius: 99px; min-width: 16px; text-align: center;
-    }
-    .notif-dropdown {
-        position: absolute; top: calc(100% + 8px); right: 0; z-index: 50;
-        width: 320px; max-height: 400px;
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: 11px; box-shadow: 0 10px 32px rgba(17,24,39,.12);
-        overflow: hidden; display: flex; flex-direction: column;
-    }
-    .notif-header {
-        padding: 12px 14px; border-bottom: 1px solid var(--border);
-        display: flex; align-items: center; justify-content: space-between;
-    }
-    .notif-list { overflow-y: auto; max-height: 340px; }
-    .notif-item {
-        display: flex; gap: 10px; padding: 11px 14px;
-        border-bottom: 1px solid #F3F4F6; text-decoration: none; color: inherit;
-        transition: background .12s;
-    }
-    .notif-item:hover { background: var(--subtle); }
-    .notif-item.unread { background: var(--accent-soft); }
-    .notif-dot-wrap { width: 8px; padding-top: 6px; flex-shrink: 0; }
-    .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: block; }
-    .notif-msg { font-size: 13px; font-weight: 500; }
-    .notif-time { font-size: 11.5px; color: var(--faint); margin-top: 2px; }
-    .notif-empty { padding: 24px; text-align: center; color: var(--faint); font-size: 13px; }
-    .btn-link-sm { background: none; border: none; color: var(--accent); font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; padding: 0; }
-    .btn-link-sm:hover { text-decoration: underline; }
-
     @media (max-width: 860px) {
         .layout  { flex-direction: column; }
         .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 14px 0; }
@@ -271,44 +230,6 @@
         <div class="topbar">
             <h1>@yield('title', 'Dashboard')</h1>
             <div class="user">
-                {{-- notifikasi bell --}}
-                @php $unreadCount = auth()->user()->unreadNotifications()->count(); @endphp
-                <div class="notif-wrap" x-data="{ open: false }">
-                    <button class="notif-btn" @click="open = !open" title="Notifikasi">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-                        @if($unreadCount > 0)
-                            <span class="notif-badge">{{ $unreadCount > 9 ? '9+' : $unreadCount }}</span>
-                        @endif
-                    </button>
-                    <div class="notif-dropdown" x-show="open" x-cloak @click.outside="open = false">
-                        <div class="notif-header">
-                            <span style="font-weight:600;font-size:13px">Notifikasi</span>
-                            @if($unreadCount > 0)
-                                <form method="POST" action="{{ route('dashboard.notifications.read-all') }}" style="display:inline">
-                                    @csrf
-                                    <button type="submit" class="btn-link-sm">Tandai semua dibaca</button>
-                                </form>
-                            @endif
-                        </div>
-                        <div class="notif-list">
-                            @forelse(auth()->user()->notifications()->limit(10)->get() as $notif)
-                                <a href="{{ route('dashboard.cards.show', $notif->data['card_id']) }}"
-                                   class="notif-item {{ $notif->read_at ? '' : 'unread' }}">
-                                    <div class="notif-dot-wrap">
-                                        @unless($notif->read_at)<span class="notif-dot"></span>@endunless
-                                    </div>
-                                    <div>
-                                        <div class="notif-msg">{{ $notif->data['message'] ?? 'Card diaktifkan' }}</div>
-                                        <div class="notif-time">{{ $notif->created_at->diffForHumans() }}</div>
-                                    </div>
-                                </a>
-                            @empty
-                                <div class="notif-empty">Belum ada notifikasi</div>
-                            @endforelse
-                        </div>
-                    </div>
-                </div>
-
                 <div class="avatar">{{ strtoupper(substr(auth()->user()->name ?? auth()->user()->username, 0, 1)) }}</div>
                 <span>{{ auth()->user()->name ?? auth()->user()->username }}</span>
             </div>

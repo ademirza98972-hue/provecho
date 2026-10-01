@@ -5,10 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Card;
 use App\Models\CardLog;
-use App\Models\User;
-use App\Notifications\CardActivated;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CardController extends Controller
@@ -66,12 +63,6 @@ class CardController extends Controller
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
         ]);
-
-        // Kirim notifikasi ke semua admin (kecuali yang sedang login)
-        Notification::send(
-            User::where('id', '!=', auth()->id())->get(),
-            new CardActivated($card, 'dashboard')
-        );
 
         return redirect()->route('dashboard.cards.show', $card)
             ->with('success', "Card {$card->id} berhasil diaktifkan.");

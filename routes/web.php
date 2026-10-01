@@ -33,12 +33,6 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
     Route::get('/export/cards', [ExportController::class, 'cards'])->name('stats.export');
     Route::get('/export/activity', [ExportController::class, 'activity'])->name('activity.export');
 
-    // Notifikasi
-    Route::post('/notifications/read-all', function () {
-        auth()->user()->unreadNotifications->markAsRead();
-        return back();
-    })->name('notifications.read-all');
-
     Route::prefix('cards')->name('cards.')->group(function () {
         Route::get('/', [CardController::class, 'index'])->name('index');
         Route::match(['get', 'post'], '/export/pdf', [CardController::class, 'exportPdf'])->name('export.pdf');

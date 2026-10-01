@@ -5,10 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Dashboard\PlacesController;
 use App\Models\Card;
 use App\Models\CardLog;
-use App\Models\User;
-use App\Notifications\CardActivated;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
 
 class CardRedirectController extends Controller
 {
@@ -60,9 +57,6 @@ class CardRedirectController extends Controller
         ]);
 
         $this->log($card, 'activated', $request);
-
-        // Kirim notifikasi ke semua admin
-        Notification::send(User::all(), new CardActivated($card, 'public'));
 
         return redirect()->route('card.redirect', $card->id);
     }
