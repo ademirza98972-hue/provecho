@@ -15,6 +15,11 @@
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Belum aktif</option>
                     <option value="disabled" {{ request('status') === 'disabled' ? 'selected' : '' }}>Dinonaktifkan</option>
                 </select>
+                <select name="per_page" style="width:100px">
+                    <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20 / hal</option>
+                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50 / hal</option>
+                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100 / hal</option>
+                </select>
                 <button type="submit" class="btn btn-outline btn-sm">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
                     Cari

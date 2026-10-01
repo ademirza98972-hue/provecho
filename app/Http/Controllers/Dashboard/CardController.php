@@ -26,7 +26,8 @@ class CardController extends Controller
             });
         }
 
-        $cards = $query->orderByDesc('created_at')->paginate(20)->withQueryString();
+        $perPage = in_array((int) $request->input('per_page'), [20, 50, 100]) ? (int) $request->per_page : 20;
+        $cards = $query->orderByDesc('created_at')->paginate($perPage)->withQueryString();
 
         return view('dashboard.cards.index', compact('cards'));
     }
