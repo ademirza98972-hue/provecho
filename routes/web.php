@@ -4,7 +4,9 @@ use App\Http\Controllers\CardRedirectController;
 use App\Http\Controllers\Dashboard\CardController;
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\ExportController;
 use App\Http\Controllers\Dashboard\PlacesController;
+use App\Http\Controllers\Dashboard\StatsController;
 use Illuminate\Support\Facades\Route;
 
 // Public — core NFC/QR endpoint + aktivasi mandiri oleh pemilik kartu
@@ -25,6 +27,17 @@ Route::post('/logout', [\App\Http\Controllers\Auth\AuthenticatedSessionControlle
 Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
     Route::get('/activity', [ActivityController::class, 'index'])->name('activity');
+    Route::get('/stats', [StatsController::class, 'index'])->name('stats');
+
+    // Export
+    Route::get('/export/cards', [ExportController::class, 'cards'])->name('stats.export');
+    Route::get('/export/activity', [ExportController::class, 'activity'])->name('activity.export');
+
+    // Notifikasi
+    Route::post('/notifications/read-all', function () {
+        auth()->user()->unreadNotifications->markAsRead();
+        return back();
+    })->name('notifications.read-all');
 
     Route::prefix('cards')->name('cards.')->group(function () {
         Route::get('/', [CardController::class, 'index'])->name('index');
