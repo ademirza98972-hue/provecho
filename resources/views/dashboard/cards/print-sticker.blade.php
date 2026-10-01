@@ -29,8 +29,8 @@
     }
     .toolbar a      { background: #fff; border-color: #D4D7DD; color: #111827; }
     .toolbar a:hover{ background: #F9FAFB; }
-    .toolbar button { background: #1A73E8; color: #fff; }
-    .toolbar button:hover { background: #1558B0; }
+    .toolbar button { background: #1B8C3D; color: #fff; }
+    .toolbar button:hover { background: #15702F; }
     .toolbar .hint  { color: #6B7280; }
 
     /* ── sticker sheet: 100cm × 50cm ── */

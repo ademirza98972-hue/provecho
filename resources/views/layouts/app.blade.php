@@ -18,9 +18,9 @@
         --text: #111827;
         --muted: #6B7280;
         --faint: #9CA3AF;
-        --accent: #1A73E8;
-        --accent-dark: #1558B0;
-        --accent-soft: #EFF6FF;
+        --accent: #1B8C3D;
+        --accent-dark: #15702F;
+        --accent-soft: #ECFDF5;
         --ok: #15803D;      --ok-soft: #F0FDF4;
         --warn: #B45309;    --warn-soft: #FFFBEB;
         --bad: #B91C1C;     --bad-soft: #FEF2F2;
