@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CardRedirectController;
 use App\Http\Controllers\Dashboard\CardController;
+use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\PlacesController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,7 @@ Route::post('/logout', [\App\Http\Controllers\Auth\AuthenticatedSessionControlle
 // Dashboard — protected
 Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
+    Route::get('/activity', [ActivityController::class, 'index'])->name('activity');
 
     Route::prefix('cards')->name('cards.')->group(function () {
         Route::get('/', [CardController::class, 'index'])->name('index');
