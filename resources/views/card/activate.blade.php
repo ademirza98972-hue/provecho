@@ -32,9 +32,8 @@
     }
     .wrap { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 20px; }
 
-    .brand      { display: flex; align-items: center; gap: 10px; justify-content: center; }
-    .brand-mark { width: 32px; height: 32px; object-fit: contain; }
-    .brand-name { font-size: 18px; font-weight: 600; letter-spacing: -.02em; }
+    .brand      { display: flex; align-items: center; justify-content: center; }
+    .brand-mark { width: 72px; height: 72px; object-fit: contain; }
 
     .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
 
@@ -98,7 +97,6 @@
 
     <div class="brand">
         <img class="brand-mark" src="/img/logo.png" alt="Provecho">
-        <div class="brand-name">Provecho</div>
     </div>
 
     <div class="panel" x-data="activation()">
