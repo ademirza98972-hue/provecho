@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'Dashboard') — Provecho</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.14.9/cdn.min.js" defer></script>
+    <style>
+    :root {
+        --bg: #F9FAFB;
+        --surface: #FFFFFF;
+        --subtle: #FCFCFD;
+        --border: #E5E7EB;
+        --border-strong: #D4D7DD;
+        --text: #111827;
+        --muted: #6B7280;
+        --faint: #9CA3AF;
+        --accent: #1A73E8;
+        --accent-dark: #1558B0;
+        --accent-soft: #EFF6FF;
+        --ok: #15803D;      --ok-soft: #F0FDF4;
+        --warn: #B45309;    --warn-soft: #FFFBEB;
+        --bad: #B91C1C;     --bad-soft: #FEF2F2;
+        --radius: 10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 14px;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    svg { flex-shrink: 0; }
+
+    /* ── shell ── */
+    .layout  { display: flex; min-height: 100vh; }
+    .main    { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+    .sidebar {
+        width: 236px; flex-shrink: 0;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        display: flex; flex-direction: column;
+        padding: 20px 0;
+    }
+    .brand      { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; }
+    .brand-mark { width: 48px; height: 48px; object-fit: contain; }
+    .brand-name { font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+
+    .nav       { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+    .nav-label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); padding: 6px 10px; }
+    .nav a     { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 7px; color: var(--muted); font-weight: 500; transition: background .12s, color .12s; }
+    .nav a:hover  { background: #F3F4F6; color: var(--text); }
+    .nav a.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+    .sidebar-foot { margin-top: auto; padding: 14px 10px 0; }
+    .sidebar-foot button { width: 100%; }
+
+    .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .topbar h1 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+    .user   { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--muted); }
+    .avatar { width: 28px; height: 28px; border-radius: 50%; background: #F3F4F6; border: 1px solid var(--border); display: grid; place-items: center; font-size: 11px; font-weight: 600; color: var(--muted); }
+
+    .content { flex: 1; padding: 24px; overflow-y: auto; }
+
+    /* ── panels ── */
+    .panel      { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .panel-head { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .panel-title{ font-size: 14px; font-weight: 600; }
+    .panel-body { padding: 18px; }
+    .stack      { display: flex; flex-direction: column; gap: 16px; }
+    .grid-2     { display: grid; grid-template-columns: 1.05fr .95fr; gap: 16px; align-items: start; }
+
+    /* ── stats ── */
+    .stat-grid  { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+    .stat       { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+    .stat-label { font-size: 12px; font-weight: 500; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+    .stat-num   { font-size: 28px; font-weight: 700; letter-spacing: -.03em; margin-top: 6px; font-variant-numeric: tabular-nums; }
+    .dot        { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+    /* ── table ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { padding: 10px 18px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--faint); background: var(--subtle); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 12px 18px; border-bottom: 1px solid #F3F4F6; vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--subtle); }
+    th.check, td.check { width: 42px; padding-right: 0; }
+    .mono  { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; letter-spacing: -.01em; }
+    .empty { text-align: center; color: var(--faint); padding: 40px 18px; }
+
+    /* ── badges ── */
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .badge .dot { width: 6px; height: 6px; }
+    .badge-active   { background: var(--ok-soft);   color: var(--ok); }
+    .badge-inactive { background: var(--warn-soft); color: var(--warn); }
+    .badge-disabled { background: var(--bad-soft);  color: var(--bad); }
+
+    /* ── buttons ── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; border: 1px solid transparent; transition: background .12s, border-color .12s, color .12s; white-space: nowrap; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-dark); }
+    .btn-outline { background: var(--surface); border-color: var(--border-strong); color: var(--text); }
+    .btn-outline:hover { background: var(--bg); border-color: var(--faint); }
+    .btn-ghost   { background: transparent; color: var(--muted); }
+    .btn-ghost:hover { background: #F3F4F6; color: var(--text); }
+    .btn-danger  { background: var(--surface); border-color: #FCA5A5; color: var(--bad); }
+    .btn-danger:hover { background: var(--bad-soft); }
+    .btn-sm { padding: 6px 11px; font-size: 12.5px; border-radius: 7px; }
+    .btn:disabled, .btn:disabled:hover { opacity: .4; cursor: not-allowed; background: var(--accent); }
+
+    /* ── forms ── */
+    .field  { display: flex; flex-direction: column; gap: 6px; }
+    .form-stack { display: flex; flex-direction: column; gap: 14px; }
+    label   { font-size: 12.5px; font-weight: 600; color: var(--text); }
+    input[type=text], input[type=url], input[type=number], input[type=password], input[type=email], select, textarea {
+        width: 100%; padding: 8px 11px;
+        border: 1px solid var(--border-strong); border-radius: 8px;
+        font-size: 13.5px; font-family: inherit; color: var(--text); background: var(--surface);
+        transition: border-color .12s, box-shadow .12s;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    input::placeholder { color: var(--faint); }
+    input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; margin: 0; }
+    .hint { font-size: 12px; color: var(--muted); }
+
+    /* ── combobox (Places search) ── */
+    .combo      { position: relative; }
+    .combo-list { position: absolute; z-index: 20; top: calc(100% + 4px); left: 0; right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 9px; box-shadow: 0 8px 24px rgba(17,24,39,.09); max-height: 260px; overflow-y: auto; padding: 4px; }
+    .combo-item { padding: 8px 10px; border-radius: 6px; cursor: pointer; }
+    .combo-item:hover { background: #F3F4F6; }
+    .combo-name { font-size: 13px; font-weight: 600; }
+    .combo-addr { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+    /* ── alerts ── */
+    .alert { display: flex; align-items: flex-start; gap: 9px; padding: 11px 14px; border-radius: 9px; font-size: 13px; font-weight: 500; margin-bottom: 16px; border: 1px solid; }
+    .alert-success { background: var(--ok-soft);  border-color: #BBF7D0; color: var(--ok); }
+    .alert-error   { background: var(--bad-soft); border-color: #FECACA; color: var(--bad); }
+
+    /* ── meta list ── */
+    .meta     { display: flex; flex-direction: column; gap: 14px; }
+    .meta-row { display: flex; flex-direction: column; gap: 3px; }
+    .meta-key { font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--faint); }
+    .meta-val { font-size: 13.5px; word-break: break-word; }
+    .link     { color: var(--accent); font-weight: 500; }
+    .link:hover { text-decoration: underline; }
+
+    /* ── QR block ── */
+    .qr-box   { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .qr-frame { background: #fff; border: 1px solid var(--border); border-radius: 9px; padding: 10px; line-height: 0; }
+    .qr-frame svg { display: block; width: 160px; height: 160px; }
+    .url-chip { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: var(--subtle); border: 1px solid var(--border); border-radius: 7px; padding: 7px 10px; color: var(--muted); word-break: break-all; text-align: center; }
+
+    /* ── activity log ── */
+    .log-row  { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #F3F4F6; font-size: 13px; }
+    .log-row:last-child { border-bottom: none; }
+    .log-time { color: var(--faint); font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .log-act  { font-weight: 600; font-size: 11.5px; padding: 2px 8px; border-radius: 99px; background: #F3F4F6; color: var(--muted); }
+    .log-ip   { color: var(--muted); font-size: 12px; margin-left: auto; font-variant-numeric: tabular-nums; }
+
+    /* ── toolbar ── */
+    .toolbar  { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+    .toolbar-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    /* ── pagination ── */
+    .pagination { display: flex; gap: 4px; justify-content: center; padding: 14px; }
+    .pagination a, .pagination span { padding: 6px 11px; border-radius: 7px; font-size: 12.5px; font-weight: 500; border: 1px solid var(--border); color: var(--muted); }
+    .pagination a:hover { background: var(--bg); color: var(--text); }
+    .pagination .active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    @media (max-width: 860px) {
+        .layout  { flex-direction: column; }
+        .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 14px 0; }
+        .nav     { flex-direction: row; overflow-x: auto; }
+        .nav-label { display: none; }
+        .sidebar-foot { padding-top: 12px; }
+        .grid-2  { grid-template-columns: 1fr; }
+        .content { padding: 16px; }
+    }
+    </style>
+    @stack('styles')
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="brand">
+            <img class="brand-mark" src="/img/logo.png" alt="Provecho">
+        </div>
+
+        <div class="nav-label">Menu</div>
+        <nav class="nav">
+            <a href="{{ route('dashboard.index') }}" class="{{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                Dashboard
+            </a>
+            <a href="{{ route('dashboard.cards.index') }}" class="{{ request()->routeIs('dashboard.cards.*') ? 'active' : '' }}">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 14.5h4"/></svg>
+                Kelola Card
+            </a>
+        </nav>
+
+        <div class="sidebar-foot">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-outline btn-sm">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+                    Keluar
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <div class="main">
+        <div class="topbar">
+            <h1>@yield('title', 'Dashboard')</h1>
+            <div class="user">
+                <div class="avatar">{{ strtoupper(substr(auth()->user()->name ?? auth()->user()->username, 0, 1)) }}</div>
+                <span>{{ auth()->user()->name ?? auth()->user()->username }}</span>
+            </div>
+        </div>
+
+        <div class="content">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>
+                    <span>{{ session('success') }}</span>
+                </div>
+            @endif
+            @if($errors->any())
+                <div class="alert alert-error">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5"/><path d="M12 16h.01"/></svg>
+                    <div>
+                        @foreach($errors->all() as $e)
+                            <div>{{ $e }}</div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+            @yield('content')
+        </div>
+    </div>
+</div>
+@stack('scripts')
+</body>
+</html>
