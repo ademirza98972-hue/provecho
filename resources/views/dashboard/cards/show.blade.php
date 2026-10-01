@@ -167,12 +167,17 @@
             <div class="panel">
                 <div class="panel-head">
                     <span class="panel-title">QR Code</span>
-                    <form method="POST" action="{{ route('dashboard.cards.export.pdf') }}">
+                    <form method="POST" action="{{ route('dashboard.cards.export.pdf') }}" x-data="{ mode: 'a4' }" style="display:flex;align-items:center;gap:6px">
                         @csrf
                         <input type="hidden" name="ids[]" value="{{ $card->id }}">
+                        <input type="hidden" name="mode" :value="mode">
+                        <select x-model="mode" style="border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;font-weight:600;background:#fff;cursor:pointer">
+                            <option value="a4">A4</option>
+                            <option value="sticker">Sticker</option>
+                        </select>
                         <button type="submit" class="btn btn-outline btn-sm">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-1"/><rect x="6" y="14" width="12" height="7" rx="1.5"/></svg>
-                            Cetak Card
+                            Cetak
                         </button>
                     </form>
                 </div>

@@ -37,8 +37,9 @@
 
     {{-- Tabel + pilih card untuk dicetak --}}
     <form method="POST" action="{{ route('dashboard.cards.export.pdf') }}"
-          x-data="{ ids: @js($cards->pluck('id')), sel: [] }">
+          x-data="{ ids: @js($cards->pluck('id')), sel: [], mode: 'a4' }">
         @csrf
+        <input type="hidden" name="mode" :value="mode">
 
         <div class="panel">
             <div class="panel-head">
@@ -51,6 +52,10 @@
                     <button type="button" class="btn btn-ghost btn-sm" x-show="sel.length" x-cloak @click="sel = []">
                         Batal pilih
                     </button>
+                    <select x-model="mode" class="btn-sm" x-show="sel.length" x-cloak style="border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;font-weight:600;background:#fff;cursor:pointer">
+                        <option value="a4">Cetak A4</option>
+                        <option value="sticker">Sticker 100×50 cm</option>
+                    </select>
                     <button type="submit" class="btn btn-primary btn-sm" :disabled="!sel.length">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-1"/><rect x="6" y="14" width="12" height="7" rx="1.5"/></svg>
                         Cetak Terpilih

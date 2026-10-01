@@ -175,11 +175,15 @@ class CardController extends Controller
             ? Card::whereIn('id', $ids)->orderBy('id')->get()
             : Card::where('status', 'inactive')->orderBy('id')->limit(100)->get();
 
-        // SVG inline — no Imagick/GD needed, browser renders perfectly
+        $mode = $request->input('mode', 'a4');
+
+        $qrSize = $mode === 'sticker' ? 120 : 160;
         $qrCodes = $cards->mapWithKeys(fn($card) => [
-            $card->id => QrCode::size(160)->generate($card->url),
+            $card->id => QrCode::size($qrSize)->generate($card->url),
         ]);
 
-        return view('dashboard.cards.print', compact('cards', 'qrCodes'));
+        $view = $mode === 'sticker' ? 'dashboard.cards.print-sticker' : 'dashboard.cards.print';
+
+        return view($view, compact('cards', 'qrCodes'));
     }
 }
