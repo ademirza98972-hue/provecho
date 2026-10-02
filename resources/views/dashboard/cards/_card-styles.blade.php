@@ -4,7 +4,7 @@
         position: relative;
         border-radius: 5mm;
         overflow: hidden;
-        background: url('/img/desain-card.png') center/cover no-repeat;
+        background: url('/img/review.png') center/cover no-repeat;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
