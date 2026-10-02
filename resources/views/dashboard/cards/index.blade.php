@@ -13,6 +13,8 @@
                     <option value="">Semua status</option>
                     <option value="active"   {{ request('status') === 'active' ? 'selected' : '' }}>Aktif</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Belum aktif</option>
+                    <option value="printed" {{ request('status') === 'printed' ? 'selected' : '' }}>Sudah dicetak</option>
+                    <option value="unprinted" {{ request('status') === 'unprinted' ? 'selected' : '' }}>Belum dicetak</option>
                     <option value="disabled" {{ request('status') === 'disabled' ? 'selected' : '' }}>Dinonaktifkan</option>
                 </select>
                 <select name="per_page" style="width:100px">
@@ -41,8 +43,8 @@
     </div>
 
     {{-- Tabel + pilih card untuk dicetak --}}
-    <form method="POST" action="{{ route('dashboard.cards.export.pdf') }}"
-          x-data="{ ids: @js($cards->pluck('id')), sel: [], mode: 'a4' }">
+    <div x-data="{ ids: @js($cards->pluck('id')), sel: [], mode: 'a4' }">
+    <form method="POST" action="{{ route('dashboard.cards.export.pdf') }}">
         @csrf
         <input type="hidden" name="mode" :value="mode">
 
@@ -58,12 +60,19 @@
                         Batal pilih
                     </button>
                     <select x-model="mode" class="btn-sm" x-show="sel.length" x-cloak style="border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;font-weight:600;background:#fff;cursor:pointer">
+                        <option value="single">10×10 cm</option>
                         <option value="a4">Cetak A4</option>
+                        <option value="a3">Cetak A3</option>
                         <option value="sticker">Sticker 100×50 cm</option>
                     </select>
                     <button type="submit" class="btn btn-primary btn-sm" :disabled="!sel.length">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-1"/><rect x="6" y="14" width="12" height="7" rx="1.5"/></svg>
                         Cetak Terpilih
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" x-show="sel.length" x-cloak
+                            @click="if(confirm('HAPUS PERMANEN ' + sel.length + ' card? Tidak bisa dikembalikan.')) { $refs.deleteForm.submit() }">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                        Hapus Terpilih
                     </button>
                 </div>
             </div>
@@ -97,6 +106,12 @@
                                     <span class="dot"></span>
                                     {{ ['active' => 'Aktif', 'inactive' => 'Belum aktif', 'disabled' => 'Nonaktif'][$card->status] }}
                                 </span>
+                                @if($card->printed_at)
+                                    <span class="badge badge-printed" style="margin-left:4px" title="Dicetak {{ $card->printed_at->format('d M Y') }}">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-1"/><rect x="6" y="14" width="12" height="7" rx="1.5"/></svg>
+                                        Dicetak
+                                    </span>
+                                @endif
                             </td>
                             <td>{{ $card->owner_name ?? '—' }}</td>
                             <td style="color:var(--muted)">{{ $card->activated_at?->format('d M Y') ?? '—' }}</td>
@@ -114,6 +129,12 @@
             {{ $cards->links('vendor.pagination.simple') }}
         </div>
     </form>
+
+    <form x-ref="deleteForm" method="POST" action="{{ route('dashboard.cards.bulk-destroy') }}" style="display:none">
+        @csrf
+        <template x-for="id in sel"><input type="hidden" name="ids[]" :value="id"></template>
+    </form>
+    </div>
 
 </div>
 

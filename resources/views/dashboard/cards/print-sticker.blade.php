@@ -29,8 +29,8 @@
     }
     .toolbar a      { background: #fff; border-color: #D4D7DD; color: #111827; }
     .toolbar a:hover{ background: #F9FAFB; }
-    .toolbar button { background: #1B8C3D; color: #fff; }
-    .toolbar button:hover { background: #15702F; }
+    .toolbar button { background: #0284C7; color: #fff; }
+    .toolbar button:hover { background: #0369A1; }
     .toolbar .hint  { color: #6B7280; }
 
     /* ── sticker sheet: 100cm × 50cm ── */
@@ -45,39 +45,8 @@
         box-shadow: 0 4px 20px rgba(0,0,0,.12);
     }
 
-    .sticker {
-        width: 100mm;
-        height: 100mm;
-        position: relative;
-        overflow: hidden;
-        border: 0.2mm dashed #D4D7DD;
-        background: url('/img/desain-card.png') center/cover no-repeat;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .qr-overlay {
-        position: absolute;
-        right: 15.8%;
-        top: 55%;
-        width: 27.2%;
-        aspect-ratio: 1;
-        padding: 0;
-    }
-    .qr-overlay svg { width: 100%; height: 100%; display: block; }
-
-    .id-overlay {
-        position: absolute;
-        bottom: 0.8%;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-family: 'Inter', sans-serif;
-        font-size: 4pt;
-        font-weight: 500;
-        color: #B0B0B0;
-        letter-spacing: .06em;
-    }
+@include('dashboard.cards._card-styles')
+    .card-item { border-radius: 0; border: 0.2mm dashed #D4D7DD; }
 
     .empty-cell {
         width: 100mm;
@@ -109,7 +78,7 @@
             page-break-after: always;
         }
 
-        .sticker {
+        .card-item {
             border-color: #E5E7EB;
         }
     }
@@ -135,7 +104,7 @@
 @foreach($cards->chunk(50) as $sheetCards)
 <div class="sheet">
     @foreach($sheetCards as $card)
-    <div class="sticker">
+    <div class="card-item">
         <div class="qr-overlay">{!! $qrCodes[$card->id] !!}</div>
         <div class="id-overlay">{{ $card->id }}</div>
     </div>

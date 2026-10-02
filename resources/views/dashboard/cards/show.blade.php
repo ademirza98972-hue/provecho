@@ -14,6 +14,12 @@
             Kelola Card
         </a>
         <span class="badge badge-{{ $card->status }}"><span class="dot"></span>{{ $statusLabel }}</span>
+        @if($card->printed_at)
+            <span class="badge badge-printed">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-1"/><rect x="6" y="14" width="12" height="7" rx="1.5"/></svg>
+                Dicetak {{ $card->printed_at->format('d M Y') }}
+            </span>
+        @endif
     </div>
 
     <div class="grid-2">
@@ -125,16 +131,23 @@
                     </form>
                 </div>
 
-                @if($card->isActive())
                 <div class="panel-head" style="border-bottom:none;border-top:1px solid var(--border)">
+                    @if($card->isActive())
                     <span class="hint">Nonaktifkan agar card tidak lagi mengarah ke halaman review.</span>
                     <form method="POST" action="{{ route('dashboard.cards.disable', $card) }}"
                           onsubmit="return confirm('Nonaktifkan card {{ $card->id }}?')">
                         @csrf
                         <button type="submit" class="btn btn-danger btn-sm">Nonaktifkan</button>
                     </form>
+                    @else
+                    <span class="hint">Hapus card ini secara permanen.</span>
+                    <form method="POST" action="{{ route('dashboard.cards.destroy', $card) }}"
+                          onsubmit="return confirm('HAPUS PERMANEN card {{ $card->id }}?')">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm">Hapus Card</button>
+                    </form>
+                    @endif
                 </div>
-                @endif
             </div>
             @else
             <div class="panel">
@@ -154,6 +167,11 @@
                             @csrf
                             <button type="submit" class="btn btn-outline btn-sm">Reset Card</button>
                         </form>
+                        <form method="POST" action="{{ route('dashboard.cards.destroy', $card) }}"
+                              onsubmit="return confirm('HAPUS PERMANEN card {{ $card->id }}? Card dan semua log-nya akan dihapus dan tidak bisa dikembalikan.')">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">Hapus Card</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -172,6 +190,7 @@
                         <input type="hidden" name="ids[]" value="{{ $card->id }}">
                         <input type="hidden" name="mode" :value="mode">
                         <select x-model="mode" style="border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;font-weight:600;background:#fff;cursor:pointer">
+                            <option value="single">10×10 cm</option>
                             <option value="a4">A4</option>
                             <option value="a3">A3</option>
                             <option value="sticker">Sticker</option>

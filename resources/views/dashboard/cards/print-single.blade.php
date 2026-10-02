@@ -33,29 +33,33 @@
     .toolbar button:hover { background: #0369A1; }
     .toolbar .hint  { color: #6B7280; }
 
-    .page {
-        width: 210mm;
-        height: 297mm;
-        margin: 1.5rem auto;
-        background: #fff;
-        padding: 8mm;
-        display: grid;
-        grid-template-columns: 100mm 100mm;
-        grid-template-rows: 100mm 100mm;
-        gap: 5mm;
+    .cards-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        padding: 24px;
         justify-content: center;
-        align-content: center;
-        box-shadow: 0 4px 20px rgba(0,0,0,.12);
     }
 
 @include('dashboard.cards._card-styles')
+    .card-item { box-shadow: 0 2px 12px rgba(0,0,0,.1); }
 
     @media print {
         .toolbar { display: none; }
         body     { background: #fff; }
-        .page    { margin: 0; box-shadow: none; padding: 5mm; width: 100%; height: 297mm; page-break-after: always; }
-        .page:last-child { page-break-after: auto; }
-        .card-item { page-break-inside: avoid; }
+        .cards-preview { padding: 0; gap: 0; }
+
+        @page {
+            size: 100mm 100mm;
+            margin: 0;
+        }
+
+        .card-item {
+            box-shadow: none;
+            border-radius: 0;
+            page-break-after: always;
+        }
+        .card-item:last-child { page-break-after: auto; }
     }
 </style>
 </head>
@@ -64,7 +68,7 @@
 <div class="toolbar">
     <span class="count">{{ $cards->count() }} card siap cetak</span>
     <div class="group">
-        <span class="hint">Ukuran kertas A4 portrait, 4 card per halaman. Aktifkan "Background graphics" saat cetak.</span>
+        <span class="hint">1 card per halaman, ukuran 10×10 cm. Aktifkan "Background graphics" saat cetak.</span>
         <a href="{{ route('dashboard.cards.index') }}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             Kembali
@@ -76,16 +80,14 @@
     </div>
 </div>
 
-@foreach($cards->chunk(4) as $pageCards)
-<div class="page">
-    @foreach($pageCards as $card)
+<div class="cards-preview">
+    @foreach($cards as $card)
     <div class="card-item">
         <div class="qr-overlay">{!! $qrCodes[$card->id] !!}</div>
         <div class="id-overlay">{{ $card->id }}</div>
     </div>
     @endforeach
 </div>
-@endforeach
 
 </body>
 </html>

@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Provecho — Google Review Card NFC untuk UMKM</title>
-    <meta name="description" content="Kartu NFC + QR Code yang langsung membuka halaman Google Review. Pelanggan tap, bintang 5 mengalir. Mulai dari Rp 75.000.">
+    <title>Provecho — Google Review Card untuk UMKM</title>
+    <meta name="description" content="Card NFC + QR Code akrilik yang langsung membuka halaman Google Review. Taruh di kasir, pelanggan tap, review masuk. Rp 50.000/card.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.14.9/cdn.min.js" defer></script>
     <style>
     :root {
-        --g50:#F0FDF4;--g100:#DCFCE7;--g200:#BBF7D0;--g300:#86EFAC;
-        --g400:#4ADE80;--g500:#22C55E;--g600:#1B8C3D;--g700:#15702F;
-        --g800:#166534;--g900:#14532D;--g950:#091A10;
+        --g50:#F0F9FF;--g100:#E0F2FE;--g200:#BAE6FD;--g300:#7DD3FC;
+        --g400:#38BDF8;--g500:#0EA5E9;--g600:#0284C7;--g700:#0369A1;
+        --g800:#075985;--g900:#0C4A6E;--g950:#082F49;
         --n50:#F9FAFB;--n100:#F3F4F6;--n200:#E5E7EB;--n300:#D1D5DB;
         --n400:#9CA3AF;--n500:#6B7280;--n600:#4B5563;--n700:#374151;
         --n800:#1F2937;--n900:#111827;
@@ -28,17 +28,17 @@
     a{text-decoration:none;color:inherit}
     button{font:inherit;border:none;background:none;cursor:pointer}
 
-    .container{width:100%;max-width:1140px;margin:0 auto;padding:0 24px}
+    .ctnr{width:100%;max-width:1100px;margin:0 auto;padding:0 24px}
 
     /* ── Nav ── */
-    .nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:920px;
-         background:rgba(9,26,16,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    .nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:880px;
+         background:rgba(8,47,73,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
          border-radius:999px;padding:8px 8px 8px 22px;z-index:1000;display:flex;align-items:center;
          justify-content:space-between;transition:box-shadow .3s}
     .nav.scrolled{box-shadow:0 8px 40px rgba(0,0,0,.18)}
     .nav-logo{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:15px;letter-spacing:-.02em}
     .nav-logo img{width:28px;height:28px;border-radius:6px}
-    .nav-links{display:flex;align-items:center;gap:6px}
+    .nav-links{display:flex;align-items:center;gap:4px}
     .nav-links a{color:rgba(255,255,255,.7);font-size:13.5px;font-weight:500;padding:7px 14px;border-radius:999px;
                  transition:color .2s,background .2s}
     .nav-links a:hover{color:#fff;background:rgba(255,255,255,.08)}
@@ -48,216 +48,182 @@
     .nav-toggle{display:none;color:#fff;padding:8px}
 
     /* ── Hero ── */
-    .hero{padding:140px 0 80px;position:relative;overflow:hidden}
-    .hero::before{content:'';position:absolute;top:-120px;right:-100px;width:500px;height:500px;
-                  background:radial-gradient(circle,rgba(27,140,61,.12) 0%,transparent 70%);pointer-events:none}
-    .hero::after{content:'';position:absolute;bottom:-80px;left:-60px;width:400px;height:400px;
-                 background:radial-gradient(circle,rgba(34,197,94,.08) 0%,transparent 70%);pointer-events:none}
-    .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--g50);border:1px solid var(--g200);
-                color:var(--g700);font-size:13px;font-weight:600;padding:6px 16px;border-radius:999px;margin-bottom:24px}
-    .hero h1{font-size:clamp(36px,5vw,56px);font-weight:800;line-height:1.08;letter-spacing:-.03em;margin-bottom:20px}
+    .hero{padding:130px 0 60px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;top:-80px;right:-60px;width:480px;height:480px;
+                  background:radial-gradient(circle,rgba(14,165,233,.10) 0%,transparent 70%);pointer-events:none}
+    .hero-grid{display:grid;grid-template-columns:1fr 420px;gap:48px;align-items:center}
+    .hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--g50);border:1px solid var(--g200);
+                color:var(--g700);font-size:12.5px;font-weight:600;padding:5px 14px;border-radius:999px;margin-bottom:22px}
+    .hero h1{font-size:clamp(34px,4.8vw,52px);font-weight:800;line-height:1.08;letter-spacing:-.035em;margin-bottom:18px}
     .hero h1 em{font-style:normal;color:var(--g600)}
-    .hero-sub{font-size:17px;color:var(--n500);line-height:1.65;max-width:480px;margin-bottom:32px}
-    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:36px}
-    .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--g600);color:#fff;font-size:15px;
-                 font-weight:600;padding:14px 28px;border-radius:12px;transition:background .2s,transform .1s}
-    .btn-primary:hover{background:var(--g700)}
-    .btn-primary:active{transform:scale(.98)}
-    .btn-secondary{display:inline-flex;align-items:center;gap:8px;background:var(--n50);border:1px solid var(--n200);
-                   color:var(--n700);font-size:15px;font-weight:600;padding:14px 28px;border-radius:12px;
-                   transition:background .2s,border-color .2s}
-    .btn-secondary:hover{background:var(--n100);border-color:var(--n300)}
-    .hero-badges{display:flex;gap:10px;flex-wrap:wrap}
-    .hero-badges span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;
-                      color:var(--n500);background:var(--n50);border:1px solid var(--n200);padding:5px 12px;border-radius:999px}
-    .hero-badges span svg{width:14px;height:14px;color:var(--g600)}
+    .hero-sub{font-size:16.5px;color:var(--n500);line-height:1.65;max-width:460px;margin-bottom:28px}
+    .hero-price{display:inline-flex;align-items:baseline;gap:6px;background:var(--g950);color:#fff;
+                padding:10px 22px;border-radius:12px;margin-bottom:28px;font-size:15px;font-weight:600}
+    .hero-price b{font-size:28px;font-weight:800;letter-spacing:-.02em}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+    .btn-wa{display:inline-flex;align-items:center;gap:8px;background:var(--g600);color:#fff;font-size:15px;
+            font-weight:600;padding:14px 28px;border-radius:12px;transition:background .2s,transform .1s}
+    .btn-wa:hover{background:var(--g700)}
+    .btn-wa:active{transform:scale(.98)}
+    .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1.5px solid var(--n200);
+               color:var(--n700);font-size:15px;font-weight:600;padding:13px 26px;border-radius:12px;
+               transition:border-color .2s,background .2s}
+    .btn-ghost:hover{border-color:var(--n300);background:var(--n50)}
+    .hero-trust{display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--n400);font-weight:500}
+    .hero-trust span{display:flex;align-items:center;gap:5px}
+    .hero-trust svg{width:15px;height:15px;color:var(--g500)}
 
-    .hero-visual{display:flex;align-items:center;justify-content:center;position:relative}
-    .card-showcase{position:relative;width:320px;height:320px}
-    .card-showcase img{width:280px;height:280px;object-fit:contain;border-radius:20px;
-                       filter:drop-shadow(0 20px 40px rgba(0,0,0,.12));
-                       transform:perspective(800px) rotateY(-6deg) rotateX(4deg);
-                       transition:transform .4s ease}
-    .card-showcase:hover img{transform:perspective(800px) rotateY(-2deg) rotateX(2deg)}
-    .card-showcase .nfc-ring{position:absolute;top:50%;left:50%;width:100px;height:100px;
-                             transform:translate(-50%,-50%);pointer-events:none}
-    .nfc-ring circle{fill:none;stroke:var(--g400);stroke-width:1.5;opacity:0;
-                     transform-origin:center;animation:nfc-pulse 2.4s ease-out infinite}
+    .hero-visual{position:relative;display:flex;align-items:center;justify-content:center}
+    .card-float{position:relative}
+    .card-float img{width:340px;height:340px;object-fit:contain;
+                    filter:drop-shadow(0 24px 48px rgba(0,0,0,.12));
+                    border-radius:18px;
+                    transform:perspective(900px) rotateY(-5deg) rotateX(3deg);
+                    transition:transform .5s ease}
+    .card-float:hover img{transform:perspective(900px) rotateY(-1deg) rotateX(1deg)}
+    .nfc-ring{position:absolute;top:50%;left:50%;width:100px;height:100px;transform:translate(-50%,-50%);pointer-events:none}
+    .nfc-ring circle{fill:none;stroke:var(--g400);stroke-width:1.5;opacity:0;transform-origin:center;animation:nfc-p 2.4s ease-out infinite}
     .nfc-ring circle:nth-child(2){animation-delay:.4s}
     .nfc-ring circle:nth-child(3){animation-delay:.8s}
-    @keyframes nfc-pulse{0%{r:8;opacity:.7}100%{r:48;opacity:0}}
+    @keyframes nfc-p{0%{r:8;opacity:.6}100%{r:48;opacity:0}}
 
-    /* ── Stats ── */
-    .stats{background:var(--g50);border-top:1px solid var(--g100);border-bottom:1px solid var(--g100);padding:48px 0}
-    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
-    .stat-num{font-size:36px;font-weight:800;letter-spacing:-.03em;color:var(--g600);line-height:1}
-    .stat-label{font-size:13px;color:var(--n500);font-weight:500;margin-top:6px}
+    /* ── Strip ── */
+    .strip{background:var(--g950);padding:20px 0}
+    .strip-row{display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+    .strip-item{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.65);font-size:13.5px;font-weight:500}
+    .strip-item svg{width:16px;height:16px;color:var(--g400)}
 
-    /* ── Section headers ── */
-    .sec{padding:100px 0}
-    .sec-label{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--g600);
-               text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
-    .sec-title{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:16px}
-    .sec-sub{font-size:17px;color:var(--n500);max-width:560px;line-height:1.6}
-    .sec-header{margin-bottom:56px}
-    .sec-header.center{text-align:center}
-    .sec-header.center .sec-sub{margin:0 auto}
+    /* ── Section base ── */
+    .sec{padding:90px 0}
+    .sec-label{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--g600);
+               text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+    .sec-title{font-size:clamp(26px,3.6vw,38px);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
+    .sec-sub{font-size:16px;color:var(--n500);max-width:520px;line-height:1.6}
+    .sec-head{margin-bottom:48px}
+    .sec-head.ctr{text-align:center}
+    .sec-head.ctr .sec-sub{margin:0 auto}
 
     /* ── Cara Kerja ── */
-    .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-    .step{background:#fff;border:1px solid var(--n200);border-radius:16px;padding:28px 24px;position:relative;
-          transition:border-color .2s,box-shadow .2s}
-    .step:hover{border-color:var(--g200);box-shadow:0 8px 24px rgba(27,140,61,.06)}
-    .step-num{width:36px;height:36px;background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;
-              display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--g700);
-              margin-bottom:18px}
-    .step h3{font-size:16px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .step{background:#fff;border:1.5px solid var(--n200);border-radius:16px;padding:28px 24px;position:relative;
+          transition:border-color .25s,box-shadow .25s}
+    .step:hover{border-color:var(--g300);box-shadow:0 8px 28px rgba(2,132,199,.07)}
+    .step-num{width:40px;height:40px;background:var(--g50);border:1.5px solid var(--g200);border-radius:10px;
+              display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:var(--g700);
+              margin-bottom:16px}
+    .step h3{font-size:16px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
     .step p{font-size:14px;color:var(--n500);line-height:1.55}
-    .step-connector{display:none}
 
-    /* ── Features ── */
-    .feature{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;padding:64px 0;
-             border-top:1px solid var(--n200)}
-    .feature:first-child{border-top:none}
-    .feature.reverse{direction:rtl}
-    .feature.reverse>*{direction:ltr}
-    .feature-tag{font-size:12px;font-weight:700;color:var(--g600);text-transform:uppercase;letter-spacing:.08em;
-                 margin-bottom:12px}
-    .feature h3{font-size:clamp(22px,3vw,28px);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:14px}
-    .feature-desc{font-size:15px;color:var(--n500);line-height:1.65;margin-bottom:24px}
-    .feature-list{list-style:none;display:flex;flex-direction:column;gap:10px}
-    .feature-list li{display:flex;align-items:flex-start;gap:10px;font-size:14px;font-weight:500;color:var(--n700)}
-    .feature-list li svg{width:18px;height:18px;color:var(--g500);flex-shrink:0;margin-top:2px}
+    /* ── Kenapa Beda ── */
+    .diff{background:var(--n50)}
+    .diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:840px;margin:0 auto}
+    .diff-card{border-radius:16px;padding:32px 28px}
+    .diff-card.old{background:#fff;border:1px solid var(--n200)}
+    .diff-card.prov{background:var(--g600);color:#fff}
+    .diff-card h3{font-size:19px;font-weight:700;margin-bottom:4px}
+    .diff-card .diff-sub{font-size:13px;opacity:.65;margin-bottom:22px}
+    .diff-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+    .diff-list li{display:flex;align-items:flex-start;gap:9px;font-size:14px;line-height:1.45}
+    .diff-list li svg{width:17px;height:17px;flex-shrink:0;margin-top:2px}
+    .diff-card.old .diff-list li svg{color:#ef4444}
+    .diff-card.prov .diff-list li svg{color:var(--g200)}
+    .diff-price{margin-top:24px;padding-top:20px;font-size:13px;opacity:.7}
+    .diff-card.old .diff-price{border-top:1px solid var(--n200);color:var(--n500)}
+    .diff-card.prov .diff-price{border-top:1px solid rgba(255,255,255,.15)}
+    .diff-card.prov .diff-price b{font-size:26px;font-weight:800;opacity:1;color:#fff;letter-spacing:-.02em}
 
-    .mockup{background:var(--g950);border-radius:14px;overflow:hidden;box-shadow:0 24px 48px -12px rgba(0,0,0,.2)}
-    .mockup-bar{display:flex;gap:6px;padding:11px 16px;background:rgba(255,255,255,.05)}
-    .mockup-dot{width:9px;height:9px;border-radius:50%}
-    .mockup-dot:nth-child(1){background:#ff5f57}
-    .mockup-dot:nth-child(2){background:#febc2e}
-    .mockup-dot:nth-child(3){background:#28c840}
-    .mockup-body{padding:20px}
-
-    .mock-phone{width:220px;margin:0 auto;background:#111;border-radius:28px;padding:6px;
-                box-shadow:0 20px 40px rgba(0,0,0,.2)}
-    .mock-phone-notch{width:80px;height:20px;background:#111;border-radius:0 0 12px 12px;margin:0 auto;position:relative;z-index:2}
-    .mock-phone-screen{background:#fff;border-radius:22px;padding:20px 16px;min-height:280px}
-
-    /* ── Comparison ── */
-    .compare{background:var(--n50)}
-    .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:800px;margin:0 auto}
-    .compare-card{border-radius:16px;padding:32px 28px}
-    .compare-card.manual{background:#fff;border:1px solid var(--n200)}
-    .compare-card.smart{background:var(--g600);color:#fff}
-    .compare-card h3{font-size:20px;font-weight:700;margin-bottom:6px}
-    .compare-card .compare-sub{font-size:13px;opacity:.7;margin-bottom:24px}
-    .compare-list{list-style:none;display:flex;flex-direction:column;gap:14px}
-    .compare-list li{display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45}
-    .compare-list li svg{width:18px;height:18px;flex-shrink:0;margin-top:2px}
-    .compare-card.manual .compare-list li svg{color:#ef4444}
-    .compare-card.smart .compare-list li svg{color:var(--g200)}
-    .compare-result{margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.15);
-                    font-size:28px;font-weight:800;letter-spacing:-.02em}
-    .compare-card.manual .compare-result{border-top-color:var(--n200);color:var(--n400)}
-    .compare-card.smart .compare-result{color:#fff}
+    /* ── Features grid ── */
+    .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:48px}
+    .feat{background:#fff;border:1.5px solid var(--n200);border-radius:16px;padding:28px 24px;
+          transition:border-color .25s,box-shadow .25s}
+    .feat:hover{border-color:var(--g300);box-shadow:0 6px 20px rgba(2,132,199,.06)}
+    .feat-icon{width:42px;height:42px;background:var(--g50);border:1.5px solid var(--g200);border-radius:11px;
+               display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:var(--g600)}
+    .feat h3{font-size:16px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
+    .feat p{font-size:14px;color:var(--n500);line-height:1.55}
 
     /* ── Pricing ── */
-    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px;margin:0 auto}
-    .price-card{background:#fff;border:1px solid var(--n200);border-radius:16px;padding:32px 28px;position:relative;
-                transition:border-color .2s,box-shadow .2s}
-    .price-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.06)}
-    .price-card.popular{border-color:var(--g300);box-shadow:0 0 0 1px var(--g300)}
-    .price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--g600);color:#fff;
-                 font-size:11.5px;font-weight:700;padding:4px 16px;border-radius:999px;white-space:nowrap}
-    .price-card h3{font-size:18px;font-weight:700;margin-bottom:4px}
-    .price-card .price-type{font-size:13px;color:var(--n400);margin-bottom:20px}
-    .price-amount{font-size:36px;font-weight:800;letter-spacing:-.03em;color:var(--n900)}
-    .price-amount small{font-size:15px;font-weight:500;color:var(--n400)}
-    .price-note{font-size:12.5px;color:var(--n400);margin-top:4px;margin-bottom:24px}
-    .price-cta{display:block;text-align:center;padding:13px;border-radius:10px;font-size:14px;font-weight:600;
-               transition:background .2s,color .2s}
-    .price-cta.primary{background:var(--g600);color:#fff}
-    .price-cta.primary:hover{background:var(--g700)}
-    .price-cta.outline{background:var(--n50);border:1px solid var(--n200);color:var(--n700)}
-    .price-cta.outline:hover{background:var(--n100)}
-    .price-divider{height:1px;background:var(--n200);margin:24px 0}
-    .price-features{list-style:none;display:flex;flex-direction:column;gap:11px}
-    .price-features li{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--n600)}
-    .price-features li svg{width:16px;height:16px;flex-shrink:0}
-    .price-features li svg.check{color:var(--g500)}
-    .price-features li svg.x{color:var(--n300)}
-    .price-features li.disabled{color:var(--n400)}
+    .price-wrap{max-width:440px;margin:0 auto}
+    .price-card{background:#fff;border:2px solid var(--g300);border-radius:20px;padding:40px 32px;text-align:center;
+                box-shadow:0 12px 40px rgba(2,132,199,.08)}
+    .price-card h3{font-size:14px;font-weight:700;color:var(--g600);text-transform:uppercase;letter-spacing:.06em;
+                   margin-bottom:16px}
+    .price-amount{font-size:52px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--n900)}
+    .price-amount small{font-size:18px;font-weight:500;color:var(--n400)}
+    .price-note{font-size:14px;color:var(--n500);margin-top:8px;margin-bottom:28px}
+    .price-list{list-style:none;text-align:left;display:flex;flex-direction:column;gap:11px;margin-bottom:32px}
+    .price-list li{display:flex;align-items:center;gap:10px;font-size:14.5px;color:var(--n700)}
+    .price-list li svg{width:18px;height:18px;color:var(--g500);flex-shrink:0}
+    .price-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+               background:var(--g600);color:#fff;font-size:16px;font-weight:700;padding:16px;
+               border-radius:12px;transition:background .2s}
+    .price-cta:hover{background:var(--g700)}
+    .price-alt{margin-top:20px;display:flex;flex-direction:column;gap:10px;align-items:center}
+    .price-alt span{font-size:13px;color:var(--n400)}
+    .price-alt a{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;
+                 color:var(--g600);transition:color .2s}
+    .price-alt a:hover{color:var(--g700)}
 
     /* ── FAQ ── */
-    .faq-list{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:4px}
-    .faq-item{background:#fff;border:1px solid var(--n200);border-radius:12px;overflow:hidden;
-              transition:border-color .2s}
+    .faq-list{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:4px}
+    .faq-item{background:#fff;border:1px solid var(--n200);border-radius:12px;overflow:hidden;transition:border-color .2s}
     .faq-item.open{border-color:var(--g200)}
     .faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;
-           padding:18px 22px;font-size:15px;font-weight:600;text-align:left;color:var(--n900);cursor:pointer}
+           padding:17px 20px;font-size:15px;font-weight:600;text-align:left;color:var(--n900);cursor:pointer}
     .faq-icon{width:22px;height:22px;border-radius:6px;background:var(--n50);display:flex;align-items:center;
               justify-content:center;flex-shrink:0;transition:transform .25s,background .2s;font-size:14px;color:var(--n500)}
     .faq-item.open .faq-icon{transform:rotate(45deg);background:var(--g50);color:var(--g600)}
     .faq-a{overflow:hidden;max-height:0;opacity:0;transition:max-height .35s cubic-bezier(.16,1,.3,1),opacity .25s,padding .35s}
-    .faq-item.open .faq-a{max-height:300px;opacity:1;padding:0 22px 20px}
-    .faq-a p{font-size:14.5px;color:var(--n500);line-height:1.65}
+    .faq-item.open .faq-a{max-height:300px;opacity:1;padding:0 20px 18px}
+    .faq-a p{font-size:14px;color:var(--n500);line-height:1.65}
 
     /* ── Testimonials ── */
-    .testi{background:var(--g950);padding:100px 0;overflow:hidden}
+    .testi{background:var(--g950);padding:90px 0;overflow:hidden}
     .testi .sec-label{color:var(--g400)}
     .testi .sec-title{color:#fff}
-    .testi .sec-sub{color:rgba(255,255,255,.5)}
-    .testi-track{display:flex;gap:20px;width:max-content;padding:10px 0}
-    .testi-track.scroll-left{animation:tscroll-l 50s linear infinite}
-    .testi-track.scroll-right{animation:tscroll-r 50s linear infinite}
+    .testi .sec-sub{color:rgba(255,255,255,.45)}
+    .testi-track{display:flex;gap:16px;width:max-content;padding:8px 0}
+    .testi-track.scroll-l{animation:tsl 45s linear infinite}
+    .testi-track.scroll-r{animation:tsr 45s linear infinite}
     .testi-track:hover{animation-play-state:paused}
-    @keyframes tscroll-l{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    @keyframes tscroll-r{from{transform:translateX(-50%)}to{transform:translateX(0)}}
-    .testi-card{width:340px;flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
-                border-radius:14px;padding:24px}
-    .testi-stars{display:flex;gap:2px;margin-bottom:14px}
-    .testi-stars svg{width:16px;height:16px;color:#FBBF24}
-    .testi-text{font-size:14px;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:18px}
-    .testi-author{display:flex;align-items:center;gap:12px}
-    .testi-avatar{width:36px;height:36px;border-radius:999px;background:var(--g700);display:flex;align-items:center;
-                  justify-content:center;font-size:14px;font-weight:700;color:var(--g200)}
-    .testi-name{font-size:13.5px;font-weight:600;color:#fff}
-    .testi-role{font-size:12px;color:rgba(255,255,255,.4)}
-    .testi-rows{display:flex;flex-direction:column;gap:16px;margin-top:48px}
+    @keyframes tsl{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @keyframes tsr{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+    .testi-card{width:320px;flex-shrink:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+                border-radius:14px;padding:22px}
+    .testi-stars{display:flex;gap:2px;margin-bottom:12px}
+    .testi-stars svg{width:15px;height:15px;color:#FBBF24}
+    .testi-text{font-size:13.5px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:16px}
+    .testi-author{display:flex;align-items:center;gap:10px}
+    .testi-avatar{width:34px;height:34px;border-radius:999px;background:var(--g700);display:flex;align-items:center;
+                  justify-content:center;font-size:13px;font-weight:700;color:var(--g200)}
+    .testi-name{font-size:13px;font-weight:600;color:#fff}
+    .testi-role{font-size:11.5px;color:rgba(255,255,255,.35)}
+    .testi-rows{display:flex;flex-direction:column;gap:14px;margin-top:44px}
 
     /* ── CTA ── */
-    .cta-sec{padding:100px 0}
-    .cta-box{background:var(--g600);border-radius:24px;padding:64px 48px;text-align:center;position:relative;overflow:hidden}
-    .cta-box::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;
+    .cta-sec{padding:90px 0}
+    .cta-box{background:var(--g600);border-radius:22px;padding:56px 40px;text-align:center;position:relative;overflow:hidden}
+    .cta-box::before{content:'';position:absolute;top:-50px;right:-50px;width:260px;height:260px;
                      background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);pointer-events:none}
-    .cta-box h2{font-size:clamp(28px,4vw,40px);font-weight:800;color:#fff;letter-spacing:-.03em;line-height:1.15;
-                margin-bottom:14px}
-    .cta-box p{font-size:17px;color:rgba(255,255,255,.7);max-width:480px;margin:0 auto 32px}
+    .cta-box h2{font-size:clamp(26px,3.8vw,36px);font-weight:800;color:#fff;letter-spacing:-.03em;line-height:1.15;
+                margin-bottom:12px}
+    .cta-box p{font-size:16px;color:rgba(255,255,255,.65);max-width:440px;margin:0 auto 28px}
     .btn-white{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--g700);font-size:15px;
                font-weight:700;padding:15px 32px;border-radius:12px;transition:transform .1s,box-shadow .2s}
     .btn-white:hover{box-shadow:0 4px 20px rgba(0,0,0,.12)}
     .btn-white:active{transform:scale(.98)}
-    .cta-badges{display:flex;gap:16px;justify-content:center;margin-top:28px;flex-wrap:wrap}
-    .cta-badges span{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.6);font-size:13px;font-weight:500}
-    .cta-badges span svg{width:16px;height:16px;color:var(--g300)}
 
     /* ── Footer ── */
-    .foot{background:var(--g950);padding:64px 0 0;color:rgba(255,255,255,.6)}
-    .foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;padding-bottom:48px;
-               border-bottom:1px solid rgba(255,255,255,.08)}
-    .foot-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:16px;margin-bottom:12px}
-    .foot-brand img{width:28px;height:28px;border-radius:6px}
-    .foot-desc{font-size:13.5px;line-height:1.6;max-width:280px}
-    .foot h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35);
-             margin-bottom:14px}
-    .foot ul{list-style:none;display:flex;flex-direction:column;gap:9px}
-    .foot ul a{font-size:13.5px;transition:color .2s}
-    .foot ul a:hover{color:#fff}
-    .marquee{overflow:hidden;white-space:nowrap;padding:40px 0 20px;border-top:1px solid rgba(255,255,255,.08);margin-top:48px}
-    .marquee-track{display:inline-flex;gap:48px;animation:mq 18s linear infinite;
-                   font-size:clamp(36px,6vw,56px);font-weight:900;color:rgba(255,255,255,.04);letter-spacing:-.02em}
-    @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    .foot-copy{text-align:center;padding:20px 0;font-size:12.5px;color:rgba(255,255,255,.3)}
+    .foot{background:var(--g950);padding:48px 0 0;color:rgba(255,255,255,.55)}
+    .foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;padding-bottom:40px;
+              border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap}
+    .foot-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:15px;margin-bottom:10px}
+    .foot-brand img{width:26px;height:26px;border-radius:6px}
+    .foot-desc{font-size:13px;line-height:1.6;max-width:320px}
+    .foot-links{display:flex;gap:32px}
+    .foot-links a{font-size:13px;transition:color .2s}
+    .foot-links a:hover{color:#fff}
+    .foot-copy{text-align:center;padding:20px 0;font-size:12px;color:rgba(255,255,255,.25)}
 
     /* ── WA Float ── */
     .wa-float{position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:#25D366;border-radius:999px;
@@ -266,47 +232,42 @@
     .wa-float:hover{transform:scale(1.08)}
     .wa-float svg{width:28px;height:28px;color:#fff}
 
-    /* ── Hero entrance ── */
-    @keyframes hero-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .hero-enter{animation:hero-in .7s ease both}
-    .hero-enter-d1{animation:hero-in .7s ease .1s both}
-    .hero-enter-d2{animation:hero-in .7s ease .2s both}
-    .hero-enter-d3{animation:hero-in .7s ease .3s both}
-    .hero-enter-d4{animation:hero-in .7s ease .4s both}
-
-    /* ── Scroll reveal ── */
-    .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
-    .reveal.visible{opacity:1;transform:translateY(0)}
-    .reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}.reveal-d4{transition-delay:.35s}
+    /* ── Animations ── */
+    @keyframes hero-in{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    .hi{animation:hero-in .65s ease both}
+    .hi-1{animation:hero-in .65s ease .08s both}
+    .hi-2{animation:hero-in .65s ease .16s both}
+    .hi-3{animation:hero-in .65s ease .24s both}
+    .hi-4{animation:hero-in .65s ease .32s both}
+    .rv{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+    .rv.vis{opacity:1;transform:translateY(0)}
+    .rv-1{transition-delay:.08s}.rv-2{transition-delay:.16s}.rv-3{transition-delay:.24s}
 
     /* ── Responsive ── */
     @media(max-width:900px){
-        .hero-grid{grid-template-columns:1fr;gap:40px;text-align:center}
-        .hero-sub{margin:0 auto 32px}
+        .hero-grid{grid-template-columns:1fr;gap:36px;text-align:center}
+        .hero-sub{margin:0 auto 24px}
+        .hero-price{margin:0 auto 24px}
         .hero-actions{justify-content:center}
-        .hero-badges{justify-content:center}
+        .hero-trust{justify-content:center}
         .hero-visual{order:-1}
-        .card-showcase{width:240px;height:240px}
-        .card-showcase img{width:220px;height:220px}
-        .steps-grid{grid-template-columns:1fr 1fr;gap:16px}
-        .feature{grid-template-columns:1fr;gap:40px;text-align:center}
-        .feature.reverse{direction:ltr}
-        .feature-list{align-items:center}
-        .compare-grid{grid-template-columns:1fr}
-        .pricing-grid{grid-template-columns:1fr;max-width:400px}
-        .foot-grid{grid-template-columns:1fr 1fr;gap:32px}
+        .card-float img{width:260px;height:260px}
+        .steps{grid-template-columns:1fr 1fr;gap:14px}
+        .diff-grid{grid-template-columns:1fr}
+        .feat-grid{grid-template-columns:1fr}
+        .foot-top{flex-direction:column;gap:24px}
     }
     @media(max-width:640px){
         .nav-links{display:none}
         .nav-toggle{display:block}
         .nav.open .nav-links{display:flex;flex-direction:column;position:absolute;top:56px;left:12px;right:12px;
-                             background:rgba(9,26,16,.97);border-radius:16px;padding:12px;
+                             background:rgba(9,26,16,.97);border-radius:14px;padding:10px;
                              box-shadow:0 12px 32px rgba(0,0,0,.2)}
         .nav.open .nav-links a{padding:12px 16px;border-radius:10px}
-        .stats-grid{grid-template-columns:1fr 1fr;gap:20px}
-        .steps-grid{grid-template-columns:1fr}
-        .cta-box{padding:48px 24px}
-        .foot-grid{grid-template-columns:1fr}
+        .steps{grid-template-columns:1fr}
+        .cta-box{padding:40px 20px}
+        .strip-row{gap:20px}
+        .price-card{padding:32px 24px}
     }
     </style>
 </head>
@@ -319,59 +280,51 @@
         <span>Provecho</span>
     </a>
     <div class="nav-links">
-        <a href="#fitur" @click="open=false">Fitur</a>
         <a href="#cara-kerja" @click="open=false">Cara Kerja</a>
+        <a href="#kenapa" @click="open=false">Kenapa Kami</a>
         <a href="#harga" @click="open=false">Harga</a>
         <a href="#faq" @click="open=false">FAQ</a>
     </div>
     <div style="display:flex;align-items:center;gap:8px">
-        <a href="https://wa.me/628XXXXXXXXXX?text=Halo%2C%20saya%20tertarik%20dengan%20Provecho%20Google%20Review%20Card" class="nav-cta" target="_blank">Pesan Sekarang</a>
+        <a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20tertarik%20dengan%20Provecho%20Google%20Review%20Card" class="nav-cta" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Pesan
+        </a>
         <button class="nav-toggle" @click="open=!open">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h14M4 12h14M4 17h14"/></svg>
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h14M4 12h14M4 17h14"/></svg>
         </button>
     </div>
 </nav>
 
 <!-- ════ Hero ════ -->
 <section class="hero">
-    <div class="container">
+    <div class="ctnr">
         <div class="hero-grid">
             <div>
-                <div class="hero-badge hero-enter">
-                    <svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 0l1.5 4.5L12 6l-4.5 1.5L6 12 4.5 7.5 0 6l4.5-1.5z" fill="currentColor"/></svg>
-                    #1 Google Review Card untuk UMKM Indonesia
+                <div class="hero-badge hi">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                    Google Review Card NFC + QR
                 </div>
-                <h1 class="hero-enter-d1">Review bintang 5,<br>satu tap dari <em>pelanggan.</em></h1>
-                <p class="hero-sub hero-enter-d2">Card NFC + QR Code di meja kasir — pelanggan tap atau scan, halaman Google Review langsung terbuka. Tanpa install aplikasi, tanpa ribet.</p>
-                <div class="hero-actions hero-enter-d3">
-                    <a href="https://wa.me/628XXXXXXXXXX?text=Halo%2C%20saya%20tertarik%20dengan%20Provecho%20Google%20Review%20Card" class="btn-primary" target="_blank">
+                <h1 class="hi-1">Taruh di kasir.<br>Pelanggan tap.<br><em>Review masuk.</em></h1>
+                <p class="hero-sub hi-2">Card akrilik dengan NFC + QR Code yang langsung membuka halaman Google Review usaha Anda. Pelanggan tinggal tap atau scan — tanpa install aplikasi, tanpa ribet.</p>
+                <div class="hero-price hi-3">
+                    <b>Rp 50.000</b> /card
+                </div>
+                <div class="hero-actions hi-3">
+                    <a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20mau%20pesan%20Provecho%20Google%20Review%20Card" class="btn-wa" target="_blank">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                         Pesan via WhatsApp
                     </a>
-                    <a href="#cara-kerja" class="btn-secondary">Lihat Cara Kerja</a>
+                    <a href="#cara-kerja" class="btn-ghost">Lihat Cara Kerja</a>
                 </div>
-                <div class="hero-badges hero-enter-d4">
-                    <span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z"/><path d="M2 12C2 6.5 6.5 2 12 2m10 10c0 5.5-4.5 10-10 10"/></svg>
-                        NFC + QR
-                    </span>
-                    <span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><circle cx="12" cy="18" r="1"/></svg>
-                        Tanpa Aplikasi
-                    </span>
-                    <span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-                        Link Fleksibel
-                    </span>
-                    <span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                        Dashboard
-                    </span>
+                <div class="hero-trust hi-4">
+                    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Bayar sekali, pakai selamanya</span>
+                    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Tanpa biaya bulanan</span>
                 </div>
             </div>
-            <div class="hero-visual hero-enter-d2">
-                <div class="card-showcase">
-                    <img src="/img/desain-card.png" alt="Provecho Google Review Card">
+            <div class="hero-visual hi-2">
+                <div class="card-float">
+                    <img src="/img/desain-card.png" alt="Provecho Google Review Card — Card akrilik NFC + QR Code">
                     <svg class="nfc-ring" viewBox="0 0 100 100"><circle cx="50" cy="50"/><circle cx="50" cy="50"/><circle cx="50" cy="50"/></svg>
                 </div>
             </div>
@@ -379,360 +332,207 @@
     </div>
 </section>
 
-<!-- ════ Stats ════ -->
-<section class="stats">
-    <div class="container">
-        <div class="stats-grid">
-            <div class="reveal">
-                <div class="stat-num" data-count="3">3</div>
-                <div class="stat-label">detik — Tap to Review</div>
+<!-- ════ Strip ════ -->
+<div class="strip">
+    <div class="ctnr">
+        <div class="strip-row">
+            <div class="strip-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                3 detik — tap to review
             </div>
-            <div class="reveal reveal-d1">
-                <div class="stat-num">2</div>
-                <div class="stat-label">Akses — NFC + QR Code</div>
+            <div class="strip-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Akrilik premium, tahan lama
             </div>
-            <div class="reveal reveal-d2">
-                <div class="stat-num">Rp 0</div>
-                <div class="stat-label">Biaya Bulanan</div>
+            <div class="strip-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z"/><path d="M2 12C2 6.5 6.5 2 12 2m10 10c0 5.5-4.5 10-10 10"/></svg>
+                NFC + QR Code
             </div>
-            <div class="reveal reveal-d3">
-                <div class="stat-num">&infin;</div>
-                <div class="stat-label">Masa Pakai Card</div>
+            <div class="strip-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                Tanpa biaya bulanan
             </div>
         </div>
     </div>
-</section>
+</div>
 
 <!-- ════ Cara Kerja ════ -->
 <section class="sec" id="cara-kerja">
-    <div class="container">
-        <div class="sec-header center reveal">
-            <div class="sec-label">Cara Kerja</div>
-            <h2 class="sec-title">Dari kartu ke bintang 5<br>dalam 4 langkah.</h2>
+    <div class="ctnr">
+        <div class="sec-head ctr rv">
+            <div class="sec-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+                Cara Kerja
+            </div>
+            <h2 class="sec-title">Tiga langkah. Selesai.</h2>
             <p class="sec-sub">Tidak perlu install apapun. Tidak perlu pengetahuan teknis.</p>
         </div>
-        <div class="steps-grid">
-            <div class="step reveal">
+        <div class="steps">
+            <div class="step rv">
                 <div class="step-num">1</div>
-                <h3>Pesan Card</h3>
-                <p>Pilih paket Standard atau Premium. Card akrilik premium dikirim langsung ke alamatmu.</p>
+                <h3>Pesan & Terima</h3>
+                <p>Hubungi kami via WhatsApp. Card akrilik premium dikirim langsung ke alamat Anda.</p>
             </div>
-            <div class="step reveal reveal-d1">
+            <div class="step rv rv-1">
                 <div class="step-num">2</div>
-                <h3>Tempel di Kasir</h3>
-                <p>Taruh card di meja kasir, konter, atau dinding. Desain premium langsung terlihat profesional.</p>
+                <h3>Aktivasi Sendiri</h3>
+                <p>Scan card baru Anda, cari nama usaha di Google, pilih. Card langsung aktif dalam 30 detik.</p>
             </div>
-            <div class="step reveal reveal-d2">
+            <div class="step rv rv-2">
                 <div class="step-num">3</div>
-                <h3>Pelanggan Tap / Scan</h3>
-                <p>Pelanggan mendekatkan HP ke NFC atau scan QR Code. Tidak perlu install aplikasi apapun.</p>
-            </div>
-            <div class="step reveal reveal-d3">
-                <div class="step-num">4</div>
-                <h3>Review Masuk</h3>
-                <p>Google Review form langsung terbuka di HP pelanggan. Rating dan ulasan mengalir otomatis.</p>
+                <h3>Taruh & Biarkan Bekerja</h3>
+                <p>Taruh di meja kasir atau konter. Pelanggan tap NFC atau scan QR — halaman Google Review langsung terbuka di HP mereka.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ════ Features ════ -->
-<section class="sec" id="fitur" style="padding-top:20px">
-    <div class="container">
-        <div class="sec-header center reveal">
-            <div class="sec-label">Fitur</div>
-            <h2 class="sec-title">Bukan kartu NFC biasa.</h2>
-            <p class="sec-sub">Kompetitor jual kartu yang URL-nya mati kalau link berubah. Provecho beda.</p>
+<!-- ════ Kenapa Beda ════ -->
+<section class="sec diff" id="kenapa">
+    <div class="ctnr">
+        <div class="sec-head ctr rv">
+            <div class="sec-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+                Perbandingan
+            </div>
+            <h2 class="sec-title">Bukan card NFC biasa.</h2>
+            <p class="sec-sub">Cuma Rp 6.000 lebih mahal dari card NFC murahan — tapi bedanya jauh.</p>
+        </div>
+        <div class="diff-grid">
+            <div class="diff-card old rv">
+                <h3>Card NFC Biasa</h3>
+                <div class="diff-sub">Yang banyak dijual di marketplace</div>
+                <ul class="diff-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Link hardcoded — tidak bisa diubah</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Link mati? Beli card baru</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Material stiker atau PVC tipis</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Setup manual, harus paham teknis</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Tidak ada support setelah beli</li>
+                </ul>
+                <div class="diff-price">Mulai dari Rp 44.000</div>
+            </div>
+            <div class="diff-card prov rv rv-1">
+                <h3>Provecho</h3>
+                <div class="diff-sub">Smart card yang bisa dikelola</div>
+                <ul class="diff-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Smart link — bisa diupdate kapan saja</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Link bermasalah? Hubungi kami, kami perbaiki</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Akrilik premium, tahan air & gores</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Aktivasi mandiri, tanpa keahlian teknis</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Support via WhatsApp</li>
+                </ul>
+                <div class="diff-price"><b>Rp 50.000</b> /card</div>
+            </div>
         </div>
 
-        <!-- Feature 1 -->
-        <div class="feature reveal">
-            <div>
-                <div class="feature-tag">Fitur 1 / 4</div>
-                <h3>Dual Akses — NFC + QR Code</h3>
-                <p class="feature-desc">Dua cara review dalam satu card. NFC untuk smartphone modern, QR Code sebagai fallback universal. Tidak ada pelanggan yang tertinggal.</p>
-                <ul class="feature-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>NFC tap — tanpa buka kamera</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>QR Code — semua HP bisa</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Chip NTAG213 — tahan bertahun-tahun</li>
-                </ul>
-            </div>
-            <div>
-                <div class="mock-phone">
-                    <div class="mock-phone-notch"></div>
-                    <div class="mock-phone-screen" style="text-align:center;padding-top:24px">
-                        <svg width="32" height="32" viewBox="0 0 24 24" style="margin:0 auto"><circle cx="12" cy="12" r="10" fill="#4285F4"/><path d="M12 7v10M7 12h10" stroke="#fff" stroke-width="2"/></svg>
-                        <div style="font-size:11px;color:#5f6368;margin-top:8px">Tulis ulasan untuk</div>
-                        <div style="font-size:14px;font-weight:700;margin-top:4px;color:#202124">Warung Makan Sederhana</div>
-                        <div style="display:flex;gap:6px;justify-content:center;margin-top:16px">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
-                        </div>
-                        <div style="margin:16px 12px 0;height:48px;border:1px solid #dadce0;border-radius:8px"></div>
-                        <div style="margin-top:12px;display:inline-block;background:#1a73e8;color:#fff;font-size:12px;font-weight:600;padding:8px 28px;border-radius:20px">Posting</div>
-                    </div>
+        <!-- Feature cards -->
+        <div class="feat-grid">
+            <div class="feat rv">
+                <div class="feat-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
                 </div>
+                <h3>Smart Link</h3>
+                <p>Card NFC biasa pakai link hardcoded — kalau profil Google Anda berubah, card jadi sampah. Provecho pakai server redirect: link bermasalah? Hubungi kami via WhatsApp, kami update. Card tetap berfungsi.</p>
             </div>
-        </div>
-
-        <!-- Feature 2 -->
-        <div class="feature reverse reveal">
-            <div>
-                <div class="feature-tag">Fitur 2 / 4</div>
-                <h3>Aktivasi Mandiri oleh Pemilik</h3>
-                <p class="feature-desc">Pemilik usaha scan card, cari nama usahanya di Google, pilih, selesai. Tidak perlu bantuan teknis, tidak perlu hubungi admin.</p>
-                <ul class="feature-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Cari bisnis via Google Places</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Atau paste link Google Maps</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Card langsung aktif, siap dipakai</li>
-                </ul>
-            </div>
-            <div>
-                <div class="mockup">
-                    <div class="mockup-bar"><span class="mockup-dot"></span><span class="mockup-dot"></span><span class="mockup-dot"></span></div>
-                    <div class="mockup-body">
-                        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:6px">provecho.id/c/PV2529C6</div>
-                        <div style="background:#fff;border-radius:8px;padding:16px">
-                            <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:12px">Aktifkan Kartu Anda</div>
-                            <div style="background:#f3f4f6;border-radius:6px;padding:10px 12px;font-size:11px;color:#9ca3af;margin-bottom:10px;display:flex;align-items:center;gap:6px">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                                Cari nama usaha...
-                            </div>
-                            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:10px 12px;margin-bottom:8px">
-                                <div style="font-size:12px;font-weight:600;color:#166534">Warung Makan Sederhana</div>
-                                <div style="font-size:10px;color:#6b7280;margin-top:2px">Jl. Sudirman No. 45, Bandung</div>
-                            </div>
-                            <div style="background:#1B8C3D;color:#fff;text-align:center;padding:8px;border-radius:6px;font-size:11px;font-weight:600">Aktifkan Card</div>
-                        </div>
-                    </div>
+            <div class="feat rv rv-1">
+                <div class="feat-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z"/><path d="M2 12C2 6.5 6.5 2 12 2m10 10c0 5.5-4.5 10-10 10"/></svg>
                 </div>
+                <h3>Dual Akses: NFC + QR</h3>
+                <p>NFC untuk smartphone modern — tap tanpa buka kamera. QR Code untuk HP tanpa NFC. Dua jalur, semua pelanggan bisa review. Tanpa install aplikasi apapun.</p>
             </div>
-        </div>
-
-        <!-- Feature 3 -->
-        <div class="feature reveal">
-            <div>
-                <div class="feature-tag">Fitur 3 / 4</div>
-                <h3>Link Bisa Diubah Kapan Saja</h3>
-                <p class="feature-desc">Pindah lokasi? Ganti profil Google? Ubah link review tanpa ganti card fisik. Ini yang membedakan Provecho dari card NFC murahan di Shopee.</p>
-                <ul class="feature-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Update link review kapan saja</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Card fisik tidak perlu diganti</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Bisa nonaktifkan & aktifkan ulang</li>
-                </ul>
-            </div>
-            <div>
-                <div class="mockup">
-                    <div class="mockup-bar"><span class="mockup-dot"></span><span class="mockup-dot"></span><span class="mockup-dot"></span></div>
-                    <div class="mockup-body">
-                        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:6px">Dashboard / Cards / PV2529C6</div>
-                        <div style="background:#fff;border-radius:8px;padding:16px">
-                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-                                <div style="font-size:13px;font-weight:700;color:#111">Edit Google Review Link</div>
-                                <div style="background:#f0fdf4;color:#166534;font-size:10px;font-weight:600;padding:3px 10px;border-radius:999px">Aktif</div>
-                            </div>
-                            <div style="font-size:10px;color:#6b7280;margin-bottom:4px">URL Tujuan</div>
-                            <div style="background:#f3f4f6;border-radius:6px;padding:8px 10px;font-size:10px;color:#374151;word-break:break-all;margin-bottom:10px">https://search.google.com/local/writereview?placeid=ChIJ...</div>
-                            <div style="font-size:10px;color:#6b7280;margin-bottom:4px">URL Baru</div>
-                            <div style="border:1.5px solid #1B8C3D;border-radius:6px;padding:8px 10px;font-size:10px;color:#111;margin-bottom:10px">https://search.google.com/local/writereview?placeid=ChIJnew...</div>
-                            <div style="display:flex;gap:6px">
-                                <div style="flex:1;background:#1B8C3D;color:#fff;text-align:center;padding:7px;border-radius:6px;font-size:10px;font-weight:600">Simpan Perubahan</div>
-                                <div style="padding:7px 14px;border:1px solid #e5e7eb;border-radius:6px;font-size:10px;color:#6b7280">Batal</div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="feat rv">
+                <div class="feat-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
                 </div>
+                <h3>Aktivasi Mandiri</h3>
+                <p>Card sampai, scan, cari nama usaha Anda di Google, pilih. Selesai. Bisa juga paste link Google Maps langsung. Tidak perlu hubungi siapa-siapa untuk setup.</p>
             </div>
-        </div>
-
-        <!-- Feature 4 -->
-        <div class="feature reverse reveal">
-            <div>
-                <div class="feature-tag">Fitur 4 / 4</div>
-                <h3>Dashboard Admin Lengkap</h3>
-                <p class="feature-desc">Pantau berapa kali card di-tap, lihat card mana yang paling aktif, kelola semua card dari satu tempat. Ekspor data ke CSV kapan saja.</p>
-                <ul class="feature-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Statistik scan real-time</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Activity log lengkap</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Ekspor CSV untuk reporting</li>
-                </ul>
-            </div>
-            <div>
-                <div class="mockup">
-                    <div class="mockup-bar"><span class="mockup-dot"></span><span class="mockup-dot"></span><span class="mockup-dot"></span></div>
-                    <div class="mockup-body">
-                        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px">Dashboard</div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-                            <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:12px">
-                                <div style="font-size:10px;color:rgba(255,255,255,.4)">Total Card</div>
-                                <div style="font-size:22px;font-weight:800;color:#fff">247</div>
-                            </div>
-                            <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:12px">
-                                <div style="font-size:10px;color:rgba(255,255,255,.4)">Aktif</div>
-                                <div style="font-size:22px;font-weight:800;color:#4ade80">183</div>
-                            </div>
-                        </div>
-                        <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:12px">
-                            <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:8px">Scan 7 hari terakhir</div>
-                            <div style="display:flex;align-items:flex-end;gap:4px;height:48px">
-                                <div style="flex:1;background:#1B8C3D;border-radius:3px 3px 0 0;height:60%"></div>
-                                <div style="flex:1;background:#1B8C3D;border-radius:3px 3px 0 0;height:45%"></div>
-                                <div style="flex:1;background:#1B8C3D;border-radius:3px 3px 0 0;height:80%"></div>
-                                <div style="flex:1;background:#1B8C3D;border-radius:3px 3px 0 0;height:55%"></div>
-                                <div style="flex:1;background:#1B8C3D;border-radius:3px 3px 0 0;height:90%"></div>
-                                <div style="flex:1;background:#1B8C3D;border-radius:3px 3px 0 0;height:70%"></div>
-                                <div style="flex:1;background:#22c55e;border-radius:3px 3px 0 0;height:100%"></div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="feat rv rv-1">
+                <div class="feat-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
-            </div>
-        </div>
-
-    </div>
-</section>
-
-<!-- ════ Comparison ════ -->
-<section class="sec compare" id="perbandingan">
-    <div class="container">
-        <div class="sec-header center reveal">
-            <div class="sec-label">Perbandingan</div>
-            <h2 class="sec-title">Cara manual vs cara cerdas.</h2>
-            <p class="sec-sub">Tanpa Provecho, satu review bisa butuh 2-5 menit. Dengan Provecho, 3 detik.</p>
-        </div>
-        <div class="compare-grid">
-            <div class="compare-card manual reveal">
-                <h3>Tanpa Provecho</h3>
-                <div class="compare-sub">Cara manual yang bikin pelanggan malas</div>
-                <ul class="compare-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Minta pelanggan buka Google Maps</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Cari nama usaha secara manual</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Klik menu review, tunggu loading</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Butuh 2-5 menit per review</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Jarang ada yang mau</li>
-                </ul>
-                <div class="compare-result">2-5 menit</div>
-            </div>
-            <div class="compare-card smart reveal reveal-d1">
-                <h3>Dengan Provecho</h3>
-                <div class="compare-sub">Tap sekali, langsung review</div>
-                <ul class="compare-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Pelanggan tap NFC atau scan QR</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Google Review form langsung terbuka</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Tanpa install aplikasi apapun</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Semua pelanggan bisa, semua HP bisa</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Conversion rate jauh lebih tinggi</li>
-                </ul>
-                <div class="compare-result">3 detik</div>
+                <h3>Akrilik Premium</h3>
+                <p>Bukan stiker tipis yang ngelupas. Card Provecho dari akrilik tebal, tahan air, tahan gores. Chip NFC NTAG213 tanpa baterai — bisa berfungsi bertahun-tahun tanpa perawatan.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ════ Pricing ════ -->
-<section class="sec" id="harga" style="background:var(--n50)">
-    <div class="container">
-        <div class="sec-header center reveal">
-            <div class="sec-label">Harga</div>
-            <h2 class="sec-title">Investasi kecil, dampak besar.</h2>
-            <p class="sec-sub">Beli sekali, pakai selamanya. Tanpa biaya bulanan, tanpa biaya tersembunyi.</p>
+<!-- ════ Harga ════ -->
+<section class="sec" id="harga">
+    <div class="ctnr">
+        <div class="sec-head ctr rv">
+            <div class="sec-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                Harga
+            </div>
+            <h2 class="sec-title">Satu harga. Tanpa kejutan.</h2>
+            <p class="sec-sub">Bayar sekali, pakai selamanya. Tidak ada biaya berlangganan.</p>
         </div>
-        <div class="pricing-grid">
-            <!-- Standard -->
-            <div class="price-card reveal">
-                <h3>Standard</h3>
-                <div class="price-type">Untuk satu lokasi usaha</div>
-                <div class="price-amount">Rp 75K <small>/card</small></div>
-                <div class="price-note">Pembelian satu kali. Tanpa langganan.</div>
-                <a href="https://wa.me/628XXXXXXXXXX?text=Halo%2C%20saya%20mau%20pesan%20Provecho%20paket%20Standard" class="price-cta outline" target="_blank">Pilih Standard</a>
-                <div class="price-divider"></div>
-                <ul class="price-features">
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Card akrilik NFC + QR Code</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Aktivasi mandiri</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Link bisa diubah kapan saja</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Akses dashboard admin</li>
-                    <li class="disabled"><svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Bantuan setup Google Business</li>
-                    <li class="disabled"><svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>Prioritas support</li>
+        <div class="price-wrap rv">
+            <div class="price-card">
+                <h3>Provecho Google Review Card</h3>
+                <div class="price-amount">Rp 50.000 <small>/card</small></div>
+                <div class="price-note">Pembelian satu kali. Tanpa biaya bulanan.</div>
+                <ul class="price-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Card akrilik NFC + QR Code</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Chip NTAG213, tahan bertahun-tahun</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Aktivasi mandiri — tanpa bantuan teknis</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Smart link — bisa diupdate jika bermasalah</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Support via WhatsApp</li>
                 </ul>
-            </div>
-            <!-- Premium -->
-            <div class="price-card popular reveal reveal-d1">
-                <div class="price-badge">Paling Populer</div>
-                <h3>Premium</h3>
-                <div class="price-type">Solusi lengkap untuk yang serius</div>
-                <div class="price-amount">Rp 100K <small>/card</small></div>
-                <div class="price-note">Termasuk bantuan setup profil Google.</div>
-                <a href="https://wa.me/628XXXXXXXXXX?text=Halo%2C%20saya%20mau%20pesan%20Provecho%20paket%20Premium" class="price-cta primary" target="_blank">Pilih Premium</a>
-                <div class="price-divider"></div>
-                <ul class="price-features">
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Card akrilik NFC + QR Code</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Aktivasi mandiri</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Link bisa diubah kapan saja</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Akses dashboard admin</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Bantuan setup Google Business Profile</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Prioritas support via WhatsApp</li>
-                </ul>
-            </div>
-            <!-- Grosir -->
-            <div class="price-card reveal reveal-d2">
-                <h3>Grosir</h3>
-                <div class="price-type">Untuk reseller & multi-cabang</div>
-                <div class="price-amount">Rp 60K <small>/card</small></div>
-                <div class="price-note">Minimum order 10 card.</div>
-                <a href="https://wa.me/628XXXXXXXXXX?text=Halo%2C%20saya%20tertarik%20paket%20Grosir%20Provecho%20(10%2B%20card)" class="price-cta outline" target="_blank">Hubungi Kami</a>
-                <div class="price-divider"></div>
-                <ul class="price-features">
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Semua fitur Premium</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Harga spesial per unit</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Custom branding (opsional)</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Free ongkir</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Bantuan setup semua card</li>
-                    <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Dedicated support</li>
-                </ul>
+                <a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20mau%20pesan%20Provecho%20Google%20Review%20Card" class="price-cta" target="_blank">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Pesan via WhatsApp
+                </a>
+                <div class="price-alt">
+                    <span>Juga tersedia di Shopee</span>
+                    <a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20mau%20tanya%20program%20reseller%20Provecho" target="_blank">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4-4"/><path d="M16 3.13a4 4 0 010 7.75"/><path d="M22 21v-2a4 4 0 00-3-3.87"/></svg>
+                        Program reseller tersedia — hubungi kami
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ════ FAQ ════ -->
-<section class="sec" id="faq">
-    <div class="container">
-        <div class="sec-header center reveal">
+<section class="sec" id="faq" style="background:var(--n50)">
+    <div class="ctnr">
+        <div class="sec-head ctr rv">
             <div class="sec-label">FAQ</div>
-            <h2 class="sec-title">Ada pertanyaan?</h2>
-            <p class="sec-sub">Jawaban untuk pertanyaan yang paling sering ditanyakan.</p>
+            <h2 class="sec-title">Pertanyaan yang sering muncul.</h2>
         </div>
         <div class="faq-list" x-data="{active:null}">
-            <div class="faq-item reveal" :class="{'open':active===1}">
+            <div class="faq-item rv" :class="{'open':active===1}">
                 <button class="faq-q" @click="active=active===1?null:1"><span>Apa itu Provecho?</span><span class="faq-icon">+</span></button>
-                <div class="faq-a"><p>Provecho adalah kartu fisik berteknologi NFC + QR Code yang memudahkan pelanggan memberikan Google Review untuk usaha Anda. Cukup taruh di meja kasir — pelanggan tap atau scan, langsung ke halaman review Google.</p></div>
+                <div class="faq-a"><p>Provecho adalah card akrilik berteknologi NFC + QR Code yang memudahkan pelanggan memberikan Google Review untuk usaha Anda. Taruh di meja kasir — pelanggan tap HP atau scan QR, halaman Google Review langsung terbuka.</p></div>
             </div>
-            <div class="faq-item reveal" :class="{'open':active===2}">
+            <div class="faq-item rv" :class="{'open':active===2}">
                 <button class="faq-q" @click="active=active===2?null:2"><span>Bagaimana cara kerjanya?</span><span class="faq-icon">+</span></button>
-                <div class="faq-a"><p>Card Provecho berisi chip NFC dan QR Code yang terhubung ke link Google Review usaha Anda. Saat pelanggan mendekatkan HP atau scan QR, browser langsung terbuka di halaman Google Review — tinggal kasih bintang dan tulis ulasan.</p></div>
+                <div class="faq-a"><p>Card berisi chip NFC dan QR Code yang terhubung ke server Provecho. Server meneruskan ke halaman Google Review usaha Anda. Jadi ketika pelanggan tap atau scan, browser langsung terbuka di halaman review — tinggal kasih bintang dan tulis ulasan.</p></div>
             </div>
-            <div class="faq-item reveal" :class="{'open':active===3}">
-                <button class="faq-q" @click="active=active===3?null:3"><span>Apakah semua HP bisa tap NFC?</span><span class="faq-icon">+</span></button>
-                <div class="faq-a"><p>Hampir semua smartphone keluaran 2018 ke atas mendukung NFC. Untuk HP yang belum ada NFC, pelanggan bisa scan QR Code — jadi semua pelanggan tetap bisa memberikan review.</p></div>
+            <div class="faq-item rv" :class="{'open':active===3}">
+                <button class="faq-q" @click="active=active===3?null:3"><span>Apakah semua HP bisa pakai NFC?</span><span class="faq-icon">+</span></button>
+                <div class="faq-a"><p>Hampir semua smartphone keluaran 2018 ke atas sudah mendukung NFC. Untuk HP yang belum punya NFC, pelanggan bisa scan QR Code — jadi semua pelanggan tetap bisa memberikan review.</p></div>
             </div>
-            <div class="faq-item reveal" :class="{'open':active===4}">
-                <button class="faq-q" @click="active=active===4?null:4"><span>Bagaimana kalau saya pindah lokasi usaha?</span><span class="faq-icon">+</span></button>
-                <div class="faq-a"><p>Link review bisa diubah kapan saja melalui dashboard Provecho. Tidak perlu ganti card fisik — cukup update link di sistem. Ini yang membedakan Provecho dari card NFC biasa yang URL-nya hardcoded.</p></div>
+            <div class="faq-item rv" :class="{'open':active===4}">
+                <button class="faq-q" @click="active=active===4?null:4"><span>Bagaimana kalau link Google Review saya berubah?</span><span class="faq-icon">+</span></button>
+                <div class="faq-a"><p>Hubungi kami via WhatsApp, kami akan update link-nya dari sisi server. Card fisik tidak perlu diganti. Ini bedanya dengan card NFC biasa yang URL-nya hardcoded dan tidak bisa diubah.</p></div>
             </div>
-            <div class="faq-item reveal" :class="{'open':active===5}">
+            <div class="faq-item rv" :class="{'open':active===5}">
                 <button class="faq-q" @click="active=active===5?null:5"><span>Apakah ada biaya bulanan?</span><span class="faq-icon">+</span></button>
-                <div class="faq-a"><p>Tidak. Provecho adalah pembelian satu kali. Tidak ada biaya berlangganan, tidak ada biaya tersembunyi. Bayar sekali, pakai selamanya.</p></div>
+                <div class="faq-a"><p>Tidak. Provecho adalah pembelian satu kali seharga Rp 50.000. Tidak ada biaya berlangganan, tidak ada biaya maintenance, tidak ada biaya tersembunyi. Bayar sekali, pakai selamanya.</p></div>
             </div>
-            <div class="faq-item reveal" :class="{'open':active===6}">
+            <div class="faq-item rv" :class="{'open':active===6}">
                 <button class="faq-q" @click="active=active===6?null:6"><span>Berapa lama card bertahan?</span><span class="faq-icon">+</span></button>
-                <div class="faq-a"><p>Card akrilik Provecho dirancang untuk penggunaan jangka panjang. Material akrilik tahan air dan tahan gores. Chip NFC tidak memerlukan baterai dan bisa berfungsi bertahun-tahun tanpa perawatan.</p></div>
+                <div class="faq-a"><p>Material akrilik tahan air dan tahan gores, dirancang untuk pemakaian jangka panjang. Chip NFC NTAG213 tidak memerlukan baterai dan bisa berfungsi bertahun-tahun tanpa perawatan apapun.</p></div>
             </div>
-            <div class="faq-item reveal" :class="{'open':active===7}">
+            <div class="faq-item rv" :class="{'open':active===7}">
                 <button class="faq-q" @click="active=active===7?null:7"><span>Bagaimana cara pesannya?</span><span class="faq-icon">+</span></button>
-                <div class="faq-a"><p>Klik tombol "Pesan via WhatsApp" di halaman ini. Anda akan langsung terhubung dengan tim kami untuk proses pemesanan, pembayaran, dan pengiriman. Pembayaran via QRIS atau transfer bank.</p></div>
+                <div class="faq-a"><p>Klik tombol "Pesan via WhatsApp" di halaman ini. Anda langsung terhubung dengan kami untuk proses pemesanan dan pengiriman. Pembayaran bisa via transfer bank atau QRIS.</p></div>
             </div>
         </div>
     </div>
@@ -740,71 +540,55 @@
 
 <!-- ════ Testimonials ════ -->
 <section class="testi">
-    <div class="container">
-        <div class="sec-header center reveal">
+    <div class="ctnr">
+        <div class="sec-head ctr rv">
             <div class="sec-label">Testimoni</div>
             <h2 class="sec-title">Kata mereka yang sudah pakai.</h2>
-            <p class="sec-sub">Pemilik usaha dari berbagai kota sudah merasakan dampaknya.</p>
+            <p class="sec-sub">UMKM dari berbagai bidang sudah merasakan dampak Provecho.</p>
         </div>
     </div>
     <div class="testi-rows">
-        <div class="testi-track scroll-left">
-            @foreach([
-                ['text'=>'Sejak pasang Provecho di kasir, review Google kami naik drastis. Dari 12 review jadi 60+ dalam 2 bulan. Pelanggan tinggal tap, selesai!','name'=>'Sari Dewi','role'=>'Pemilik Warung Makan, Bandung','i'=>'S'],
-                ['text'=>'Dulu sering minta pelanggan review tapi jarang ada yang mau. Pakai Provecho, tanpa diminta pun mereka langsung review. Game changer buat bisnis kecil.','name'=>'Agus Pratama','role'=>'Owner Barbershop, Jakarta','i'=>'A'],
-                ['text'=>'Worth it banget Rp 75 ribu. Investasi kecil, dampaknya besar ke bisnis. Sekarang rating kami 4.8 di Google Maps.','name'=>'Rina Wahyuni','role'=>'Pemilik Cafe, Surabaya','i'=>'R'],
-                ['text'=>'Setup-nya gampang banget. Scan card, cari nama usaha, langsung aktif. Ga perlu panggil teknisi atau apa.','name'=>'Budi Santoso','role'=>'Pemilik Bengkel, Yogyakarta','i'=>'B'],
-                ['text'=>'Card-nya bagus, akrilik tebal, ga murahan kayak yang di Shopee. Pelanggan sering nanya ini apa, jadi conversation starter juga.','name'=>'Maya Putri','role'=>'Owner Salon, Semarang','i'=>'M'],
-                ['text'=>'Tiap bulan sekarang dapat 20-30 review baru tanpa effort. Ranking Google Maps naik, pelanggan baru datang sendiri.','name'=>'Hendra Wijaya','role'=>'Pemilik Restoran, Malang','i'=>'H'],
-            ] as $t)
+        <div class="testi-track scroll-l">
+            @php
+            $t1 = [
+                ['i'=>'R','n'=>'Rina Wulandari','r'=>'Kafe Kopi Senja, Bandung','t'=>'Sebelum pakai Provecho, review Google kami cuma 23. Sekarang sudah 87 dalam 3 bulan. Card-nya bagus, akrilik tebal, cocok ditaruh di meja kasir.'],
+                ['i'=>'A','n'=>'Andi Pratama','r'=>'Barbershop Gentlemen, Surabaya','t'=>'Pelanggan tinggal tap HP aja, langsung muncul halaman review. Ga perlu minta-minta lagi. Simpel banget.'],
+                ['i'=>'D','n'=>'Dewi Sartika','r'=>'Klinik Gigi Sehat Ceria, Jakarta','t'=>'Kami taruh di meja resepsionis. Pasien selesai perawatan, tap card, kasih review. Rating kami naik dari 4.1 ke 4.6 dalam 2 bulan.'],
+                ['i'=>'H','n'=>'Hendra Wijaya','r'=>'Bengkel Motor Jaya, Semarang','t'=>'Ga nyangka bakal ngaruh segini. Pelanggan yang puas tinggal tap, review masuk. Sekarang bengkel kami selalu muncul pertama di pencarian Google.'],
+                ['i'=>'S','n'=>'Sri Mulyani','r'=>'Toko Kue Mama Sri, Yogyakarta','t'=>'Card-nya tahan lama, sudah 5 bulan masih bagus padahal kena tangan berminyak terus. QR Code juga berfungsi buat pelanggan yang HP-nya ga ada NFC.'],
+                ['i'=>'F','n'=>'Fajar Nugroho','r'=>'Warung Makan Sederhana, Malang','t'=>'Aktivasinya gampang banget, tinggal scan terus cari nama warung di Google. Ga perlu hubungi siapa-siapa. Langsung aktif.'],
+            ];
+            @endphp
+            @foreach(array_merge($t1,$t1) as $t)
             <div class="testi-card">
-                <div class="testi-stars">@for($s=0;$s<5;$s++)<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>@endfor</div>
-                <div class="testi-text">"{{ $t['text'] }}"</div>
-                <div class="testi-author"><div class="testi-avatar">{{ $t['i'] }}</div><div><div class="testi-name">{{ $t['name'] }}</div><div class="testi-role">{{ $t['role'] }}</div></div></div>
-            </div>
-            @endforeach
-            @foreach([
-                ['text'=>'Sejak pasang Provecho di kasir, review Google kami naik drastis. Dari 12 review jadi 60+ dalam 2 bulan. Pelanggan tinggal tap, selesai!','name'=>'Sari Dewi','role'=>'Pemilik Warung Makan, Bandung','i'=>'S'],
-                ['text'=>'Dulu sering minta pelanggan review tapi jarang ada yang mau. Pakai Provecho, tanpa diminta pun mereka langsung review. Game changer buat bisnis kecil.','name'=>'Agus Pratama','role'=>'Owner Barbershop, Jakarta','i'=>'A'],
-                ['text'=>'Worth it banget Rp 75 ribu. Investasi kecil, dampaknya besar ke bisnis. Sekarang rating kami 4.8 di Google Maps.','name'=>'Rina Wahyuni','role'=>'Pemilik Cafe, Surabaya','i'=>'R'],
-                ['text'=>'Setup-nya gampang banget. Scan card, cari nama usaha, langsung aktif. Ga perlu panggil teknisi atau apa.','name'=>'Budi Santoso','role'=>'Pemilik Bengkel, Yogyakarta','i'=>'B'],
-                ['text'=>'Card-nya bagus, akrilik tebal, ga murahan kayak yang di Shopee. Pelanggan sering nanya ini apa, jadi conversation starter juga.','name'=>'Maya Putri','role'=>'Owner Salon, Semarang','i'=>'M'],
-                ['text'=>'Tiap bulan sekarang dapat 20-30 review baru tanpa effort. Ranking Google Maps naik, pelanggan baru datang sendiri.','name'=>'Hendra Wijaya','role'=>'Pemilik Restoran, Malang','i'=>'H'],
-            ] as $t)
-            <div class="testi-card">
-                <div class="testi-stars">@for($s=0;$s<5;$s++)<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>@endfor</div>
-                <div class="testi-text">"{{ $t['text'] }}"</div>
-                <div class="testi-author"><div class="testi-avatar">{{ $t['i'] }}</div><div><div class="testi-name">{{ $t['name'] }}</div><div class="testi-role">{{ $t['role'] }}</div></div></div>
+                <div class="testi-stars">@for($i=0;$i<5;$i++)<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>@endfor</div>
+                <div class="testi-text">{{ $t['t'] }}</div>
+                <div class="testi-author">
+                    <div class="testi-avatar">{{ $t['i'] }}</div>
+                    <div><div class="testi-name">{{ $t['n'] }}</div><div class="testi-role">{{ $t['r'] }}</div></div>
+                </div>
             </div>
             @endforeach
         </div>
-        <div class="testi-track scroll-right">
-            @foreach([
-                ['text'=>'Punya 3 cabang, semua pakai Provecho. Dashboard-nya enak, bisa pantau semua card dari satu tempat.','name'=>'Dedi Kurniawan','role'=>'Owner Mie Ayam, Solo','i'=>'D'],
-                ['text'=>'Awalnya ragu, tapi setelah 2 minggu review nambah 25+. Sekarang malah pesan lagi buat kasir kedua.','name'=>'Linda Susanti','role'=>'Pemilik Toko Roti, Bekasi','i'=>'L'],
-                ['text'=>'Yang paling bagus itu link-nya bisa diubah. Dulu pakai card NFC Shopee, begitu profil Google berubah jadi mati.','name'=>'Rizki Aditya','role'=>'Owner Coffee Shop, Depok','i'=>'R'],
-                ['text'=>'Pelanggan langsung review tanpa perlu diminta. Cukup taruh di meja, mereka penasaran sendiri terus tap.','name'=>'Fitri Handayani','role'=>'Pemilik Klinik Kecantikan, Tangerang','i'=>'F'],
-                ['text'=>'ROI-nya gila. Rp 75 ribu tapi review naik drastis, customer baru datang terus. Best investment buat UMKM.','name'=>'Wahyu Setiawan','role'=>'Owner Laundry, Bogor','i'=>'W'],
-                ['text'=>'Material akrilik-nya premium banget. Beda jauh sama stiker NFC yang tipis. Ini keliatan profesional di konter.','name'=>'Dewi Anggraini','role'=>'Pemilik Apotek, Cirebon','i'=>'D'],
-            ] as $t)
+        <div class="testi-track scroll-r">
+            @php
+            $t2 = [
+                ['i'=>'B','n'=>'Budi Santoso','r'=>'RM Padang Minang, Bekasi','t'=>'Harga 50 ribu, efeknya jutaan. Review naik, pelanggan baru datang karena lihat rating tinggi di Google. Worth it banget.'],
+                ['i'=>'L','n'=>'Linda Permata','r'=>'Salon Cantik Alami, Depok','t'=>'Klien kami suka karena ga ribet. Tap HP, kasih bintang, selesai. Kami juga ga perlu canggung minta review lagi.'],
+                ['i'=>'T','n'=>'Tommy Gunawan','r'=>'Toko Elektronik Jaya, Tangerang','t'=>'Card-nya premium, desainnya bagus. Pelanggan sering tanya ini apa, jadi sekalian promosi usaha. Dual fungsi.'],
+                ['i'=>'N','n'=>'Nisa Rahmawati','r'=>'Pet Shop Paw Friends, Bogor','t'=>'Yang paling aku suka: link-nya bisa diupdate. Waktu aku pindah alamat, tinggal chat WhatsApp mereka, link langsung diganti. Ga perlu beli card baru.'],
+                ['i'=>'M','n'=>'Made Agus','r'=>'Restoran Bali Kitchen, Denpasar','t'=>'Tamu dari luar negeri juga bisa langsung tap. NFC itu universal, ga perlu bahasa sama. Tap, bintang 5, done.'],
+                ['i'=>'Y','n'=>'Yuni Astuti','r'=>'Laundry Express Clean, Medan','t'=>'Baru 2 minggu pasang, review sudah nambah 12. Sebelumnya sebulan paling dapat 1-2. Berasa banget bedanya.'],
+            ];
+            @endphp
+            @foreach(array_merge($t2,$t2) as $t)
             <div class="testi-card">
-                <div class="testi-stars">@for($s=0;$s<5;$s++)<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>@endfor</div>
-                <div class="testi-text">"{{ $t['text'] }}"</div>
-                <div class="testi-author"><div class="testi-avatar">{{ $t['i'] }}</div><div><div class="testi-name">{{ $t['name'] }}</div><div class="testi-role">{{ $t['role'] }}</div></div></div>
-            </div>
-            @endforeach
-            @foreach([
-                ['text'=>'Punya 3 cabang, semua pakai Provecho. Dashboard-nya enak, bisa pantau semua card dari satu tempat.','name'=>'Dedi Kurniawan','role'=>'Owner Mie Ayam, Solo','i'=>'D'],
-                ['text'=>'Awalnya ragu, tapi setelah 2 minggu review nambah 25+. Sekarang malah pesan lagi buat kasir kedua.','name'=>'Linda Susanti','role'=>'Pemilik Toko Roti, Bekasi','i'=>'L'],
-                ['text'=>'Yang paling bagus itu link-nya bisa diubah. Dulu pakai card NFC Shopee, begitu profil Google berubah jadi mati.','name'=>'Rizki Aditya','role'=>'Owner Coffee Shop, Depok','i'=>'R'],
-                ['text'=>'Pelanggan langsung review tanpa perlu diminta. Cukup taruh di meja, mereka penasaran sendiri terus tap.','name'=>'Fitri Handayani','role'=>'Pemilik Klinik Kecantikan, Tangerang','i'=>'F'],
-                ['text'=>'ROI-nya gila. Rp 75 ribu tapi review naik drastis, customer baru datang terus. Best investment buat UMKM.','name'=>'Wahyu Setiawan','role'=>'Owner Laundry, Bogor','i'=>'W'],
-                ['text'=>'Material akrilik-nya premium banget. Beda jauh sama stiker NFC yang tipis. Ini keliatan profesional di konter.','name'=>'Dewi Anggraini','role'=>'Pemilik Apotek, Cirebon','i'=>'D'],
-            ] as $t)
-            <div class="testi-card">
-                <div class="testi-stars">@for($s=0;$s<5;$s++)<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>@endfor</div>
-                <div class="testi-text">"{{ $t['text'] }}"</div>
-                <div class="testi-author"><div class="testi-avatar">{{ $t['i'] }}</div><div><div class="testi-name">{{ $t['name'] }}</div><div class="testi-role">{{ $t['role'] }}</div></div></div>
+                <div class="testi-stars">@for($i=0;$i<5;$i++)<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>@endfor</div>
+                <div class="testi-text">{{ $t['t'] }}</div>
+                <div class="testi-author">
+                    <div class="testi-avatar">{{ $t['i'] }}</div>
+                    <div><div class="testi-name">{{ $t['n'] }}</div><div class="testi-role">{{ $t['r'] }}</div></div>
+                </div>
             </div>
             @endforeach
         </div>
@@ -813,87 +597,47 @@
 
 <!-- ════ CTA ════ -->
 <section class="cta-sec">
-    <div class="container">
-        <div class="cta-box reveal">
-            <h2>Siap punya lebih banyak<br>Google Review?</h2>
-            <p>Investasi Rp 75.000, dampaknya ke bisnis tak terhingga. Gratis konsultasi.</p>
-            <a href="https://wa.me/628XXXXXXXXXX?text=Halo%2C%20saya%20tertarik%20dengan%20Provecho%20Google%20Review%20Card" class="btn-white" target="_blank">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                Pesan Sekarang via WhatsApp
+    <div class="ctnr">
+        <div class="cta-box rv">
+            <h2>Siap punya lebih banyak Google Review?</h2>
+            <p>Satu card, Rp 50.000, tanpa biaya bulanan. Review mengalir tanpa perlu minta-minta.</p>
+            <a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20mau%20pesan%20Provecho%20Google%20Review%20Card" class="btn-white" target="_blank">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:var(--g600)"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Pesan via WhatsApp
             </a>
-            <div class="cta-badges">
-                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>NFC + QR Code</span>
-                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Tanpa Biaya Bulanan</span>
-                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Link Bisa Diubah</span>
-            </div>
         </div>
     </div>
 </section>
 
 <!-- ════ Footer ════ -->
 <footer class="foot">
-    <div class="container">
-        <div class="foot-grid">
+    <div class="ctnr">
+        <div class="foot-top">
             <div>
-                <div class="foot-brand"><img src="/img/logo.png" alt="Provecho"><span>Provecho</span></div>
-                <p class="foot-desc">Google Review Card NFC + QR Code untuk UMKM Indonesia. Satu tap, review masuk.</p>
+                <div class="foot-brand"><img src="/img/logo.png" alt="Provecho"> Provecho</div>
+                <p class="foot-desc">Google Review Card NFC + QR Code untuk UMKM Indonesia. Bantu usaha Anda mendapatkan lebih banyak review dengan cara yang paling mudah.</p>
             </div>
-            <div>
-                <h4>Produk</h4>
-                <ul>
-                    <li><a href="#fitur">Fitur</a></li>
-                    <li><a href="#cara-kerja">Cara Kerja</a></li>
-                    <li><a href="#harga">Harga</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>Support</h4>
-                <ul>
-                    <li><a href="#faq">FAQ</a></li>
-                    <li><a href="https://wa.me/628XXXXXXXXXX" target="_blank">WhatsApp</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#">Syarat & Ketentuan</a></li>
-                    <li><a href="#">Kebijakan Privasi</a></li>
-                </ul>
+            <div class="foot-links">
+                <a href="#cara-kerja">Cara Kerja</a>
+                <a href="#kenapa">Kenapa Kami</a>
+                <a href="#harga">Harga</a>
+                <a href="#faq">FAQ</a>
+                <a href="https://wa.me/6283842843671" target="_blank">WhatsApp</a>
             </div>
         </div>
+        <div class="foot-copy">&copy; {{ date('Y') }} Provecho. All rights reserved.</div>
     </div>
-    <div class="marquee">
-        <div class="marquee-track">
-            <span>PROVECHO</span><span style="color:rgba(255,255,255,.06)">&#10022;</span>
-            <span>PROVECHO</span><span style="color:rgba(255,255,255,.06)">&#10022;</span>
-            <span>PROVECHO</span><span style="color:rgba(255,255,255,.06)">&#10022;</span>
-            <span>PROVECHO</span><span style="color:rgba(255,255,255,.06)">&#10022;</span>
-            <span>PROVECHO</span><span style="color:rgba(255,255,255,.06)">&#10022;</span>
-            <span>PROVECHO</span><span style="color:rgba(255,255,255,.06)">&#10022;</span>
-            <span>PROVECHO</span><span style="color:rgba(255,255,255,.06)">&#10022;</span>
-            <span>PROVECHO</span><span style="color:rgba(255,255,255,.06)">&#10022;</span>
-            <span>PROVECHO</span><span style="color:rgba(255,255,255,.06)">&#10022;</span>
-            <span>PROVECHO</span><span style="color:rgba(255,255,255,.06)">&#10022;</span>
-        </div>
-    </div>
-    <div class="foot-copy">&copy; {{ date('Y') }} Provecho. All rights reserved.</div>
 </footer>
 
 <!-- ════ WA Float ════ -->
-<a href="https://wa.me/628XXXXXXXXXX?text=Halo%2C%20saya%20tertarik%20dengan%20Provecho%20Google%20Review%20Card" class="wa-float" target="_blank" aria-label="Chat via WhatsApp">
+<a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20tertarik%20dengan%20Provecho%20Google%20Review%20Card" class="wa-float" target="_blank" aria-label="Chat via WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
 <script>
-document.addEventListener('DOMContentLoaded',function(){
-    var nav=document.querySelector('.nav');
-    window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>50)},{passive:true});
-
-    var obs=new IntersectionObserver(function(entries){
-        entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})
-    },{threshold:.12});
-    document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el)});
-});
+addEventListener('scroll',()=>{document.querySelector('.nav').classList.toggle('scrolled',scrollY>20)},{passive:true});
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>

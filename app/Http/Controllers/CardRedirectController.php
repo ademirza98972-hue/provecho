@@ -58,7 +58,7 @@ class CardRedirectController extends Controller
 
         $this->log($card, 'activated', $request);
 
-        return redirect()->route('card.redirect', $card->id);
+        return view('card.activated', compact('card'));
     }
 
     /**

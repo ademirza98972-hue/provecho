@@ -15,7 +15,13 @@ class CardController extends Controller
         $query = Card::query();
 
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            if ($request->status === 'printed') {
+                $query->whereNotNull('printed_at');
+            } elseif ($request->status === 'unprinted') {
+                $query->where('status', 'inactive')->whereNull('printed_at');
+            } else {
+                $query->where('status', $request->status);
+            }
         }
 
         if ($request->filled('search')) {
@@ -155,6 +161,28 @@ class CardController extends Controller
             ->with('success', "Card {$card->id} direset ke Belum Aktif.");
     }
 
+    public function destroy(Card $card)
+    {
+        $id = $card->id;
+        $card->logs()->delete();
+        $card->delete();
+
+        return redirect()->route('dashboard.cards.index')
+            ->with('success', "Card {$id} dihapus.");
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = array_filter((array) $request->input('ids', []));
+        if ($ids) {
+            CardLog::whereIn('card_id', $ids)->delete();
+            Card::whereIn('id', $ids)->delete();
+        }
+
+        return redirect()->route('dashboard.cards.index')
+            ->with('success', count($ids) . ' card dihapus.');
+    }
+
     public function generate(Request $request)
     {
         $request->validate(['count' => 'required|integer|min:1|max:500']);
@@ -184,10 +212,24 @@ class CardController extends Controller
         ]);
 
         $view = match ($mode) {
+            'single'  => 'dashboard.cards.print-single',
             'sticker' => 'dashboard.cards.print-sticker',
             'a3'      => 'dashboard.cards.print-a3',
             default   => 'dashboard.cards.print',
         };
+
+        $unprinted = $cards->whereNull('printed_at');
+        if ($unprinted->isNotEmpty()) {
+            Card::whereIn('id', $unprinted->pluck('id'))->update(['printed_at' => now()]);
+            foreach ($unprinted as $card) {
+                CardLog::create([
+                    'card_id'    => $card->id,
+                    'action'     => 'printed',
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                ]);
+            }
+        }
 
         return view($view, compact('cards', 'qrCodes'));
     }

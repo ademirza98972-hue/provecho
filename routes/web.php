@@ -43,6 +43,8 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::post('/{card}/disable', [CardController::class, 'disable'])->name('disable');
         Route::post('/{card}/reactivate', [CardController::class, 'reactivate'])->name('reactivate');
         Route::post('/{card}/reset', [CardController::class, 'reset'])->name('reset');
+        Route::delete('/{card}', [CardController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-delete', [CardController::class, 'bulkDestroy'])->name('bulk-destroy');
     });
 
     Route::get('/places/search', [PlacesController::class, 'search'])->name('places.search');

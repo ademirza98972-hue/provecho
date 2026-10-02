@@ -14,7 +14,7 @@
         --surface: #FFFFFF; --bg: #F9FAFB; --subtle: #FCFCFD;
         --border: #E5E7EB; --border-strong: #D4D7DD;
         --text: #111827; --muted: #6B7280; --faint: #9CA3AF;
-        --accent: #1B8C3D; --accent-dark: #15702F; --accent-soft: #ECFDF5;
+        --accent: #0EA5E9; --accent-dark: #0284C7; --accent-soft: #F0F9FF;
         --ok: #15803D; --ok-soft: #F0FDF4;
         --bad: #B91C1C; --bad-soft: #FEF2F2;
         color-scheme: light;

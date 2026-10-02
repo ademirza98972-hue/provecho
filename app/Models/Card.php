@@ -12,12 +12,13 @@ class Card extends Model
     protected $fillable = [
         'id', 'status', 'google_url', 'place_id',
         'owner_name', 'owner_address', 'activated_at',
-        'disabled_at', 'notes',
+        'disabled_at', 'printed_at', 'notes',
     ];
 
     protected $casts = [
         'activated_at' => 'datetime',
         'disabled_at' => 'datetime',
+        'printed_at' => 'datetime',
     ];
 
     public function logs()

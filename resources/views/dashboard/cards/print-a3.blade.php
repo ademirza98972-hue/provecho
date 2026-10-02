@@ -29,8 +29,8 @@
     }
     .toolbar a      { background: #fff; border-color: #D4D7DD; color: #111827; }
     .toolbar a:hover{ background: #F9FAFB; }
-    .toolbar button { background: #1B8C3D; color: #fff; }
-    .toolbar button:hover { background: #15702F; }
+    .toolbar button { background: #0284C7; color: #fff; }
+    .toolbar button:hover { background: #0369A1; }
     .toolbar .hint  { color: #6B7280; }
 
     .page {
@@ -48,39 +48,7 @@
         box-shadow: 0 4px 20px rgba(0,0,0,.12);
     }
 
-    .card-item {
-        width: 100mm;
-        height: 100mm;
-        position: relative;
-        border-radius: 5mm;
-        overflow: hidden;
-        background: url('/img/desain-card.png') center/cover no-repeat;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .qr-overlay {
-        position: absolute;
-        right: 15.8%;
-        top: 55%;
-        width: 27.2%;
-        aspect-ratio: 1;
-        padding: 0;
-    }
-    .qr-overlay svg { width: 100%; height: 100%; display: block; }
-
-    .id-overlay {
-        position: absolute;
-        bottom: 0.8%;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-family: 'Inter', sans-serif;
-        font-size: 4.5pt;
-        font-weight: 500;
-        color: #8c8686;
-        letter-spacing: .06em;
-    }
+@include('dashboard.cards._card-styles')
 
     @media screen {
         .page {
