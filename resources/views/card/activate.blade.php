@@ -205,7 +205,7 @@
         </form>
     </div>
 
-    <p class="foot">Provecho &mdash; Google Review Card</p>
+    <p class="foot">PROVECHO GOOGLE REVIEW</p>
 </div>
 
 <script>

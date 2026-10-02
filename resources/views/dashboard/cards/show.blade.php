@@ -173,6 +173,7 @@
                         <input type="hidden" name="mode" :value="mode">
                         <select x-model="mode" style="border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;font-weight:600;background:#fff;cursor:pointer">
                             <option value="a4">A4</option>
+                            <option value="a3">A3</option>
                             <option value="sticker">Sticker</option>
                         </select>
                         <button type="submit" class="btn btn-outline btn-sm">

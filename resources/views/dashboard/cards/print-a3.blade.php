@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Cetak Card — Provecho</title>
+<title>Cetak Card A3 — Provecho</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap">
 <style>
@@ -34,14 +34,14 @@
     .toolbar .hint  { color: #6B7280; }
 
     .page {
-        width: 210mm;
-        height: 297mm;
+        width: 297mm;
+        height: 420mm;
         margin: 1.5rem auto;
         background: #fff;
         padding: 8mm;
         display: grid;
         grid-template-columns: 100mm 100mm;
-        grid-template-rows: 100mm 100mm;
+        grid-template-rows: repeat(4, 100mm);
         gap: 5mm;
         justify-content: center;
         align-content: center;
@@ -82,10 +82,24 @@
         letter-spacing: .06em;
     }
 
+    @media screen {
+        .page {
+            transform-origin: top left;
+            transform: scale(0.7);
+            margin-bottom: calc(-420mm * 0.3 + 1.5rem);
+        }
+    }
+
     @media print {
         .toolbar { display: none; }
         body     { background: #fff; }
-        .page    { margin: 0; box-shadow: none; padding: 5mm; width: 100%; height: 297mm; page-break-after: always; }
+
+        @page {
+            size: 297mm 420mm;
+            margin: 0;
+        }
+
+        .page { margin: 0; box-shadow: none; padding: 5mm; width: 100%; height: 420mm; page-break-after: always; }
         .page:last-child { page-break-after: auto; }
         .card-item { page-break-inside: avoid; }
     }
@@ -96,7 +110,7 @@
 <div class="toolbar">
     <span class="count">{{ $cards->count() }} card siap cetak</span>
     <div class="group">
-        <span class="hint">Ukuran kertas A4 portrait, 4 card per halaman. Aktifkan "Background graphics" saat cetak.</span>
+        <span class="hint">Ukuran kertas A3 portrait, 8 card per halaman. Aktifkan "Background graphics" saat cetak.</span>
         <a href="{{ route('dashboard.cards.index') }}">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             Kembali
@@ -108,7 +122,7 @@
     </div>
 </div>
 
-@foreach($cards->chunk(4) as $pageCards)
+@foreach($cards->chunk(8) as $pageCards)
 <div class="page">
     @foreach($pageCards as $card)
     <div class="card-item">

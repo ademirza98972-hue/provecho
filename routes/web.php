@@ -49,4 +49,4 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
     Route::post('/places/resolve-maps', [PlacesController::class, 'resolveMaps'])->name('places.resolve-maps');
 });
 
-Route::get('/', fn() => redirect()->route('dashboard.index'));
+Route::get('/', fn() => view('landing'))->name('landing');

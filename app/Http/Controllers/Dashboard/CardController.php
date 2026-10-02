@@ -183,7 +183,11 @@ class CardController extends Controller
             $card->id => QrCode::size($qrSize)->generate($card->url),
         ]);
 
-        $view = $mode === 'sticker' ? 'dashboard.cards.print-sticker' : 'dashboard.cards.print';
+        $view = match ($mode) {
+            'sticker' => 'dashboard.cards.print-sticker',
+            'a3'      => 'dashboard.cards.print-a3',
+            default   => 'dashboard.cards.print',
+        };
 
         return view($view, compact('cards', 'qrCodes'));
     }

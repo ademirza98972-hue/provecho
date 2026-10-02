@@ -4,8 +4,8 @@
     {
       "name": "provecho",
       "runtimeExecutable": "php",
-      "runtimeArgs": ["artisan", "serve", "--port=8123"],
-      "port": 8123
+      "runtimeArgs": ["artisan", "serve", "--port=8124"],
+      "port": 8124
     }
   ]
 }
