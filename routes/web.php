@@ -6,6 +6,7 @@ use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ExportController;
 use App\Http\Controllers\Dashboard\PlacesController;
+use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Dashboard\StatsController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,9 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::delete('/{card}', [CardController::class, 'destroy'])->name('destroy');
         Route::post('/bulk-delete', [CardController::class, 'bulkDestroy'])->name('bulk-destroy');
     });
+
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+    Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
 
     Route::get('/places/search', [PlacesController::class, 'search'])->name('places.search');
     Route::post('/places/resolve-maps', [PlacesController::class, 'resolveMaps'])->name('places.resolve-maps');
