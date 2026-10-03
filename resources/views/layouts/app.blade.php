@@ -25,6 +25,8 @@
         --warn: #B45309;    --warn-soft: #FFFBEB;
         --bad: #B91C1C;     --bad-soft: #FEF2F2;
         --radius: 10px;
+        --sidebar-w: 240px;
+        --sidebar-collapsed-w: 64px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,30 +44,111 @@
 
     /* ── shell ── */
     .layout  { display: flex; min-height: 100vh; }
-    .main    { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .main    { flex: 1; display: flex; flex-direction: column; min-width: 0; margin-left: var(--sidebar-w); transition: margin-left .2s ease; }
 
+    /* ── sidebar: fixed ── */
     .sidebar {
-        width: 236px; flex-shrink: 0;
+        width: var(--sidebar-w); flex-shrink: 0;
         background: var(--surface);
         border-right: 1px solid var(--border);
         display: flex; flex-direction: column;
-        padding: 20px 0;
+        position: fixed; top: 0; left: 0; bottom: 0;
+        z-index: 40;
+        transition: width .2s ease, transform .25s ease;
     }
-    .brand      { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; }
-    .brand-mark { width: 48px; height: 48px; object-fit: contain; }
-    .brand-name { font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+    .sidebar-inner {
+        display: flex; flex-direction: column;
+        height: 100%;
+        overflow-y: auto;
+        padding: 0 0 14px;
+    }
 
-    .nav       { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
-    .nav-label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); padding: 6px 10px; }
-    .nav a     { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 7px; color: var(--muted); font-weight: 500; transition: background .12s, color .12s; }
+    /* brand */
+    .brand {
+        display: flex; align-items: center; gap: 11px;
+        padding: 18px 20px 16px;
+        border-bottom: 1px solid var(--border);
+    }
+    .brand-mark { width: 36px; height: 36px; object-fit: contain; }
+    .brand-name { font-size: 17px; font-weight: 700; letter-spacing: -.02em; color: var(--text); }
+
+    /* nav */
+    .nav       { display: flex; flex-direction: column; gap: 2px; padding: 14px 10px 0; flex: 1; }
+    .nav-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); padding: 8px 10px 4px; }
+    .nav a {
+        display: flex; align-items: center; gap: 10px;
+        padding: 9px 12px; border-radius: 8px;
+        color: var(--muted); font-weight: 500; font-size: 13.5px;
+        transition: background .12s, color .12s;
+    }
     .nav a:hover  { background: #F3F4F6; color: var(--text); }
     .nav a.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
 
-    .sidebar-foot { margin-top: auto; padding: 14px 10px 0; }
+    .sidebar-foot { padding: 10px 10px 0; border-top: 1px solid var(--border); margin-top: auto; }
     .sidebar-foot button { width: 100%; }
 
-    .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-    .topbar h1 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+    /* ── hamburger ── */
+    .hamburger {
+        display: flex;
+        background: none; border: none; cursor: pointer;
+        padding: 6px; border-radius: 6px; color: var(--muted);
+        transition: background .12s;
+    }
+    .hamburger:hover { background: #F3F4F6; color: var(--text); }
+
+    /* overlay */
+    .sidebar-overlay {
+        display: none;
+        position: fixed; inset: 0; z-index: 35;
+        background: rgba(0,0,0,.3);
+    }
+
+    /* ── collapsed sidebar (desktop) ── */
+    .layout.collapsed .sidebar {
+        width: var(--sidebar-collapsed-w);
+    }
+    .layout.collapsed .main {
+        margin-left: var(--sidebar-collapsed-w);
+    }
+    .layout.collapsed .brand-name,
+    .layout.collapsed .nav-label,
+    .layout.collapsed .nav a span,
+    .layout.collapsed .sidebar-foot span,
+    .layout.collapsed .sidebar-foot .btn svg ~ * {
+        display: none;
+    }
+    .layout.collapsed .brand {
+        justify-content: center;
+        padding: 18px 10px 16px;
+    }
+    .layout.collapsed .nav {
+        padding: 14px 6px 0;
+    }
+    .layout.collapsed .nav a {
+        justify-content: center;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    .layout.collapsed .nav a svg {
+        width: 20px; height: 20px;
+    }
+    .layout.collapsed .sidebar-foot {
+        padding: 10px 6px 0;
+    }
+    .layout.collapsed .sidebar-foot button {
+        justify-content: center;
+        padding: 8px;
+    }
+
+    /* topbar */
+    .topbar {
+        background: var(--surface); border-bottom: 1px solid var(--border);
+        padding: 0 24px; min-height: 56px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        position: sticky; top: 0; z-index: 20;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar h1 { font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
     .user   { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--muted); }
     .avatar { width: 28px; height: 28px; border-radius: 50%; background: #F3F4F6; border: 1px solid var(--border); display: grid; place-items: center; font-size: 11px; font-weight: 600; color: var(--muted); }
 
@@ -177,12 +260,23 @@
     .pagination a:hover { background: var(--bg); color: var(--text); }
     .pagination .active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
+    /* ── mobile ── */
     @media (max-width: 860px) {
-        .layout  { flex-direction: column; }
-        .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 14px 0; }
-        .nav     { flex-direction: row; overflow-x: auto; }
-        .nav-label { display: none; }
-        .sidebar-foot { padding-top: 12px; }
+        .main { margin-left: 0 !important; }
+        .sidebar { transform: translateX(-100%); width: var(--sidebar-w) !important; }
+        .sidebar.open { transform: translateX(0); }
+        .sidebar-overlay.open { display: block; }
+        .layout.collapsed .sidebar { width: var(--sidebar-w) !important; }
+        .layout.collapsed .brand-name,
+        .layout.collapsed .nav-label,
+        .layout.collapsed .nav a span,
+        .layout.collapsed .sidebar-foot span { display: inline; }
+        .layout.collapsed .brand { justify-content: flex-start; padding: 18px 20px 16px; }
+        .layout.collapsed .nav { padding: 14px 10px 0; }
+        .layout.collapsed .nav a { justify-content: flex-start; padding: 9px 12px; border-radius: 8px; }
+        .layout.collapsed .nav a svg { width: 17px; height: 17px; }
+        .layout.collapsed .sidebar-foot { padding: 10px 10px 0; }
+        .layout.collapsed .sidebar-foot button { justify-content: center; padding: 6px 11px; }
         .grid-2  { grid-template-columns: 1fr; }
         .content { padding: 16px; }
     }
@@ -191,45 +285,51 @@
 </head>
 <body>
 <div class="layout">
-    <aside class="sidebar">
-        <div class="brand">
-            <img class="brand-mark" src="/img/logo.png" alt="Provecho">
-        </div>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-        <div class="nav-label">Menu</div>
-        <nav class="nav">
-            <a href="{{ route('dashboard.index') }}" class="{{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-                Dashboard
-            </a>
-            <a href="{{ route('dashboard.cards.index') }}" class="{{ request()->routeIs('dashboard.cards.*') ? 'active' : '' }}">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 14.5h4"/></svg>
-                Kelola Card
-            </a>
-            <a href="{{ route('dashboard.stats') }}" class="{{ request()->routeIs('dashboard.stats') ? 'active' : '' }}">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-                Statistik
-            </a>
-            <a href="{{ route('dashboard.activity') }}" class="{{ request()->routeIs('dashboard.activity') ? 'active' : '' }}">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
-                Aktivitas
-            </a>
-        </nav>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <div class="brand">
+                <img class="brand-mark" src="/img/logo.png" alt="Provecho">
+                <span class="brand-name">PROVECHO</span>
+            </div>
 
-        <div class="sidebar-foot">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="btn btn-outline btn-sm">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
-                    Keluar
-                </button>
-            </form>
+            <nav class="nav">
+                <span class="nav-label">Menu</span>
+                <a href="{{ route('dashboard.index') }}" class="{{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ route('dashboard.cards.index') }}" class="{{ request()->routeIs('dashboard.cards.*') ? 'active' : '' }}">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 14.5h4"/></svg>
+                    <span>Kelola Card</span>
+                </a>
+                <a href="{{ route('dashboard.activity') }}" class="{{ request()->routeIs('dashboard.activity') ? 'active' : '' }}">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+                    <span>Aktivitas</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-foot">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-outline btn-sm">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+                        <span>Keluar</span>
+                    </button>
+                </form>
+            </div>
         </div>
     </aside>
 
     <div class="main">
         <div class="topbar">
-            <h1>@yield('title', 'Dashboard')</h1>
+            <div class="topbar-left">
+                <button class="hamburger" onclick="toggleSidebar()" aria-label="Toggle menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+                </button>
+                <h1>@yield('title', 'Dashboard')</h1>
+            </div>
             <div class="user">
                 <div class="avatar">{{ strtoupper(substr(auth()->user()->name ?? auth()->user()->username, 0, 1)) }}</div>
                 <span>{{ auth()->user()->name ?? auth()->user()->username }}</span>
@@ -257,6 +357,20 @@
         </div>
     </div>
 </div>
+
+<script>
+function toggleSidebar() {
+    var isMobile = window.innerWidth <= 860;
+    if (isMobile) {
+        document.getElementById('sidebar').classList.toggle('open');
+        document.getElementById('sidebarOverlay').classList.toggle('open');
+    } else {
+        document.querySelector('.layout').classList.toggle('collapsed');
+        try { localStorage.setItem('sidebar', document.querySelector('.layout').classList.contains('collapsed') ? 'c' : 'e'); } catch(e) {}
+    }
+}
+try { if (localStorage.getItem('sidebar') === 'c') document.querySelector('.layout').classList.add('collapsed'); } catch(e) {}
+</script>
 @stack('scripts')
 </body>
 </html>
