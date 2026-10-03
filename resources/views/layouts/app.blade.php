@@ -255,8 +255,8 @@
     .toolbar-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
     /* ── pagination ── */
-    .pagination { display: flex; gap: 4px; justify-content: center; padding: 14px; }
-    .pagination a, .pagination span { padding: 6px 11px; border-radius: 7px; font-size: 12.5px; font-weight: 500; border: 1px solid var(--border); color: var(--muted); }
+    .pagination { display: flex; gap: 4px; align-items: center; padding: 0; }
+    .pagination a, .pagination span { padding: 5px 10px; border-radius: 7px; font-size: 12px; font-weight: 500; border: 1px solid var(--border); color: var(--muted); white-space: nowrap; }
     .pagination a:hover { background: var(--bg); color: var(--text); }
     .pagination .active { background: var(--accent); color: #fff; border-color: var(--accent); }
 

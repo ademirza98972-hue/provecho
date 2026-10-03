@@ -32,10 +32,28 @@ class CardController extends Controller
             });
         }
 
+        if ($request->filled('generated')) {
+            $query->where('created_at', '>=', match ($request->generated) {
+                'today' => now()->startOfDay(),
+                'week'  => now()->subDays(7)->startOfDay(),
+                'month' => now()->subDays(30)->startOfDay(),
+                default => now()->startOfDay(),
+            });
+        }
+
+        $query->withCount(['logs as scan_count' => fn ($q) => $q->where('action', 'scan')]);
+
         $perPage = in_array((int) $request->input('per_page'), [20, 50, 100]) ? (int) $request->per_page : 20;
         $cards = $query->orderByDesc('created_at')->paginate($perPage)->withQueryString();
 
-        return view('dashboard.cards.index', compact('cards'));
+        $counts = [
+            'total'    => Card::count(),
+            'active'   => Card::where('status', 'active')->count(),
+            'inactive' => Card::where('status', 'inactive')->count(),
+            'disabled' => Card::where('status', 'disabled')->count(),
+        ];
+
+        return view('dashboard.cards.index', compact('cards', 'counts'));
     }
 
     public function show(Card $card)
