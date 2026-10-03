@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Provecho — Google Review Card</title>
-    <meta name="description" content="Card NFC + QR Code yang langsung membuka Google Review toko kamu. Tap sekali, review masuk. Rp 50.000, sekali bayar.">
+    <meta name="description" content="Card NFC + QR Code yang langsung membuka Google Review toko kamu. Tap sekali, review masuk. Sekali bayar, aktif selamanya.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap">
@@ -108,35 +108,39 @@
     .hero-note span { display: flex; align-items: center; gap: 5px }
     .hero-note svg { width: 13px; height: 13px; color: var(--green) }
 
-    .hero-img-wrap {
-        max-width: 740px; margin: 0 auto;
+    /* ─── HERO STAT CARDS ─── */
+    .hero-visual { max-width: 880px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; text-align: left }
+    .sc {
         background: var(--white); border: 1px solid var(--border);
-        border-radius: var(--r-lg) var(--r-lg) 0 0;
-        box-shadow: 0 -2px 0 0 var(--border), var(--shadow-lg);
-        overflow: hidden;
+        border-radius: 14px; padding: 20px 20px 18px;
+        box-shadow: var(--shadow);
     }
-    .hero-img-bar {
-        padding: 12px 16px; border-bottom: 1px solid var(--border);
-        display: flex; align-items: center; gap: 6px;
-    }
-    .hero-img-bar span { width: 10px; height: 10px; border-radius: 50% }
-    .dot-r { background: #FF5F56 }
-    .dot-y { background: #FFBD2E }
-    .dot-g { background: #27C93F }
-    .hero-img-wrap img { width: 100%; display: block }
+    .sc.wide { grid-column: span 2 }
+    .sc-label { font-size: 11.5px; font-weight: 600; color: var(--fg3); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 10px; display: flex; align-items: center; gap: 6px }
+    .sc-label svg { width: 13px; height: 13px }
+    .sc-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 32px; font-weight: 900; color: var(--fg); letter-spacing: -.04em; line-height: 1 }
+    .sc-val.blue { color: var(--blue) }
+    .sc-val.green { color: var(--green) }
+    .sc-sub { font-size: 12px; color: var(--fg3); margin-top: 4px }
+    .sc-bar { margin-top: 12px; height: 5px; background: var(--bg); border-radius: 999px; overflow: hidden }
+    .sc-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--blue), var(--green)); width: 82%; animation: bar-in 1.2s ease both }
+    @keyframes bar-in { from { width: 0 } }
+    .sc-stars { display: flex; gap: 3px; margin-top: 6px }
+    .sc-stars svg { width: 14px; height: 14px; fill: #FBBF24; color: #FBBF24 }
+    .sc-trend { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; color: var(--green); background: var(--green-bg); padding: 3px 8px; border-radius: 999px; margin-top: 6px }
+    .sc-trend svg { width: 11px; height: 11px }
+    .sc-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse-g 2s ease-in-out infinite; display: inline-block }
+    @keyframes pulse-g { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
+    .sc-live { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--fg2) }
 
-    /* ─── DIVIDER ─── */
-    .divider { height: 1px; background: var(--border); margin: 0 }
-
-    /* ─── STATS ─── */
-    .stats { background: var(--white); padding: 40px 0 }
-    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); text-align: center }
-    .stat { padding: 4px 0; position: relative }
-    .stat:not(:last-child)::after { content:''; position: absolute; right: 0; top: 10%; height: 80%; width: 1px; background: var(--border) }
-    .stat-n { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: var(--fg); letter-spacing: -.03em; line-height: 1.1; margin-bottom: 4px }
+/* ─── STATS ─── */
+    .stats { background: var(--bg); padding: 40px 0 }
+    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px }
+    .stat { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 20px 20px 18px }
+    .stat-n { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 26px; font-weight: 900; color: var(--fg); letter-spacing: -.04em; line-height: 1; margin-bottom: 6px }
     .stat-n .blue { color: var(--blue) }
     .stat-n .green { color: var(--green) }
-    .stat-l { font-size: 12.5px; color: var(--fg3); font-weight: 500 }
+    .stat-l { font-size: 12px; color: var(--fg3); font-weight: 500; line-height: 1.4 }
 
     /* ─── SECTION BASE ─── */
     .sec { padding: 88px 0 }
@@ -164,19 +168,48 @@
     .feat p { font-size: 13.5px; color: var(--fg2); line-height: 1.65 }
 
     /* ─── HOW ─── */
-    .how-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; position: relative }
-    .how-grid::before { content:''; position: absolute; top: 24px; left: calc(16.7% + 20px); right: calc(16.7% + 20px); height: 1px; background: var(--border) }
-    .how-step { text-align: center }
-    .how-num {
-        width: 48px; height: 48px; border-radius: 50%;
-        border: 1.5px solid var(--border); background: var(--white);
-        display: flex; align-items: center; justify-content: center;
-        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800; color: var(--fg3);
-        margin: 0 auto 20px; position: relative; z-index: 1;
+    .how-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; position: relative }
+    /* base grey line */
+    .how-grid::before { content:''; position: absolute; top: 28px; left: calc(16.7% + 28px); right: calc(16.7% + 28px); height: 2px; background: var(--border); z-index: 0 }
+    /* animated fill line — infinite loop via clip-path */
+    .how-grid::after { content:''; position: absolute; top: 28px; left: calc(16.7% + 28px); right: calc(16.7% + 28px); height: 2px; background: linear-gradient(90deg,var(--blue),var(--green)); clip-path: inset(0 100% 0 0); z-index: 0 }
+    .how-grid.vis::after { animation: connector-loop 4.5s ease-in-out infinite }
+    @keyframes connector-loop {
+        0%        { clip-path: inset(0 100% 0 0) }
+        28%       { clip-path: inset(0 50%  0 0) }
+        58%       { clip-path: inset(0 0%   0 0) }
+        75%, 90%  { clip-path: inset(0 0%   0 0) }
+        100%      { clip-path: inset(0 100% 0 0) }
     }
-    .how-step.active .how-num { border-color: var(--blue); color: var(--blue); box-shadow: 0 0 0 6px var(--blue-bg) }
-    .how-step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px }
+    /* looping step number highlight */
+    @keyframes num-glow {
+        0%, 4%    { border-color: var(--blue); color: var(--blue); background: rgba(14,165,233,.08); box-shadow: 0 0 0 5px rgba(14,165,233,.1) }
+        28%, 100% { border-color: var(--border); color: var(--fg3); background: var(--bg); box-shadow: none }
+    }
+    .how-grid.vis .how-step:nth-child(1) .how-num { animation: num-glow 4.5s ease-in-out infinite }
+    .how-grid.vis .how-step:nth-child(2) .how-num { animation: num-glow 4.5s ease-in-out infinite 1.5s }
+    .how-grid.vis .how-step:nth-child(3) .how-num { animation: num-glow 4.5s ease-in-out infinite 3s }
+    .how-step {
+        background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px;
+        text-align: left; position: relative;
+        opacity: 0; transform: translateY(22px);
+        transition: opacity .45s ease, transform .45s ease, box-shadow .2s;
+    }
+    .how-step:hover { box-shadow: var(--shadow-lg) }
+    .how-grid.vis .how-step:nth-child(1) { opacity:1; transform:none }
+    .how-grid.vis .how-step:nth-child(2) { opacity:1; transform:none; transition-delay:.22s }
+    .how-grid.vis .how-step:nth-child(3) { opacity:1; transform:none; transition-delay:.44s }
+    .how-num {
+        width: 42px; height: 42px; border-radius: 50%;
+        border: 2px solid var(--border); background: var(--bg);
+        display: flex; align-items: center; justify-content: center;
+        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; color: var(--fg3);
+        margin: 0 0 18px; position: relative; z-index: 1; transition: border-color .3s, color .3s, background .3s, box-shadow .3s;
+    }
+    .how-step h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--fg) }
     .how-step p { font-size: 14px; color: var(--fg2); line-height: 1.65 }
+    /* step badge top-right */
+    .how-step::before { content: attr(data-n); position: absolute; top: 20px; right: 20px; font-size: 11px; font-weight: 700; color: var(--fg3); letter-spacing: .05em; opacity: .35 }
 
     /* ─── PRODUCT SPLIT ─── */
     .split { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center }
@@ -211,28 +244,35 @@
     .comp-price { margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.08); font-size: 12.5px; color: rgba(255,255,255,.3) }
     .comp-price strong { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -.03em; display: block; margin-bottom: 2px }
 
-    /* ─── PRICING ─── */
-    .price-wrap { max-width: 440px; margin: 0 auto }
-    .price-card {
-        border-radius: var(--r-lg); padding: 44px 36px;
-        border: 1.5px solid var(--blue-border);
-        background: linear-gradient(135deg, var(--blue-bg) 0%, var(--white) 60%);
-        box-shadow: var(--shadow-lg);
+    /* ─── ORDER ─── */
+    .order-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 760px; margin: 0 auto }
+    .order-card {
+        background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 36px 32px;
+        display: flex; flex-direction: column; gap: 0;
+        transition: box-shadow .2s;
     }
-    .price-badge { font-size: 11px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 20px }
-    .price-amount { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 52px; font-weight: 900; letter-spacing: -.04em; line-height: 1; color: var(--fg) }
-    .price-amount small { font-size: 18px; font-weight: 500; color: var(--fg3); vertical-align: super; margin-top: 8px; display: inline-block }
-    .price-note { font-size: 13px; color: var(--fg3); margin: 8px 0 28px }
-    .price-list { list-style: none; display: flex; flex-direction: column; gap: 11px; margin-bottom: 28px }
-    .price-list li { display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--fg2) }
-    .price-list li svg { width: 17px; height: 17px; color: var(--green); flex-shrink: 0 }
-    .btn-full {
-        display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
-        background: var(--fg); color: #fff; font-size: 15px; font-weight: 700; padding: 15px;
-        border-radius: var(--r); transition: opacity .15s; font-family: 'Plus Jakarta Sans', sans-serif;
+    .order-card:hover { box-shadow: var(--shadow-lg) }
+    .order-card.order-wa { border-color: rgba(37,211,102,.3) }
+    .order-card.order-shopee { border-color: rgba(238,77,45,.2) }
+    .order-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; color: #25D366; background: rgba(37,211,102,.1) }
+    .order-icon svg { width: 24px; height: 24px }
+    .order-icon.shopee-ic { color: #EE4D2D; background: rgba(238,77,45,.1) }
+    .order-card h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 800; color: var(--fg); margin-bottom: 10px; letter-spacing: -.02em }
+    .order-card p { font-size: 14px; color: var(--fg2); line-height: 1.65; margin-bottom: 20px }
+    .order-perks { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 28px }
+    .order-perks li { display: flex; align-items: center; gap: 9px; font-size: 13.5px; color: var(--fg2) }
+    .order-perks li svg { width: 15px; height: 15px; color: var(--green); flex-shrink: 0 }
+    .order-btn {
+        display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%;
+        font-size: 14px; font-weight: 700; padding: 14px 20px; border-radius: var(--r);
+        font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity .15s; margin-top: auto;
     }
-    .btn-full:hover { opacity: .85 }
-    .price-hint { margin-top: 14px; font-size: 12px; color: var(--fg3); text-align: center }
+    .order-btn svg { width: 17px; height: 17px; flex-shrink: 0 }
+    .wa-btn { background: #25D366; color: #fff }
+    .wa-btn:hover { opacity: .88 }
+    .shopee-btn { background: #EE4D2D; color: #fff }
+    .shopee-btn:hover { opacity: .88 }
+    .order-note { text-align: center; font-size: 13px; color: var(--fg3); margin-top: 28px; max-width: 520px; margin-left: auto; margin-right: auto }
 
     /* ─── TESTIMONIALS ─── */
     .testi-bg { background: var(--bg) }
@@ -300,8 +340,8 @@
         .testi-grid { grid-template-columns: repeat(2,1fr) }
         .split { grid-template-columns: 1fr; gap: 36px }
         .split.rev .split-img { order: unset }
-        .how-grid { grid-template-columns: 1fr; gap: 28px }
-        .how-grid::before { display: none }
+        .how-grid { grid-template-columns: 1fr; gap: 16px }
+        .how-grid::before, .how-grid::after { display: none }
         .comp-table { grid-template-columns: 1fr }
         .stats-grid { grid-template-columns: repeat(2,1fr) }
         .stat:nth-child(2)::after { display: none }
@@ -318,9 +358,12 @@
         .nav.open .nav-links a { padding: 12px 14px; border-radius: 8px }
         .nav-toggle { display: block }
         .hero { padding: 80px 0 0 }
+        .hero-visual { grid-template-columns: 1fr 1fr }
         .sec { padding: 60px 0 }
         .cta-box { padding: 48px 20px }
         .price-card { padding: 32px 22px }
+        .order-grid { grid-template-columns: 1fr }
+        .order-card { padding: 28px 22px }
         .feat-grid { grid-template-columns: 1fr }
         .testi-grid { grid-template-columns: 1fr }
         .foot-inner { flex-direction: column; text-align: center }
@@ -340,7 +383,7 @@
         <div class="nav-links">
             <a href="#cara-kerja" @click="open=false">Cara Kerja</a>
             <a href="#fitur" @click="open=false">Fitur</a>
-            <a href="#harga" @click="open=false">Harga</a>
+            <a href="#harga" @click="open=false">Pemesanan</a>
             <a href="#faq" @click="open=false">FAQ</a>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
@@ -392,42 +435,54 @@
                 Setup 30 detik
             </span>
         </div>
-        <div class="hero-img-wrap hi">
-            <div class="hero-img-bar">
-                <span class="dot-r"></span>
-                <span class="dot-y"></span>
-                <span class="dot-g"></span>
+        <div class="hero-visual hi hi-4">
+            <div class="sc">
+                <div class="sc-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+                    Rating Google
+                </div>
+                <div class="sc-val">4.9</div>
+                <div class="sc-stars">
+                    @for($i=0;$i<5;$i++)<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>@endfor
+                </div>
             </div>
-            <img src="/img/landing.jpg" alt="Provecho Google Review Card">
+            <div class="sc">
+                <div class="sc-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    Waktu Tap
+                </div>
+                <div class="sc-val blue">3 dtk</div>
+                <div class="sc-sub">tap → review terbuka</div>
+            </div>
+            <div class="sc">
+                <div class="sc-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Ulasan bulan ini
+                </div>
+                <div class="sc-val green">+127</div>
+                <div class="sc-trend">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+                    +38% dari bulan lalu
+                </div>
+            </div>
+            <div class="sc">
+                <div class="sc-label">
+                    <div class="sc-dot"></div>
+                    Status card
+                </div>
+                <div class="sc-val" style="font-size:18px;margin-top:4px">
+                    <div class="sc-live">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                        Aktif & berjalan
+                    </div>
+                </div>
+                <div class="sc-bar"><div class="sc-bar-fill"></div></div>
+                <div class="sc-sub" style="margin-top:6px">uptime 100%</div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- STATS -->
-<div class="divider"></div>
-<div class="stats">
-    <div class="w">
-        <div class="stats-grid">
-            <div class="stat rv">
-                <div class="stat-n"><span class="blue">3</span> detik</div>
-                <div class="stat-l">dari tap ke Google Review terbuka</div>
-            </div>
-            <div class="stat rv rv-1">
-                <div class="stat-n">Rp 50.000</div>
-                <div class="stat-l">harga per card, bayar sekali</div>
-            </div>
-            <div class="stat rv rv-2">
-                <div class="stat-n"><span class="green">Rp 0</span></div>
-                <div class="stat-l">biaya berlangganan selamanya</div>
-            </div>
-            <div class="stat rv rv-3">
-                <div class="stat-n">∞</div>
-                <div class="stat-l">masa aktif card tanpa expired</div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="divider"></div>
 
 <!-- CARA KERJA -->
 <section class="sec" id="cara-kerja">
@@ -437,18 +492,18 @@
             <h2 class="sec-title">Tiga langkah. Beres.</h2>
             <p class="sec-sub">Tidak perlu pengetahuan teknis. Tidak perlu install apa pun. Siapa pun bisa setup sendiri.</p>
         </div>
-        <div class="how-grid">
-            <div class="how-step active rv">
+        <div class="how-grid rv">
+            <div class="how-step active" data-n="LANGKAH 01">
                 <div class="how-num">1</div>
                 <h3>Pesan & Terima Card</h3>
                 <p>Hubungi kami via WhatsApp, pilih jumlah card. Card akrilik dikirim ke alamat kamu dalam 2–5 hari kerja. Bisa bayar transfer atau QRIS.</p>
             </div>
-            <div class="how-step rv rv-1">
+            <div class="how-step" data-n="LANGKAH 02">
                 <div class="how-num">2</div>
                 <h3>Aktivasi dalam 30 Detik</h3>
                 <p>Scan QR Code di card, cari nama usaha di Google, pilih — selesai. Atau paste link Google Maps langsung. Tidak perlu hubungi siapa pun.</p>
             </div>
-            <div class="how-step rv rv-2">
+            <div class="how-step" data-n="LANGKAH 03">
                 <div class="how-num">3</div>
                 <h3>Taruh & Biarkan Bekerja</h3>
                 <p>Letakkan di meja kasir. Pelanggan tap NFC atau scan QR — Google Review langsung terbuka. Review mengalir sendiri tiap hari.</p>
@@ -555,12 +610,12 @@
         <div class="sec-head ctr rv">
             <div class="sec-label">Perbandingan</div>
             <h2 class="sec-title" style="color:#fff">Bukan card NFC yang biasa itu.</h2>
-            <p class="sec-sub">Beda Rp 5.000–10.000 dari card marketplace — tapi hasilnya jauh berbeda.</p>
+            <p class="sec-sub">Beda tipis dari card marketplace biasa — tapi hasilnya jauh berbeda.</p>
         </div>
         <div class="comp-table">
             <div class="comp-col plain rv">
                 <h3>Card NFC Marketplace</h3>
-                <div class="comp-sub">Yang dijual seharga Rp 40.000–45.000</div>
+                <div class="comp-sub">Card NFC generic dari marketplace</div>
                 <div class="comp-rows">
                     <div class="comp-row">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -583,7 +638,7 @@
                         Tidak ada support setelah transaksi selesai
                     </div>
                 </div>
-                <div class="comp-price">Harga sekitar Rp 40.000–45.000</div>
+                <div class="comp-price">Tidak ada support setelah beli</div>
             </div>
             <div class="comp-col prov rv rv-1">
                 <h3>Provecho Google Review Card</h3>
@@ -610,61 +665,57 @@
                         Support WhatsApp aktif untuk semua pembeli
                     </div>
                 </div>
-                <div class="comp-price">
-                    <strong>Rp 50.000</strong>
-                    Sekali bayar, aktif selamanya
-                </div>
+                <div class="comp-price">Support WhatsApp aktif, selamanya gratis</div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- PRICING -->
+<!-- ORDER -->
 <section class="sec" id="harga">
     <div class="w">
         <div class="sec-head ctr rv">
-            <div class="sec-label">Harga</div>
-            <h2 class="sec-title">Satu harga. Semua termasuk.</h2>
-            <p class="sec-sub">Tidak ada biaya tersembunyi, tidak ada langganan, tidak ada upsell. Bayar sekali, pakai selamanya.</p>
+            <div class="sec-label">Pemesanan</div>
+            <h2 class="sec-title">Pilih cara beli yang kamu mau.</h2>
+            <p class="sec-sub">Tersedia via WhatsApp langsung atau Shopee. Semua termasuk — card, aktivasi, dan support.</p>
         </div>
-        <div class="price-wrap rv">
-            <div class="price-card">
-                <div class="price-badge">Google Review Card</div>
-                <div class="price-amount"><small>Rp </small>50.000</div>
-                <div class="price-note">per card · sekali bayar · aktif selamanya</div>
-                <ul class="price-list">
-                    <li>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-                        Card akrilik premium 5mm + holder transparan
-                    </li>
-                    <li>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-                        NFC chip + QR Code resolusi tinggi
-                    </li>
-                    <li>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-                        Link bisa diganti kapan saja, gratis
-                    </li>
-                    <li>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-                        Aktivasi sendiri, panduan tersedia
-                    </li>
-                    <li>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-                        Support WhatsApp after-purchase
-                    </li>
-                    <li>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-                        Gratis ongkir untuk order 3 card ke atas
-                    </li>
+        <div class="order-grid rv">
+            <!-- WA card -->
+            <div class="order-card order-wa">
+                <div class="order-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.525 5.847L.057 23.571a.5.5 0 00.609.627l5.882-1.438A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.792-.538-5.363-1.471l-.385-.229-3.993.976.999-3.893-.252-.402A9.935 9.935 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+                </div>
+                <h3>WhatsApp</h3>
+                <p>Konsultasi dulu, pilih jumlah, tanya info lengkap — semua bisa lewat chat. Cocok untuk order banyak atau butuh penjelasan lebih.</p>
+                <ul class="order-perks">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Bisa tanya-tanya dulu</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Harga khusus order banyak</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Bayar transfer / QRIS</li>
                 </ul>
-                <a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20mau%20pesan%20Provecho%20Google%20Review%20Card" class="btn-full" target="_blank">
-                    Pesan via WhatsApp
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20mau%20pesan%20Provecho%20Google%20Review%20Card" class="order-btn wa-btn" target="_blank">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.525 5.847L.057 23.571a.5.5 0 00.609.627l5.882-1.438A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.792-.538-5.363-1.471l-.385-.229-3.993.976.999-3.893-.252-.402A9.935 9.935 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+                    Chat WhatsApp
                 </a>
-                <div class="price-hint">Harga lebih hemat untuk order banyak — tanya via WA</div>
+            </div>
+            <!-- Shopee card -->
+            <div class="order-card order-shopee">
+                <div class="order-icon shopee-ic">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a5.5 5.5 0 00-5.5 5.5H4.5A1.5 1.5 0 003 8v12a1.5 1.5 0 001.5 1.5h15A1.5 1.5 0 0021 20V8a1.5 1.5 0 00-1.5-1.5h-2A5.5 5.5 0 0012 1zm0 2a3.5 3.5 0 013.5 3.5h-7A3.5 3.5 0 0112 3zm0 9a3 3 0 110 6 3 3 0 010-6z"/></svg>
+                </div>
+                <h3>Shopee</h3>
+                <p>Lebih suka belanja lewat marketplace? Pesan di Shopee dengan sistem pembayaran dan proteksi pembeli yang sudah kamu kenal.</p>
+                <ul class="order-perks">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Proteksi pembeli Shopee</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Semua metode pembayaran</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Bisa pakai voucher Shopee</li>
+                </ul>
+                <a href="#" class="order-btn shopee-btn" target="_blank">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a5.5 5.5 0 00-5.5 5.5H4.5A1.5 1.5 0 003 8v12a1.5 1.5 0 001.5 1.5h15A1.5 1.5 0 0021 20V8a1.5 1.5 0 00-1.5-1.5h-2A5.5 5.5 0 0012 1zm0 2a3.5 3.5 0 013.5 3.5h-7A3.5 3.5 0 0112 3zm0 9a3 3 0 110 6 3 3 0 010-6z"/></svg>
+                    Beli di Shopee
+                </a>
             </div>
         </div>
+        <p class="order-note rv">Semua termasuk: card akrilik, NFC + QR Code, aktivasi mandiri, dan support WhatsApp after-purchase.</p>
     </div>
 </section>
 
@@ -763,7 +814,7 @@
             <div class="foot-links">
                 <a href="#cara-kerja">Cara Kerja</a>
                 <a href="#fitur">Fitur</a>
-                <a href="#harga">Harga</a>
+                <a href="#harga">Pemesanan</a>
                 <a href="#faq">FAQ</a>
                 <a href="https://wa.me/6283842843671" target="_blank">WhatsApp</a>
             </div>
