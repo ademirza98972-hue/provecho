@@ -18,9 +18,16 @@ class DashboardController extends Controller
             'disabled' => Card::where('status', 'disabled')->count(),
         ];
 
-        $todayScans = CardLog::where('action', 'scan')->whereDate('created_at', today())->count();
-        $weekScans  = CardLog::where('action', 'scan')->where('created_at', '>=', now()->subDays(7))->count();
-        $totalScans = CardLog::where('action', 'scan')->count();
+        $stats['unprinted'] = Card::where('status', 'inactive')->whereNull('printed_at')->count();
+
+        $scans = fn () => CardLog::where('action', 'scan');
+        $todayScans     = $scans()->whereDate('created_at', today())->count();
+        $yesterdayScans = $scans()->whereDate('created_at', today()->subDay())->count();
+        $totalScans     = $scans()->count();
+        $prevWeekScans  = $scans()
+            ->where('created_at', '>=', now()->subDays(13)->startOfDay())
+            ->where('created_at', '<', now()->subDays(6)->startOfDay())
+            ->count();
 
         $dailyScans = CardLog::where('action', 'scan')
             ->where('created_at', '>=', now()->subDays(6)->startOfDay())
@@ -34,8 +41,9 @@ class DashboardController extends Controller
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i);
             $chartLabels->push($date->translatedFormat('D d/m'));
-            $chartValues->push($dailyScans->get($date->format('Y-m-d'), 0));
+            $chartValues->push((int) $dailyScans->get($date->format('Y-m-d'), 0));
         }
+        $weekScans = $chartValues->sum();
 
         $recent = Card::where('status', 'active')
             ->orderByDesc('activated_at')
@@ -49,7 +57,7 @@ class DashboardController extends Controller
             ->get();
 
         return view('dashboard.index', compact(
-            'stats', 'todayScans', 'weekScans', 'totalScans',
+            'stats', 'todayScans', 'yesterdayScans', 'weekScans', 'prevWeekScans', 'totalScans',
             'chartLabels', 'chartValues', 'recent', 'topStores'
         ));
     }

@@ -42,9 +42,8 @@ class ActivityController extends Controller
             ->orderBy('owner_name')
             ->get(['id', 'owner_name']);
 
-        // Daftar aksi unik untuk dropdown filter
-        $actions = CardLog::select('action')->distinct()->orderBy('action')->pluck('action');
+        $actionCounts = CardLog::selectRaw('action, COUNT(*) as n')->groupBy('action')->pluck('n', 'action');
 
-        return view('dashboard.activity', compact('logs', 'activeCards', 'actions'));
+        return view('dashboard.activity', compact('logs', 'activeCards', 'actionCounts'));
     }
 }

@@ -1,3 +1,17 @@
+### Fix #6 — Simpan Data Usaha Menghapus Alamat & Place ID: Hidden Input Selalu Kosong
+
+| | |
+|---|---|
+| **Tanggal** | 2026-10-04 |
+| **File** | `resources/views/dashboard/cards/show.blade.php` |
+| **Masalah** | Di detail card aktif, menekan "Simpan Perubahan" tanpa memilih ulang usaha dari pencarian Google/link Maps (mis. hanya mengedit nama) mengosongkan `owner_address` dan `place_id` di database. |
+| **Akar** | Komponen Alpine `placesSearch()` hanya menerima nama & link awal; `address` dan `placeId` selalu diinisialisasi `''`. Hidden input `owner_address`/`place_id` (x-model) ikut terkirim kosong, dan `CardController::update()` menyimpan apa adanya (string kosong → null). |
+| **Fix** | `placesSearch(initName, initUrl, initAddress, initPlaceId)` — hidden input diisi dari data card yang tersimpan. Alamat kini juga tampil di bawah field nama. |
+| **Verifikasi** | Render `/dashboard/cards/PV2529C6` sebagai admin: sebelum fix hidden `owner_address` = `""`; sesudah fix = `"Jl. A. Yani No.KM. 36.8, Komet…"` dan `place_id` = `"ChIJpyTe_Q…"`. Submit form kini mengirim nilai lama bila tidak ada pilihan baru. |
+| **Pelajaran** | Form edit dengan hidden input yang di-bind x-model wajib diinisialisasi dari nilai tersimpan, bukan string kosong — kalau tidak, setiap simpan diam-diam menimpa data. |
+| **Log Keyword** | `owner_address`, `place_id`, `placesSearch`, `x-model`, alamat hilang |
+| **Deploy** | Tidak ada migrasi. Card aktif yang alamatnya sudah terlanjur kosong perlu dipilih ulang dari pencarian Google sekali. |
+
 ### Fix #5 — Card Setelah Reset Tetap Buka Maps Lama: Client-Side Redirect Ter-cache Browser
 
 | | |

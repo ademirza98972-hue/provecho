@@ -28,7 +28,8 @@ class CardController extends Controller
             $s = $request->search;
             $query->where(function ($q) use ($s) {
                 $q->where('id', 'like', "%{$s}%")
-                  ->orWhere('owner_name', 'like', "%{$s}%");
+                  ->orWhere('owner_name', 'like', "%{$s}%")
+                  ->orWhere('owner_address', 'like', "%{$s}%");
             });
         }
 
@@ -51,6 +52,7 @@ class CardController extends Controller
             'active'   => Card::where('status', 'active')->count(),
             'inactive' => Card::where('status', 'inactive')->count(),
             'disabled' => Card::where('status', 'disabled')->count(),
+            'unprinted' => Card::where('status', 'inactive')->whereNull('printed_at')->count(),
         ];
 
         return view('dashboard.cards.index', compact('cards', 'counts'));
@@ -61,7 +63,14 @@ class CardController extends Controller
         $logs = $card->logs()->orderByDesc('created_at')->limit(20)->get();
         $qr = QrCode::size(180)->generate($card->url);
 
-        return view('dashboard.cards.show', compact('card', 'logs', 'qr'));
+        $scans = $card->logs()->where('action', 'scan');
+        $scanStats = [
+            'total' => (clone $scans)->count(),
+            'week'  => (clone $scans)->where('created_at', '>=', now()->subDays(6)->startOfDay())->count(),
+            'last'  => (clone $scans)->max('created_at'),
+        ];
+
+        return view('dashboard.cards.show', compact('card', 'logs', 'qr', 'scanStats'));
     }
 
     public function activate(Request $request, Card $card)
