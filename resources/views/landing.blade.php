@@ -64,12 +64,14 @@
     .nav-links a:hover { color: var(--fg); background: rgba(11,21,38,.05) }
     .nav-cta {
         display: inline-flex; align-items: center; gap: 8px;
-        background: var(--fg); color: #fff; font-size: 13.5px; font-weight: 700;
-        padding: 11px 20px; border-radius: 999px; transition: transform .15s, box-shadow .15s;
+        background: linear-gradient(120deg, var(--blue2) 0%, var(--blue) 45%, var(--green) 100%); color: #fff; font-size: 13.5px; font-weight: 700;
+        padding: 11px 18px 11px 20px; border-radius: 999px; transition: transform .15s, box-shadow .15s;
         font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -.01em;
+        box-shadow: 0 8px 18px -10px rgba(14,165,233,.8), inset 0 1px 0 rgba(255,255,255,.25);
     }
-    .nav-cta svg { width: 15px; height: 15px; color: #FF7A45 }
-    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(11,21,38,.5) }
+    .nav-cta svg { width: 15px; height: 15px; transition: transform .15s }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 24px -10px rgba(14,165,233,.9), inset 0 1px 0 rgba(255,255,255,.25) }
+    .nav-cta:hover svg { transform: translateX(2px) }
     .cta-short { display: none }
     .nav-toggle { display: none; width: 42px; height: 42px; border-radius: 999px; border: 1px solid var(--border); background: var(--white); position: relative; flex-shrink: 0 }
     .nav-toggle span { position: absolute; left: 12px; right: 12px; height: 2px; border-radius: 2px; background: var(--fg); transition: transform .3s cubic-bezier(.16,1,.3,1), opacity .2s }
@@ -170,33 +172,30 @@
     .hero-note span { font-weight: 700; color: var(--fg); background: rgba(255,255,255,.85); border: 1px solid rgba(16,185,129,.35); padding: 4px 12px 4px 6px; border-radius: 999px }
     .hero-note span svg { width: 20px; height: 20px; padding: 3px; color: #fff; background: linear-gradient(135deg,var(--blue),var(--green)) }
 
-    /* ─── HERO STAT CARDS ─── */
-    .hero-visual { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; text-align: left; padding-bottom: 8px }
-    .sc {
-        background: rgba(255,255,255,.9); border: 1px solid var(--border);
-        border-radius: 16px; padding: 20px 20px 18px;
-        box-shadow: 0 1px 2px rgba(11,21,38,.04), 0 12px 32px -16px rgba(11,21,38,.14);
-        transition: transform .2s, box-shadow .2s;
-    }
-    .sc:hover { transform: translateY(-3px); box-shadow: 0 1px 2px rgba(11,21,38,.04), 0 18px 40px -16px rgba(11,21,38,.2) }
-    .sc { display: flex; flex-direction: column; gap: 14px }
-    .sc-head { display: flex; align-items: center; gap: 9px; font-size: 12.5px; font-weight: 600; color: var(--fg2) }
-    .sc-ic { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
-    .sc-ic svg { width: 15px; height: 15px }
-    .sc-ic.blue  { background: var(--blue-bg);  color: var(--blue) }
-    .sc-ic.green { background: var(--green-bg); color: var(--green) }
-    .sc-ic.amber { background: #FEF6E4;         color: #F59E0B }
-    .sc-val { display: flex; align-items: baseline; gap: 5px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 34px; font-weight: 800; color: var(--fg); letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums }
-    .sc-val small { font-size: 15px; font-weight: 600; color: var(--fg3); letter-spacing: -.01em }
-    .sc-foot { display: flex; align-items: center; gap: 6px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 12.5px; color: var(--fg3); margin-top: auto }
-    .sc-foot .up { display: inline-flex; align-items: center; gap: 2px; color: var(--green); font-weight: 700 }
-    .sc-foot .up svg { width: 12px; height: 12px }
-    .sc-stars { display: inline-flex; gap: 1px }
-    .sc-stars svg { width: 12px; height: 12px; fill: #F59E0B }
-    .sc-dot { position: relative; width: 9px; height: 9px; border-radius: 50%; background: var(--green); align-self: center; margin-left: 4px }
-    .sc-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--green); animation: ping 1.8s cubic-bezier(0,0,.2,1) infinite }
-    @keyframes ping { 75%,100% { transform: scale(2.6); opacity: 0 } }
 
+    /* ─── HERO: jenis usaha berjalan ─── */
+    .biz { margin-top: 4px }
+    .biz-label { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 12px; font-weight: 700; color: var(--fg3); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 18px }
+    .biz-label::before, .biz-label::after { content: ''; width: 40px; height: 1px; background: linear-gradient(90deg, transparent, var(--blue-border)) }
+    .biz-label::after { transform: scaleX(-1) }
+    .biz-rows { display: grid; gap: 12px;
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent) }
+    .biz-row { overflow: hidden; padding-block: 2px 6px }
+    .biz-track { display: flex; gap: 12px; padding-right: 12px; width: max-content; animation: biz-run 60s linear infinite }
+    .biz-row.rev .biz-track { animation-direction: reverse; animation-duration: 70s }
+    .biz-rows:hover .biz-track { animation-play-state: paused }
+    @keyframes biz-run { to { transform: translateX(-50%) } }
+    .biz-pill { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; padding: 7px 18px 7px 7px; border-radius: 999px;
+        background: rgba(255,255,255,.92); border: 1px solid var(--border); box-shadow: 0 6px 16px -12px rgba(11,21,38,.3);
+        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; color: var(--fg); letter-spacing: -.01em }
+    .biz-pill i { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--blue-bg); color: var(--blue); flex-shrink: 0 }
+    .biz-row.rev .biz-pill i { background: var(--green-bg); color: var(--green) }
+    .biz-pill i svg { width: 16px; height: 16px }
+    @media (prefers-reduced-motion: reduce) {
+        .biz-track { animation: none }
+        .biz-row { overflow-x: auto }
+    }
 /* ─── STATS ─── */
     .stats { background: var(--bg); padding: 40px 0 }
     .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px }
@@ -634,12 +633,11 @@
         .cta-short { display: inline }
         .nav { left: 10px; right: 10px }
         .nav-inner { height: 56px; padding: 0 6px 0 14px }
-        .nav-cta { padding: 9px 14px 9px 10px; font-size: 13.5px }
+        .nav-cta { padding: 10px 14px 10px 16px; font-size: 13.5px; gap: 6px }
         .hero { padding: 116px 0 56px }
         .hero-sub { font-size: 16px }
         .pill { font-size: 11.5px; gap: 8px }
         .pill b { white-space: nowrap; font-size: 10.5px; padding: 4px 8px }
-        .hero-visual { grid-template-columns: 1fr 1fr }
         .sec { padding: 60px 0 }
         .cta-box { padding: 40px 22px; grid-template-columns: 1fr; border-radius: 22px }
         /* CTA HP: foto kecil di atas, teks rata tengah, tombol selebar penuh */
@@ -703,21 +701,20 @@
         .feat.wide .feat-icon { width: 48px; height: 48px }
         .feat.wide h3 { margin-bottom: 4px }
         .feat-wa { grid-column: 1 / -1; justify-content: center; padding: 13px }
-        /* Hero HP: tombol selebar penuh, stat card ringkas */
+        /* Hero HP: tombol selebar penuh */
+        .biz-label { font-size: 11px; margin-bottom: 14px }
+        .biz-label::before, .biz-label::after { width: 24px }
+        .biz-rows { gap: 8px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent) }
+        .biz-track { gap: 8px; padding-right: 8px; animation-duration: 50s }
+        .biz-row.rev .biz-track { animation-duration: 58s }
+        .biz-pill { font-size: 14px; padding: 6px 14px 6px 6px; gap: 8px }
+        .biz-pill i { width: 28px; height: 28px }
+        .biz-pill i svg { width: 14px; height: 14px }
         .hero h1 { font-size: 38px; margin-bottom: 16px }
         .hero-sub { font-size: 15.5px; margin-bottom: 26px }
         .hero-btns { display: grid; justify-content: stretch; gap: 10px; max-width: 340px; margin: 0 auto 20px }
         .btn-primary, .btn-secondary { justify-content: center; width: 100%; padding: 15px }
         .hero-note { gap: 8px 14px; margin-bottom: 36px; font-size: 12.5px }
-        .hero-visual { gap: 10px; grid-auto-rows: 1fr }
-        .sc { padding: 14px; border-radius: 16px; gap: 10px }
-        .sc-head { font-size: 11.5px; gap: 7px }
-        .sc-ic { width: 26px; height: 26px; border-radius: 8px }
-        .sc-ic svg { width: 13px; height: 13px }
-        .sc-val { font-size: 27px }
-        .sc-val small { font-size: 12.5px }
-        .sc-foot { padding-top: 10px; font-size: 11.5px; gap: 5px; flex-wrap: wrap }
-        .sc-stars svg { width: 10px; height: 10px }
 
         /* Desain Card HP: foto + label di atas, teks rata tengah, spesifikasi 2x2 */
         .showcase .split { gap: 24px }
@@ -803,8 +800,8 @@
         </div>
         <div style="display:flex;align-items:center;gap:8px">
             <a href="{{ $shopee }}" class="nav-cta" target="_blank" rel="noopener">
-                {!! $shopeeLogo !!}
                 <span class="cta-long">Pesan Sekarang</span><span class="cta-short">Pesan</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
             <button type="button" class="nav-toggle" @click="open=!open" :aria-expanded="open" aria-controls="nav-panel" aria-label="Menu"><span></span><span></span><span></span></button>
         </div>
@@ -868,44 +865,48 @@
                 Datang siap pakai
             </span>
         </div>
-        <div class="hero-visual hi hi-4">
-            <div class="sc">
-                <div class="sc-head">
-                    <span class="sc-ic amber"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span>
-                    Rating Google
+        @php
+            $ic = [
+                'kopi'   => 'M17 8h1a4 4 0 010 8h-1M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4zM6 2v3M10 2v3M14 2v3',
+                'makan'  => 'M3 2v7a3 3 0 006 0V2M6 2v20M18 2a3 3 0 00-3 3v7h3v10',
+                'gunting'=> 'M9 6a3 3 0 11-6 0 3 3 0 016 0zM9 18a3 3 0 11-6 0 3 3 0 016 0zM20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12',
+                'medis'  => 'M9 3h6v6h6v6h-6v6H9v-6H3V9h6z',
+                'kunci'  => 'M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z',
+                'baju'   => 'M8 3L3 6l2 4 3-1v12h8V9l3 1 2-4-5-3a4 4 0 01-8 0z',
+                'kasur'  => 'M3 18V6M3 14h18v4M21 14v-3a3 3 0 00-3-3h-8v6',
+                'gym'    => 'M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12',
+                'tas'    => 'M6 7h12l-1 13H7zM9 7a3 3 0 016 0',
+                'kamera' => 'M4 8h3l2-3h6l2 3h3v11H4zM12 17a3.5 3.5 0 100-7 3.5 3.5 0 000 7z',
+                'hewan'  => 'M12 13c-3 0-5 3-5 5s2 2 5 2 5 0 5-2-2-5-5-5zM5 10a1.5 1.5 0 103 0 1.5 1.5 0 10-3 0zM16 10a1.5 1.5 0 103 0 1.5 1.5 0 10-3 0zM8.5 6a1.5 1.5 0 103 0 1.5 1.5 0 10-3 0zM12.5 6a1.5 1.5 0 103 0 1.5 1.5 0 10-3 0z',
+                'kilau'  => 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z',
+                'mobil'  => 'M4 13l2-5h12l2 5v4H4zM6 17v2M18 17v2M7.5 14h.01M16.5 14h.01',
+                'kerja'  => 'M3 7h18v13H3zM9 7V4h6v3',
+                'lokasi' => 'M12 21s-7-6-7-11a7 7 0 0114 0c0 5-7 11-7 11zM12 12a2 2 0 100-4 2 2 0 000 4z',
+                'kue'    => 'M4 21h16v-8H4zM4 16c2 1 4 1 6 0s4-1 6 0 3 1 4 0M12 13V9',
+                'toko'   => 'M3 9l2-5h14l2 5M4 9v11h16V9M3 9h18M9 20v-6h6v6',
+                'buku'   => 'M4 4h6a2 2 0 012 2v14a2 2 0 00-2-2H4zM20 4h-6a2 2 0 00-2 2v14a2 2 0 012-2h6z',
+            ];
+            $bizRows = [
+                [['Cafe','kopi'],['Restoran','makan'],['Barbershop','gunting'],['Klinik','medis'],['Bengkel','kunci'],['Laundry','baju'],['Hotel','kasur'],['Gym','gym'],['Toko Kue','kue'],['Salon','kilau'],['Pet Shop','hewan'],['Studio Foto','kamera'],['Bimbel','buku']],
+                [['Kedai Kopi','kopi'],['Warung Makan','makan'],['Apotek','medis'],['Butik','tas'],['Minimarket','toko'],['Homestay','kasur'],['Spa','kilau'],['Cuci Mobil','mobil'],['Tempat Wisata','lokasi'],['Coworking','kerja'],['Klinik Hewan','hewan'],['Toko Retail','toko'],['Nail Art','kilau']],
+            ];
+        @endphp
+        <div class="biz hi hi-4">
+            <div class="biz-label">Cocok untuk semua jenis usaha</div>
+            <div class="biz-rows">
+                @foreach($bizRows as $ri => $row)
+                <div class="biz-row {{ $ri ? 'rev' : '' }}">
+                    <div class="biz-track">
+                        @foreach([false, true] as $dup)
+                            @foreach($row as [$name, $key])
+                            <span class="biz-pill" @if($dup) aria-hidden="true" @endif><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ $ic[$key] }}"/></svg></i>{{ $name }}</span>
+                            @endforeach
+                        @endforeach
+                    </div>
                 </div>
-                <div class="sc-val">4.9<small>/5</small></div>
-                <div class="sc-foot">
-                    <span class="sc-stars">@for($i=0;$i<5;$i++)<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>@endfor</span>
-                    rata-rata ulasan
-                </div>
-            </div>
-            <div class="sc">
-                <div class="sc-head">
-                    <span class="sc-ic blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
-                    Waktu Tap
-                </div>
-                <div class="sc-val">3<small>detik</small></div>
-                <div class="sc-foot">dari tap ke halaman ulasan</div>
-            </div>
-            <div class="sc">
-                <div class="sc-head">
-                    <span class="sc-ic green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
-                    Ulasan Bulan Ini
-                </div>
-                <div class="sc-val">+127</div>
-                <div class="sc-foot"><b class="up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>38%</b> dari bulan lalu</div>
-            </div>
-            <div class="sc">
-                <div class="sc-head">
-                    <span class="sc-ic green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>
-                    Status Card
-                </div>
-                <div class="sc-val">Aktif<span class="sc-dot"></span></div>
-                <div class="sc-foot">uptime 100%, 24 jam</div>
+                @endforeach
             </div>
         </div>
-    </div>
 </section>
 
 
