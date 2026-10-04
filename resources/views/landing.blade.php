@@ -59,9 +59,19 @@
         font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 17px; color: var(--fg); letter-spacing: -.03em;
     }
     .nav-logo img { width: 30px; height: 30px }
-    .nav-links { display: flex; align-items: center; gap: 4px }
-    .nav-links a { font-size: 14px; font-weight: 500; color: var(--fg2); padding: 8px 14px; border-radius: 999px; transition: color .15s, background .15s }
-    .nav-links a:hover { color: var(--fg); background: rgba(11,21,38,.05) }
+    .nav-links { display: flex; align-items: center; gap: 2px; position: relative }
+    .nav-links a { position: relative; z-index: 1; font-size: 14px; font-weight: 500; color: var(--fg2); padding: 8px 14px; border-radius: 999px; transition: color .2s }
+    .nav-links a:hover, .nav-links a.active { color: var(--fg) }
+    /* pill yang meluncur ke link aktif / yang disorot (posisi diatur JS) */
+    .nav-ind {
+        position: absolute; top: 50%; left: 0; height: 36px; width: 0; border-radius: 999px; pointer-events: none; opacity: 0;
+        transform: translate(var(--x, 0), -50%);
+        background: linear-gradient(120deg, rgba(14,165,233,.14), rgba(16,185,129,.14));
+        box-shadow: inset 0 0 0 1px rgba(14,165,233,.22), 0 4px 12px -6px rgba(14,165,233,.45);
+        transition: transform .4s cubic-bezier(.16,1,.3,1), width .4s cubic-bezier(.16,1,.3,1), opacity .25s;
+    }
+    .nav-ind::after { content: ''; position: absolute; left: 50%; bottom: -7px; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--green)) }
+    .nav-ind.on { opacity: 1 }
     .nav-cta {
         display: inline-flex; align-items: center; gap: 8px;
         background: linear-gradient(120deg, var(--blue2) 0%, var(--blue) 45%, var(--green) 100%); color: #fff; font-size: 13.5px; font-weight: 700;
@@ -793,10 +803,12 @@
             Provecho
         </a>
         <div class="nav-links">
-            <a href="#cara-kerja" @click="open=false">Cara Kerja</a>
-            <a href="#fitur" @click="open=false">Fitur</a>
-            <a href="#harga" @click="open=false">Pemesanan</a>
-            <a href="#faq" @click="open=false">FAQ</a>
+            <span class="nav-ind" aria-hidden="true"></span>
+            <a href="#cara-kerja">Cara Kerja</a>
+            <a href="#fitur">Fitur</a>
+            <a href="#kenapa">Perbandingan</a>
+            <a href="#harga">Pemesanan</a>
+            <a href="#faq">FAQ</a>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
             <a href="{{ $shopee }}" class="nav-cta" target="_blank" rel="noopener">
@@ -1367,7 +1379,32 @@ const io = new IntersectionObserver(es => {
 }, { threshold: 0.06, rootMargin: '0px 0px -28px 0px' });
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
 const nav = document.getElementById('nav');
-const onScroll = () => nav.classList.toggle('scrolled', scrollY > 12);
+// navbar: penanda section aktif + pill yang meluncur ke link aktif/disorot
+const navLinks = [...document.querySelectorAll('.nav-links a')];
+const navInd = document.querySelector('.nav-ind');
+const navSecs = navLinks.map(a => document.querySelector(a.getAttribute('href')));
+let activeLink = null;
+const moveInd = a => {
+    navInd.classList.toggle('on', !!a);
+    if (!a) return;
+    navInd.style.setProperty('--x', a.offsetLeft + 'px');
+    navInd.style.width = a.offsetWidth + 'px';
+};
+navLinks.forEach(a => a.addEventListener('mouseenter', () => moveInd(a)));
+document.querySelector('.nav-links').addEventListener('mouseleave', () => moveInd(activeLink));
+
+const onScroll = () => {
+    nav.classList.toggle('scrolled', scrollY > 12);
+    const line = innerHeight * .35;
+    let cur = null;
+    navSecs.forEach((s, i) => { if (s && s.getBoundingClientRect().top <= line) cur = navLinks[i]; });
+    if (cur && document.getElementById('faq').getBoundingClientRect().bottom < line) cur = null; // sudah lewat FAQ (CTA/footer)
+    if (cur !== activeLink) {
+        navLinks.forEach(a => a.classList.toggle('active', a === cur));
+        activeLink = cur;
+        if (!document.querySelector('.nav-links:hover')) moveInd(cur);
+    }
+};
 addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
 // Testimoni: geser otomatis, tapi bisa di-swipe (HP), di-drag mouse, atau digeser trackpad (PC).
