@@ -138,7 +138,7 @@
         animation: hero-drift 14s ease-in-out infinite alternate;
     }
     @keyframes hero-drift { to { transform: translate3d(4%, 6%, 0) scale(1.08) } }
-    @media (prefers-reduced-motion: reduce) { .hero::after { animation: none } }
+    @media (prefers-reduced-motion: reduce) { .hero::after, .testi-bg::after { animation: none } }
     .hero > .w { position: relative; z-index: 1 }
     .pill {
         display: inline-flex; align-items: center; gap: 10px;
@@ -218,11 +218,14 @@
     /* ─── SECTION BASE ─── */
     .sec { padding: 88px 0 }
     .sec-label {
-        display: inline-flex; align-items: center; gap: 8px;
-        font-size: 12px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .1em;
-        margin-bottom: 12px;
+        display: inline-flex; align-items: center; gap: 9px; padding: 5px 16px 5px 5px; margin-bottom: 16px;
+        font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12.5px; font-weight: 800; color: var(--fg); text-transform: uppercase; letter-spacing: .1em;
+        background: linear-gradient(120deg, rgba(255,255,255,.95), rgba(240,249,255,.95)); border: 1px solid var(--blue-border); border-radius: 999px;
+        box-shadow: 0 8px 20px -12px rgba(14,165,233,.55);
     }
-    .sec-label::before { content:''; width: 20px; height: 2px; background: var(--blue); border-radius: 2px }
+    .sec-label i { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fff;
+        background: linear-gradient(135deg, var(--blue), var(--green)); box-shadow: 0 4px 10px -4px rgba(14,165,233,.7) }
+    .sec-label i svg { width: 15px; height: 15px }
     .sec-title { font-size: clamp(24px,3.2vw,38px); font-weight: 800; color: var(--fg); margin-bottom: 12px }
     .sec-sub { font-size: 15.5px; color: var(--fg2); line-height: 1.7 }
     .sec-head { margin-bottom: 52px }
@@ -345,7 +348,6 @@
     }
     .split { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center }
     .split.rev .split-img { order: -1 }
-    .split-text .tag { display: inline-flex; align-items: center; gap: 6px; background: var(--white); border: 1px solid var(--border); color: var(--blue2); font-size: 11.5px; font-weight: 700; padding: 5px 12px; border-radius: 999px; margin-bottom: 18px; text-transform: uppercase; letter-spacing: .08em }
     .split-text h2 { font-size: clamp(26px,3.2vw,40px); font-weight: 900; margin-bottom: 14px; letter-spacing: -.035em; line-height: 1.08 }
     .split-text h2 em { font-style: normal; background: linear-gradient(90deg,var(--blue),var(--green)); -webkit-background-clip: text; background-clip: text; color: transparent }
     .split-text > p { font-size: 15.5px; color: var(--fg2); line-height: 1.7; margin-bottom: 28px; max-width: 460px }
@@ -469,7 +471,21 @@
     .cs-btn:hover { background: #25D366; color: #fff }
 
     /* ─── TESTIMONIALS ─── */
-    .testi-bg { background: linear-gradient(180deg, var(--white) 0%, #F4F9FE 50%, var(--white) 100%); overflow: hidden }
+    .testi-bg { position: relative; overflow: hidden; background: linear-gradient(180deg, var(--white) 0%, #F2F9FF 45%, #F1FBF7 70%, var(--white) 100%) }
+    .testi-bg::before {
+        content: ''; position: absolute; inset: 0; pointer-events: none;
+        background-image: radial-gradient(rgba(14,165,233,.18) 1px, transparent 1px); background-size: 24px 24px;
+        -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 55%, #000 20%, transparent 75%);
+        mask-image: radial-gradient(ellipse 60% 55% at 50% 55%, #000 20%, transparent 75%);
+    }
+    .testi-bg::after {
+        content: ''; position: absolute; inset: 10% -10% 0; pointer-events: none; filter: blur(30px);
+        background: radial-gradient(30% 40% at 20% 55%, rgba(14,165,233,.16), transparent 70%),
+                    radial-gradient(30% 40% at 80% 50%, rgba(16,185,129,.15), transparent 70%);
+        animation: hero-drift 16s ease-in-out infinite alternate;
+    }
+    .testi-bg > * { position: relative; z-index: 1 }
+    .sec-title .grad { font-style: normal; background: linear-gradient(90deg, var(--blue), var(--green)); -webkit-background-clip: text; background-clip: text; color: transparent }
     /* marquee: baris bisa di-scroll (swipe/drag), JS menggeser pelan; track berisi 2 set identik untuk loop */
     .marquee { display: flex; flex-direction: column; gap: 6px;
         -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
@@ -485,12 +501,32 @@
         box-shadow: 0 1px 2px rgba(11,21,38,.04), 0 12px 28px -18px rgba(11,21,38,.18);
         transition: transform .2s, border-color .2s, box-shadow .2s;
     }
-    .testi-card:hover { transform: translateY(-3px); border-color: var(--blue-border); box-shadow: 0 18px 36px -18px rgba(14,165,233,.35) }
+    .testi-card { position: relative; overflow: hidden }
+    /* border gradien muncul saat disorot */
+    .testi-card::before {
+        content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; opacity: 0; transition: opacity .25s;
+        background: linear-gradient(135deg, var(--blue), var(--green));
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+        mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    }
+    .testi-card:hover { transform: translateY(-4px); border-color: transparent; box-shadow: 0 22px 40px -20px rgba(14,165,233,.45) }
+    .testi-card:hover::before { opacity: 1 }
+    .testi-tag { font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px; color: var(--blue2); background: var(--blue-bg) }
+    .testi-text mark { color: inherit; font-weight: 700; padding: 0 2px; border-radius: 3px;
+        background: linear-gradient(transparent 58%, rgba(14,165,233,.22) 58%, rgba(16,185,129,.22) 100%) }
+    /* variasi warna avatar & label per kartu */
+    .tone-1 .testi-av { background: linear-gradient(135deg, #10B981, #34D399) }
+    .tone-1 .testi-tag { color: #047857; background: var(--green-bg) }
+    .tone-2 .testi-av { background: linear-gradient(135deg, #F59E0B, #F97316) }
+    .tone-2 .testi-tag { color: #B45309; background: #FEF6E4 }
+    .tone-3 .testi-av { background: linear-gradient(135deg, #6366F1, #0EA5E9) }
+    .tone-3 .testi-tag { color: #4338CA; background: #EEF2FF }
     .testi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px }
     .testi-stars { display: flex; gap: 2px }
     .testi-stars svg { width: 15px; height: 15px; fill: #F59E0B }
-    .testi-q { width: 26px; height: 26px; color: var(--blue-bg) }
+    .testi-q { position: absolute; right: 14px; bottom: 58px; width: 64px; height: 64px; color: var(--blue-bg); opacity: .7; pointer-events: none }
     .testi-card:hover .testi-q { color: var(--blue-border) }
+    .testi-top, .testi-text, .testi-author { position: relative }
     .testi-text { margin: 0 0 18px; font-size: 14.5px; color: var(--fg); line-height: 1.65; flex: 1 }
     .testi-author { display: flex; align-items: center; gap: 11px; padding-top: 16px; border-top: 1px solid var(--border) }
     .testi-av { width: 38px; height: 38px; border-radius: 12px; background: linear-gradient(135deg,var(--blue),var(--green)); display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0 }
@@ -543,6 +579,7 @@
         animation: hero-drift 12s ease-in-out infinite alternate;
     }
     .cta-text, .cta-visual { position: relative; z-index: 1 }
+    .cta-kicker i { display: inline-flex; width: 18px; height: 18px; margin-right: 7px; vertical-align: -4px } .cta-kicker i svg { width: 16px; height: 16px; fill: #FDE68A; stroke: #FDE68A }
     .cta-kicker { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3); padding: 5px 12px; border-radius: 999px; margin-bottom: 18px }
     .cta-box h2 { font-size: clamp(28px,3.8vw,44px); font-weight: 900; color: #fff; letter-spacing: -.04em; line-height: 1.06; margin-bottom: 14px }
     .cta-box p { font-size: 16.5px; color: rgba(255,255,255,.88); line-height: 1.65; max-width: 460px; margin-bottom: 28px }
@@ -926,9 +963,9 @@
 <section class="sec" id="cara-kerja">
     <div class="w">
         <div class="sec-head ctr rv">
-            <div class="sec-label">Cara Kerja</div>
-            <h2 class="sec-title">Tiga langkah. Beres.</h2>
-            <p class="sec-sub">Tidak perlu pengetahuan teknis. Tidak perlu install apa pun. Card datang siap pakai.</p>
+            <div class="sec-label"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h5v-5h5v-5h5V5"/></svg></i>Cara Kerja</div>
+            <h2 class="sec-title">Dari pesan sampai ulasan masuk, cuma <em class="grad">3 langkah.</em></h2>
+            <p class="sec-sub">Kamu pesan di Shopee, kami hubungkan card ke halaman ulasan Google usaha kamu, lalu tinggal pajang di meja kasir. Pelanggan cukup tap HP atau scan QR.</p>
         </div>
         <div class="how-grid rv">
             <div class="how-step">
@@ -957,9 +994,9 @@
 <section class="sec feat-bg" id="fitur">
     <div class="w">
         <div class="sec-head ctr rv">
-            <div class="sec-label">Fitur</div>
-            <h2 class="sec-title">Semua yang kamu butuhkan, sudah ada.</h2>
-            <p class="sec-sub">Tidak ada fitur premium yang dikunci. Tidak ada upsell. Beli card, semua langsung bisa dipakai.</p>
+            <div class="sec-label"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></i>Fitur</div>
+            <h2 class="sec-title">Semua yang dibutuhkan untuk <em class="grad">menambah ulasan Google.</em></h2>
+            <p class="sec-sub">NFC untuk HP yang mendukung, QR Code untuk semua HP, stand akrilik untuk dipajang, dan CS kalau ada kendala. Semua termasuk dalam sekali beli, tanpa biaya bulanan.</p>
         </div>
         <div class="feat-grid rv">
             <div class="feat big">
@@ -1033,12 +1070,9 @@
         <div class="showcase rv">
         <div class="split">
             <div class="split-text">
-                <div class="tag">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-                    Desain Card
-                </div>
+                <div class="sec-label"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3zM7 15h4"/></svg></i>Desain Card</div>
                 <h2>Card yang langsung <em>dimengerti pelanggan.</em></h2>
-                <p>Pelanggan langsung tahu apa yang harus dilakukan tanpa perlu dijelaskan kasir. Tap NFC atau scan QR, pilih salah satu.</p>
+                <p>Petunjuk "Tap" dan "Scan" serta logo Google tercetak di card, jadi pelanggan tahu harus apa tanpa dijelaskan kasir. HP dengan NFC cukup ditempel, HP lain tinggal scan QR.</p>
                 <div class="spec-grid">
                     <div class="spec">
                         <span class="spec-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></span>
@@ -1078,9 +1112,9 @@
 <section class="sec comp-bg" id="kenapa">
     <div class="w">
         <div class="sec-head ctr rv">
-            <div class="sec-label">Perbandingan</div>
-            <h2 class="sec-title">Apa bedanya dengan card NFC lain?</h2>
-            <p class="sec-sub">Card NFC di marketplace pada dasarnya mirip. Yang kami tambahkan ada di cara setup, cara ganti link, dan bantuan setelah beli.</p>
+            <div class="sec-label"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l-3 6h6zM19 8l-3 6h6zM5 8h14"/></svg></i>Perbandingan</div>
+            <h2 class="sec-title">Sama-sama card NFC, <em class="grad">bedanya di layanan.</em></h2>
+            <p class="sec-sub">Bahan dan fungsi dasarnya mirip dengan card di marketplace. Provecho menambahkan card yang datang siap pakai, ganti lokasi tanpa tulis ulang chip, dan garansi seumur hidup.</p>
         </div>
         @php
             $dot = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 12h12"/></svg>';
@@ -1129,9 +1163,9 @@
 <section class="sec order-bg" id="harga">
     <div class="w">
         <div class="sec-head ctr rv">
-            <div class="sec-label">Pemesanan</div>
-            <h2 class="sec-title">Pesan lewat Shopee.</h2>
-            <p class="sec-sub">Checkout dengan pembayaran dan perlindungan pembeli Shopee. Ada pertanyaan sebelum beli? CS kami siap bantu lewat WhatsApp.</p>
+            <div class="sec-label"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7zM9 7a3 3 0 016 0"/></svg></i>Pemesanan</div>
+            <h2 class="sec-title">Pesan lewat Shopee, <em class="grad">datang siap pakai.</em></h2>
+            <p class="sec-sub">Bayar dengan metode apa pun yang ada di Shopee dan dapat perlindungan pembeli. Tulis nama usaha kamu di catatan pesanan, kami aktifkan card sebelum dikirim.</p>
         </div>
         <div class="order-layout rv">
             <div class="buy-card">
@@ -1195,18 +1229,18 @@
 <section class="sec testi-bg">
     <div class="w">
         <div class="sec-head ctr rv">
-            <div class="sec-label">Testimoni</div>
-            <h2 class="sec-title">Yang pemilik usaha bilang.</h2>
-            <p class="sec-sub">Dari cafe, restoran, barbershop, hingga toko ritel — mereka sudah pakai Provecho.</p>
+            <div class="sec-label"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></i>Testimoni</div>
+            <h2 class="sec-title">Yang pemilik usaha <em class="grad">bilang.</em></h2>
+            <p class="sec-sub">Cerita dari pemilik cafe, barbershop, restoran, dan toko yang memajang Provecho di meja kasirnya.</p>
         </div>
     </div>
             @php $testis = [
-                ['t'=>'Sebelum punya card ini Google Review kami cuma 12. Sekarang sudah 40+ dalam sebulan. Pelanggan senang karena gampang banget.','n'=>'Kak Rina','r'=>'Pemilik Cafe Mungil','i'=>'KR'],
-                ['t'=>'Simple banget. Taruh di kasir, pelanggan tap sendiri. Tidak perlu minta-minta lagi. Review masuk terus tiap hari.','n'=>'Pak Budi','r'=>'Barbershop Budi & Bros','i'=>'PB'],
-                ['t'=>'Awalnya ragu, tapi ternyata gampang. Card datang sudah aktif, tinggal dipajang. Worth it banget untuk harganya.','n'=>'Mbak Sari','r'=>'Toko Oleh-Oleh Sari','i'=>'MS'],
-                ['t'=>'Udah order 3 card untuk 3 cabang. Semua jalan lancar. Pelanggan tidak perlu cari nama toko dulu di Google.','n'=>'Mas Doni','r'=>'Warung Makan Doni Jaya','i'=>'MD'],
-                ['t'=>'Card-nya kelihatan premium. Pelanggan yang lihat pasti nanya ini apaan — jadi conversation starter juga.','n'=>'Kak Fara','r'=>'Boutique Fara Collection','i'=>'KF'],
-                ['t'=>'Google Review restoran kami naik drastis. Pelanggan lebih mau review karena tidak perlu cari nama toko sendiri.','n'=>'Chef Andi','r'=>'Restoran Andi Masak','i'=>'CA'],
+                ['t'=>'Sebelum punya card ini Google Review kami cuma 12. Sekarang sudah 40+ dalam sebulan. Pelanggan senang karena gampang banget.','n'=>'Kak Rina','r'=>'Pemilik Cafe Mungil','i'=>'KR','tag'=>'Cafe','hl'=>'Sekarang sudah 40+ dalam sebulan'],
+                ['t'=>'Simple banget. Taruh di kasir, pelanggan tap sendiri. Tidak perlu minta-minta lagi. Review masuk terus tiap hari.','n'=>'Pak Budi','r'=>'Barbershop Budi & Bros','i'=>'PB','tag'=>'Barbershop','hl'=>'Tidak perlu minta-minta lagi'],
+                ['t'=>'Awalnya ragu, tapi ternyata gampang. Card datang sudah aktif, tinggal dipajang. Worth it banget untuk harganya.','n'=>'Mbak Sari','r'=>'Toko Oleh-Oleh Sari','i'=>'MS','tag'=>'Toko Oleh-oleh','hl'=>'Card datang sudah aktif'],
+                ['t'=>'Udah order 3 card untuk 3 cabang. Semua jalan lancar. Pelanggan tidak perlu cari nama toko dulu di Google.','n'=>'Mas Doni','r'=>'Warung Makan Doni Jaya','i'=>'MD','tag'=>'Warung Makan','hl'=>'3 card untuk 3 cabang'],
+                ['t'=>'Card-nya kelihatan premium. Pelanggan yang lihat pasti nanya ini apaan — jadi conversation starter juga.','n'=>'Kak Fara','r'=>'Boutique Fara Collection','i'=>'KF','tag'=>'Butik','hl'=>'kelihatan premium'],
+                ['t'=>'Google Review restoran kami naik drastis. Pelanggan lebih mau review karena tidak perlu cari nama toko sendiri.','n'=>'Chef Andi','r'=>'Restoran Andi Masak','i'=>'CA','tag'=>'Restoran','hl'=>'naik drastis'],
             ]; @endphp
             @php
                 $rowsT = [$testis, array_reverse($testis)];
@@ -1218,13 +1252,14 @@
                 <div class="marquee-track">
                     {{-- set kedua = duplikat untuk loop mulus --}}
                     @foreach([false, true] as $dup)
-                        @foreach($list as $t)
-                        <figure class="testi-card" @if($dup) aria-hidden="true" @endif>
+                        @foreach($list as $ti => $t)
+                        <figure class="testi-card tone-{{ ($ri * 2 + $ti) % 4 }}" @if($dup) aria-hidden="true" @endif>
+                            <svg class="testi-q" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 6C6.5 6 4 8.5 4 11.5V18h6v-6H7c0-1.7 1.3-3 3-3V6h-.5zm10 0c-3 0-5.5 2.5-5.5 5.5V18h6v-6h-3c0-1.7 1.3-3 3-3V6h-.5z"/></svg>
                             <div class="testi-top">
                                 <div class="testi-stars">{!! str_repeat($star, 5) !!}</div>
-                                <svg class="testi-q" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 6C6.5 6 4 8.5 4 11.5V18h6v-6H7c0-1.7 1.3-3 3-3V6h-.5zm10 0c-3 0-5.5 2.5-5.5 5.5V18h6v-6h-3c0-1.7 1.3-3 3-3V6h-.5z"/></svg>
+                                <span class="testi-tag">{{ $t["tag"] }}</span>
                             </div>
-                            <blockquote class="testi-text">{{ $t["t"] }}</blockquote>
+                            <blockquote class="testi-text">{!! str_replace(e($t["hl"]), '<mark>'.e($t["hl"]).'</mark>', e($t["t"])) !!}</blockquote>
                             <figcaption class="testi-author">
                                 <div class="testi-av">{{ $t["i"] }}</div>
                                 <div>
@@ -1246,9 +1281,9 @@
     <div class="w">
         <div class="faq-layout">
             <div class="faq-side rv">
-                <div class="sec-label">FAQ</div>
-                <h2 class="sec-title">Pertanyaan yang sering ditanya.</h2>
-                <p class="faq-lead">Hal-hal yang biasanya ditanyakan sebelum beli. Belum terjawab? Tanya langsung ke CS kami.</p>
+                <div class="sec-label"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 100-18 9 9 0 000 18zM9.5 9.5a2.5 2.5 0 015 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg></i>FAQ</div>
+                <h2 class="sec-title">Pertanyaan yang <em class="grad">sering ditanya.</em></h2>
+                <p class="faq-lead">Soal cara kerja card, pengiriman, ganti lokasi, sampai garansi. Belum terjawab? Tanya langsung ke CS kami lewat WhatsApp.</p>
                 <div class="faq-cs">
                     <div class="faq-cs-top">
                         <span class="cs-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span>
@@ -1292,7 +1327,7 @@
     <div class="w">
         <div class="cta-box rv">
             <div class="cta-text">
-                <span class="cta-kicker">Siap dapat lebih banyak ulasan?</span>
+                <span class="cta-kicker"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></i>Siap dapat lebih banyak ulasan?</span>
                 <h2>Mulai kumpulkan Google Review hari ini.</h2>
                 <p>Satu card, sekali bayar, bergaransi seumur hidup. Taruh di meja kasir dan biarkan pelanggan memberi ulasan sendiri.</p>
                 <div class="cta-btns">
