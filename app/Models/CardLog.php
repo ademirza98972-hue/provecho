@@ -53,4 +53,11 @@ class CardLog extends Model
     {
         return $this->belongsTo(Card::class);
     }
+
+    public function scopeVisibleTo($query, User $user)
+    {
+        return $user->isAdmin()
+            ? $query
+            : $query->whereIn('card_id', Card::where('reseller_id', $user->id)->select('id'));
+    }
 }

@@ -12,14 +12,15 @@ class StatsController extends Controller
 {
     public function index(Request $request)
     {
+        $user = $request->user();
         // Ringkasan global
-        $totalScans     = CardLog::where('action', 'scan')->count();
-        $todayScans     = CardLog::where('action', 'scan')->whereDate('created_at', today())->count();
-        $weekScans      = CardLog::where('action', 'scan')->where('created_at', '>=', now()->subDays(7))->count();
-        $activeCards    = Card::where('status', 'active')->count();
+        $totalScans     = CardLog::visibleTo($user)->where('action', 'scan')->count();
+        $todayScans     = CardLog::visibleTo($user)->where('action', 'scan')->whereDate('created_at', today())->count();
+        $weekScans      = CardLog::visibleTo($user)->where('action', 'scan')->where('created_at', '>=', now()->subDays(7))->count();
+        $activeCards    = Card::visibleTo($user)->where('status', 'active')->count();
 
         // Scan per toko (card aktif)
-        $query = Card::where('status', 'active')
+        $query = Card::visibleTo($user)->where('status', 'active')
             ->withCount(['logs as scan_count' => function ($q) {
                 $q->where('action', 'scan');
             }])
@@ -42,7 +43,7 @@ class StatsController extends Controller
         $stores = $query->paginate(20)->withQueryString();
 
         // Scan per hari (7 hari terakhir) untuk chart sederhana
-        $dailyScans = CardLog::where('action', 'scan')
+        $dailyScans = CardLog::visibleTo($user)->where('action', 'scan')
             ->where('created_at', '>=', now()->subDays(6)->startOfDay())
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as total'))
             ->groupBy('date')

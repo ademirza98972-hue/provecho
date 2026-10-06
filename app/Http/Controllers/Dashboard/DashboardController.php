@@ -5,22 +5,24 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Card;
 use App\Models\CardLog;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $user = $request->user();
         $stats = [
-            'total'    => Card::count(),
-            'active'   => Card::where('status', 'active')->count(),
-            'inactive' => Card::where('status', 'inactive')->count(),
-            'disabled' => Card::where('status', 'disabled')->count(),
+            'total'    => Card::visibleTo($user)->count(),
+            'active'   => Card::visibleTo($user)->where('status', 'active')->count(),
+            'inactive' => Card::visibleTo($user)->where('status', 'inactive')->count(),
+            'disabled' => Card::visibleTo($user)->where('status', 'disabled')->count(),
         ];
 
-        $stats['unprinted'] = Card::where('status', 'inactive')->whereNull('printed_at')->count();
+        $stats['unprinted'] = Card::visibleTo($user)->where('status', 'inactive')->whereNull('printed_at')->count();
 
-        $scans = fn () => CardLog::where('action', 'scan');
+        $scans = fn () => CardLog::visibleTo($user)->where('action', 'scan');
         $todayScans     = $scans()->whereDate('created_at', today())->count();
         $yesterdayScans = $scans()->whereDate('created_at', today()->subDay())->count();
         $totalScans     = $scans()->count();
@@ -29,7 +31,7 @@ class DashboardController extends Controller
             ->where('created_at', '<', now()->subDays(6)->startOfDay())
             ->count();
 
-        $dailyScans = CardLog::where('action', 'scan')
+        $dailyScans = CardLog::visibleTo($user)->where('action', 'scan')
             ->where('created_at', '>=', now()->subDays(6)->startOfDay())
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as total'))
             ->groupBy('date')
@@ -45,12 +47,12 @@ class DashboardController extends Controller
         }
         $weekScans = $chartValues->sum();
 
-        $recent = Card::where('status', 'active')
+        $recent = Card::visibleTo($user)->where('status', 'active')
             ->orderByDesc('activated_at')
             ->limit(5)
             ->get();
 
-        $topStores = Card::where('status', 'active')
+        $topStores = Card::visibleTo($user)->where('status', 'active')
             ->withCount(['logs as scan_count' => fn ($q) => $q->where('action', 'scan')])
             ->orderByDesc('scan_count')
             ->limit(5)

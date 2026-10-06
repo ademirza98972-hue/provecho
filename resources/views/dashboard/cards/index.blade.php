@@ -3,15 +3,17 @@
 @section('content')
 
 @php
-    $pills = [
+    $isAdmin = auth()->user()->isAdmin();
+    $pills = array_values(array_filter([
         ['key' => null,        'label' => 'Semua',         'n' => $counts['total'],     'tone' => ''],
         ['key' => 'active',    'label' => 'Aktif',         'n' => $counts['active'],    'tone' => 'ok'],
         ['key' => 'inactive',  'label' => 'Belum aktif',   'n' => $counts['inactive'],  'tone' => 'warn'],
-        ['key' => 'unprinted', 'label' => 'Belum dicetak', 'n' => $counts['unprinted'], 'tone' => 'info'],
+        $isAdmin ? ['key' => 'unprinted', 'label' => 'Belum dicetak', 'n' => $counts['unprinted'], 'tone' => 'info'] : null,
         ['key' => 'disabled',  'label' => 'Nonaktif',      'n' => $counts['disabled'],  'tone' => 'bad'],
-    ];
+    ]));
     $statusLabel = ['active' => 'Aktif', 'inactive' => 'Belum aktif', 'disabled' => 'Nonaktif'];
-    $filtered = request()->hasAny(['search', 'generated']) && (request('search') || request('generated'));
+    $filtered = request('search') || request('generated') || request('reseller');
+    $cols = $isAdmin ? 8 : 6;
 @endphp
 
 <div class="stack">
@@ -19,8 +21,13 @@
     <div class="page-head">
         <div>
             <h2 class="page-title">Daftar card</h2>
-            <p class="page-sub">Generate ID baru, cetak QR, lalu aktifkan card sebelum dikirim ke pembeli.</p>
+            <p class="page-sub">
+                {{ $isAdmin
+                    ? 'Generate ID baru, cetak QR, berikan ke reseller, lalu aktifkan card sebelum dikirim ke pembeli.'
+                    : 'Card dari Provecho untuk kamu jual. Aktifkan card dengan data usaha pembeli sebelum diserahkan.' }}
+            </p>
         </div>
+        @if($isAdmin)
         <form method="POST" action="{{ route('dashboard.cards.generate') }}" class="gen-form">
             @csrf
             <label for="gen-count">Generate</label>
@@ -31,6 +38,7 @@
                 Generate
             </button>
         </form>
+        @endif
     </div>
 
     <nav class="status-pills" aria-label="Filter status">
@@ -59,6 +67,15 @@
                     <option value="week" @selected(request('generated') === 'week')>7 hari terakhir</option>
                     <option value="month" @selected(request('generated') === 'month')>30 hari terakhir</option>
                 </select>
+                @if($isAdmin)
+                <select name="reseller" onchange="this.form.submit()" aria-label="Pemilik card">
+                    <option value="">Semua pemilik</option>
+                    <option value="none" @selected(request('reseller') === 'none')>Stok admin</option>
+                    @foreach($resellers as $r)
+                        <option value="{{ $r->id }}" @selected(request('reseller') == $r->id)>{{ $r->name }}</option>
+                    @endforeach
+                </select>
+                @endif
                 <select name="per_page" onchange="this.form.submit()" aria-label="Baris per halaman">
                     @foreach([20, 50, 100] as $n)
                         <option value="{{ $n }}" @selected($cards->perPage() == $n)>{{ $n }} / hal</option>
@@ -71,12 +88,25 @@
             <span class="hint">{{ number_format($cards->total()) }} card</span>
         </div>
 
+        @if($isAdmin)
         <div class="panel-head sel-bar" x-show="sel.length" x-cloak>
             <span class="sel-count"><b x-text="sel.length"></b> card dipilih</span>
+            <button type="button" class="btn btn-ghost btn-sm" @click="sel = []">Batal</button>
+            <form method="POST" action="{{ route('dashboard.cards.assign') }}" class="sel-actions assign-form">
+                @csrf
+                <template x-for="id in sel"><input type="hidden" name="ids[]" :value="id"></template>
+                <select name="reseller" required aria-label="Berikan ke">
+                    <option value="" disabled selected>Berikan ke…</option>
+                    @foreach($resellers as $r)
+                        <option value="{{ $r->id }}">{{ $r->name }}</option>
+                    @endforeach
+                    <option value="none">Tarik ke stok admin</option>
+                </select>
+                <button type="submit" class="btn btn-outline btn-sm">Simpan</button>
+            </form>
             <form method="POST" action="{{ route('dashboard.cards.export.pdf') }}" class="sel-actions">
                 @csrf
                 <template x-for="id in sel"><input type="hidden" name="ids[]" :value="id"></template>
-                <button type="button" class="btn btn-ghost btn-sm" @click="sel = []">Batal</button>
                 <select name="mode" x-model="mode" aria-label="Ukuran cetak">
                     <option value="single">10×10 cm</option>
                     <option value="a4">Kertas A4</option>
@@ -94,18 +124,22 @@
                 </button>
             </form>
         </div>
+        @endif
 
         <div class="table-wrap">
             <table class="card-table">
                 <thead>
                     <tr>
+                        @if($isAdmin)
                         <th class="check">
                             <input type="checkbox" aria-label="Pilih semua di halaman ini"
                                    :checked="ids.length > 0 && sel.length === ids.length"
                                    @change="sel = $event.target.checked ? [...ids] : []">
                         </th>
+                        @endif
                         <th>ID Card</th>
                         <th>Usaha</th>
+                        @if($isAdmin)<th class="col-owner">Pemilik</th>@endif
                         <th>Status</th>
                         <th class="num">Scan</th>
                         <th class="col-created">Dibuat</th>
@@ -115,9 +149,11 @@
                 <tbody>
                     @forelse($cards as $card)
                     <tr :class="sel.includes('{{ $card->id }}') && 'is-sel'">
+                        @if($isAdmin)
                         <td class="check">
                             <input type="checkbox" value="{{ $card->id }}" x-model="sel" aria-label="Pilih {{ $card->id }}">
                         </td>
+                        @endif
                         <td>
                             <div class="id-cell">
                                 <a href="{{ route('dashboard.cards.show', $card) }}" class="mono link">{{ $card->id }}</a>
@@ -137,6 +173,15 @@
                                 <span class="faint">Belum terhubung</span>
                             @endif
                         </td>
+                        @if($isAdmin)
+                        <td class="col-owner">
+                            @if($card->reseller)
+                                <span class="owner-chip">{{ $card->reseller->name }}</span>
+                            @else
+                                <span class="faint">Stok admin</span>
+                            @endif
+                        </td>
+                        @endif
                         <td>
                             <span class="badge badge-{{ $card->status }}"><span class="dot"></span>{{ $statusLabel[$card->status] }}</span>
                             <span class="status-note">
@@ -144,6 +189,8 @@
                                     sejak {{ $card->activated_at?->translatedFormat('j M Y') }}
                                 @elseif($card->status === 'disabled')
                                     sejak {{ $card->disabled_at?->translatedFormat('j M Y') }}
+                                @elseif(! $isAdmin)
+                                    Siap diaktifkan
                                 @elseif($card->printed_at)
                                     Dicetak {{ $card->printed_at->translatedFormat('j M') }}
                                 @else
@@ -163,8 +210,14 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="empty">
-                            {{ $filtered || request('status') ? 'Tidak ada card yang cocok dengan filter ini.' : 'Belum ada card. Generate card pertama lewat tombol di atas.' }}
+                        <td colspan="{{ $cols }}" class="empty">
+                            @if($filtered || request('status'))
+                                Tidak ada card yang cocok dengan filter ini.
+                            @elseif($isAdmin)
+                                Belum ada card. Generate card pertama lewat tombol di atas.
+                            @else
+                                Belum ada card untuk kamu. Hubungi admin Provecho untuk mendapatkan card.
+                            @endif
                         </td>
                     </tr>
                     @endforelse
@@ -180,10 +233,12 @@
         @endif
     </div>
 
+    @if($isAdmin)
     <form x-ref="deleteForm" method="POST" action="{{ route('dashboard.cards.bulk-destroy') }}" hidden>
         @csrf
         <template x-for="id in sel"><input type="hidden" name="ids[]" :value="id"></template>
     </form>
+    @endif
     </div>
 
 </div>
@@ -270,6 +325,9 @@
 .scan-pill.has-scans { background: var(--accent-soft); color: var(--accent); }
 
 .col-created { white-space: nowrap; }
+.col-owner { white-space: nowrap; }
+.owner-chip { font-size: 12px; font-weight: 600; color: #6D28D9; background: #F5F3FF; padding: 3px 9px; border-radius: 99px; }
+.assign-form { padding-right: 8px; margin-right: auto; border-right: 1px solid #BAE6FD; }
 .go { width: 44px; text-align: right; }
 .go-btn {
     display: inline-flex; padding: 6px; border-radius: 7px; color: var(--faint); transition: all .12s;

@@ -16,7 +16,7 @@
     $total = max($stats['total'], 1);
     $status = [
         ['key' => 'active',   'label' => 'Aktif',       'n' => $stats['active'],   'color' => 'var(--ok)',   'desc' => 'Terhubung ke halaman ulasan Google'],
-        ['key' => 'inactive', 'label' => 'Belum aktif', 'n' => $stats['inactive'], 'color' => '#F59E0B',     'desc' => $stats['unprinted'] . ' di antaranya belum dicetak'],
+        ['key' => 'inactive', 'label' => 'Belum aktif', 'n' => $stats['inactive'], 'color' => '#F59E0B',     'desc' => auth()->user()->isAdmin() ? $stats['unprinted'] . ' di antaranya belum dicetak' : 'Siap diaktifkan untuk pembeli'],
         ['key' => 'disabled', 'label' => 'Nonaktif',    'n' => $stats['disabled'], 'color' => 'var(--bad)',  'desc' => 'Dimatikan dari dashboard'],
     ];
     $maxScan = max($topStores->max('scan_count') ?? 0, 1);

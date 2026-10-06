@@ -23,6 +23,8 @@
     .brand { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12px; color: #9CA3AF; }
     .brand-mark { width: 20px; height: 20px; object-fit: contain; }
     </style>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
 <div class="box">

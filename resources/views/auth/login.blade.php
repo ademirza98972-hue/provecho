@@ -54,6 +54,8 @@
     .error { display: flex; align-items: flex-start; gap: 8px; background: var(--bad-soft); border: 1px solid #FECACA; color: var(--bad); border-radius: 9px; padding: 10px 13px; font-size: 13px; font-weight: 500; margin-bottom: 16px; }
     .foot  { text-align: center; font-size: 12px; color: var(--faint); }
     </style>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
 <div class="box">

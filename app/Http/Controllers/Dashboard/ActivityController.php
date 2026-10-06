@@ -11,7 +11,8 @@ class ActivityController extends Controller
 {
     public function index(Request $request)
     {
-        $query = CardLog::with('card')
+        $user = $request->user();
+        $query = CardLog::visibleTo($user)->with('card')
             ->orderByDesc('created_at');
 
         // Filter berdasarkan card tertentu
@@ -38,11 +39,11 @@ class ActivityController extends Controller
         $logs = $query->paginate(30)->withQueryString();
 
         // Daftar card aktif untuk dropdown filter
-        $activeCards = Card::where('status', 'active')
+        $activeCards = Card::visibleTo($user)->where('status', 'active')
             ->orderBy('owner_name')
             ->get(['id', 'owner_name']);
 
-        $actionCounts = CardLog::selectRaw('action, COUNT(*) as n')->groupBy('action')->pluck('n', 'action');
+        $actionCounts = CardLog::visibleTo($user)->selectRaw('action, COUNT(*) as n')->groupBy('action')->pluck('n', 'action');
 
         return view('dashboard.activity', compact('logs', 'activeCards', 'actionCounts'));
     }

@@ -19,11 +19,22 @@ class Card extends Model
         'activated_at' => 'datetime',
         'disabled_at' => 'datetime',
         'printed_at' => 'datetime',
+        'reseller_id' => 'integer',
     ];
 
     public function logs()
     {
         return $this->hasMany(CardLog::class);
+    }
+
+    public function reseller()
+    {
+        return $this->belongsTo(User::class, 'reseller_id');
+    }
+
+    public function scopeVisibleTo($query, User $user)
+    {
+        return $user->isAdmin() ? $query : $query->where('reseller_id', $user->id);
     }
 
     public function isActive(): bool

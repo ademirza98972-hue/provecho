@@ -53,10 +53,12 @@
             <span class="panel-title">Scan per Toko</span>
             <div class="toolbar-group">
                 {{ $stores->links('vendor.pagination.simple') }}
+                @can('admin')
                 <a href="{{ route('dashboard.stats.export') }}" class="btn btn-outline btn-sm">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                     Export CSV
                 </a>
+                @endcan
             </div>
         </div>
         <div class="table-wrap">

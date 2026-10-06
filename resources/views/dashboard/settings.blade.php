@@ -69,12 +69,13 @@
                         <span class="account-ava">{{ strtoupper(mb_substr($user->name ?? $user->username, 0, 1)) }}</span>
                         <div>
                             <span class="account-name">{{ $user->name ?? $user->username }}</span>
-                            <span class="account-user">Login sebagai <b>{{ $user->username }}</b></span>
+                            <span class="account-user">Login sebagai <b>{{ $user->username }}</b> · {{ $user->isAdmin() ? 'Admin' : 'Reseller' }}</span>
                         </div>
                     </div>
                 </div>
             </div>
 
+            @can('admin')
             <div class="panel">
                 <div class="panel-head"><span class="panel-title">Informasi sistem</span></div>
                 <div class="panel-body">
@@ -109,6 +110,7 @@
                     </dl>
                 </div>
             </div>
+            @endcan
 
         </div>
     </div>

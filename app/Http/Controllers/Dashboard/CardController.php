@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Card;
 use App\Models\CardLog;
+use App\Models\User;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -12,7 +13,14 @@ class CardController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Card::query();
+        $user = $request->user();
+        $query = Card::visibleTo($user)->with('reseller:id,name');
+
+        if ($user->isAdmin() && $request->filled('reseller')) {
+            $request->reseller === 'none'
+                ? $query->whereNull('reseller_id')
+                : $query->where('reseller_id', (int) $request->reseller);
+        }
 
         if ($request->filled('status')) {
             if ($request->status === 'printed') {
@@ -47,19 +55,45 @@ class CardController extends Controller
         $perPage = in_array((int) $request->input('per_page'), [20, 50, 100]) ? (int) $request->per_page : 20;
         $cards = $query->orderByDesc('created_at')->paginate($perPage)->withQueryString();
 
+        $mine = fn () => Card::visibleTo($user);
         $counts = [
-            'total'    => Card::count(),
-            'active'   => Card::where('status', 'active')->count(),
-            'inactive' => Card::where('status', 'inactive')->count(),
-            'disabled' => Card::where('status', 'disabled')->count(),
-            'unprinted' => Card::where('status', 'inactive')->whereNull('printed_at')->count(),
+            'total'     => $mine()->count(),
+            'active'    => $mine()->where('status', 'active')->count(),
+            'inactive'  => $mine()->where('status', 'inactive')->count(),
+            'disabled'  => $mine()->where('status', 'disabled')->count(),
+            'unprinted' => $mine()->where('status', 'inactive')->whereNull('printed_at')->count(),
         ];
 
-        return view('dashboard.cards.index', compact('cards', 'counts'));
+        $resellers = $user->isAdmin() ? User::where('role', 'reseller')->orderBy('name')->get(['id', 'name']) : collect();
+
+        return view('dashboard.cards.index', compact('cards', 'counts', 'resellers'));
     }
 
-    public function show(Card $card)
+    public function assign(Request $request)
     {
+        $data = $request->validate([
+            'ids'      => 'required|array|min:1',
+            'ids.*'    => 'string',
+            'reseller' => 'required',
+        ]);
+
+        $resellerId = null;
+        if ($data['reseller'] !== 'none') {
+            $resellerId = User::where('role', 'reseller')->findOrFail((int) $data['reseller'])->id;
+        }
+
+        $n = Card::whereIn('id', $data['ids'])->update(['reseller_id' => $resellerId]);
+
+        return back()->with('success', $resellerId
+            ? "{$n} card diberikan ke " . User::find($resellerId)->name . '.'
+            : "{$n} card ditarik kembali ke stok admin.");
+    }
+
+    public function show(Request $request, Card $card)
+    {
+        $resellers = $request->user()->isAdmin()
+            ? User::where('role', 'reseller')->orderBy('name')->get(['id', 'name'])
+            : collect();
         $logs = $card->logs()->orderByDesc('created_at')->limit(20)->get();
         $qr = QrCode::size(180)->generate($card->url);
 
@@ -70,7 +104,7 @@ class CardController extends Controller
             'last'  => (clone $scans)->max('created_at'),
         ];
 
-        return view('dashboard.cards.show', compact('card', 'logs', 'qr', 'scanStats'));
+        return view('dashboard.cards.show', compact('card', 'logs', 'qr', 'scanStats', 'resellers'));
     }
 
     public function activate(Request $request, Card $card)

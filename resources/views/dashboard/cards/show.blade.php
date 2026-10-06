@@ -4,6 +4,7 @@
 
 @php
     $statusLabel = ['active' => 'Aktif', 'inactive' => 'Belum aktif', 'disabled' => 'Nonaktif'][$card->status];
+    $isAdmin = auth()->user()->isAdmin();
     $lastScan = $scanStats['last'] ? \Illuminate\Support\Carbon::parse($scanStats['last']) : null;
 @endphp
 
@@ -140,6 +141,9 @@
                     </div>
                 </div>
                 <div class="panel-body">
+                    @unless($isAdmin)
+                    <p class="hint">Card ini dinonaktifkan oleh admin Provecho. Hubungi admin kalau card perlu diaktifkan kembali.</p>
+                    @else
                     <div class="choice-list">
                         <div class="choice">
                             <div>
@@ -164,10 +168,12 @@
                             </form>
                         </div>
                     </div>
+                    @endunless
                 </div>
             </div>
             @endif
 
+            @if($isAdmin)
             <div class="panel danger-zone">
                 <div class="panel-body danger-row">
                     @if($card->isActive())
@@ -193,10 +199,35 @@
                     @endif
                 </div>
             </div>
+            @endif
 
         </div>
 
         <div class="stack">
+
+            @if($isAdmin)
+            <div class="panel">
+                <div class="panel-head">
+                    <div>
+                        <span class="panel-title">Pemilik card</span>
+                        <p class="panel-sub">Reseller yang memegang card ini bisa mengaktifkan dan mengubah datanya.</p>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <form method="POST" action="{{ route('dashboard.cards.assign') }}" class="print-row owner-row">
+                        @csrf
+                        <input type="hidden" name="ids[]" value="{{ $card->id }}">
+                        <select name="reseller" aria-label="Pemilik card">
+                            <option value="none" @selected(! $card->reseller_id)>Stok admin</option>
+                            @foreach($resellers as $r)
+                                <option value="{{ $r->id }}" @selected($card->reseller_id === $r->id)>{{ $r->name }}</option>
+                            @endforeach
+                        </select>
+                        <button type="submit" class="btn btn-outline btn-sm">Simpan</button>
+                    </form>
+                </div>
+            </div>
+            @endif
 
             <div class="panel">
                 <div class="panel-head">
@@ -217,11 +248,14 @@
                         <p class="hint qr-hint">
                             @if($card->isActive())
                                 Tap NFC atau scan QR langsung membuka halaman ulasan {{ $card->owner_name }}.
-                            @else
+                            @elseif($isAdmin)
                                 QR sudah bisa dicetak. Selama card belum aktif, scan menampilkan halaman "Kartu belum aktif".
+                            @else
+                                Selama card belum aktif, scan menampilkan halaman "Kartu belum aktif".
                             @endif
                         </p>
                     </div>
+                    @if($isAdmin)
                     <form method="POST" action="{{ route('dashboard.cards.export.pdf') }}" class="print-row">
                         @csrf
                         <input type="hidden" name="ids[]" value="{{ $card->id }}">
@@ -236,6 +270,7 @@
                             Cetak QR
                         </button>
                     </form>
+                    @endif
                 </div>
             </div>
 
@@ -314,6 +349,7 @@
 .copy-btn.copied .icon-check { display: block; color: var(--ok); }
 .qr-hint { text-align: center; max-width: 36ch; }
 .print-row { display: flex; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.owner-row { margin-top: 0; padding-top: 0; border-top: 0; }
 .print-row select { flex: 1; padding: 7px 10px; font-size: 13px; font-weight: 500; cursor: pointer; }
 
 .log-body { padding-top: 6px; padding-bottom: 6px; max-height: 420px; overflow-y: auto; }

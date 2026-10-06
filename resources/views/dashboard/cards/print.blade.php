@@ -58,6 +58,8 @@
         .card-item { page-break-inside: avoid; }
     }
 </style>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
 

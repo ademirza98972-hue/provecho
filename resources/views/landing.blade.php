@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Provecho — Google Review Card</title>
-    <meta name="description" content="Card NFC + QR Code yang langsung membuka Google Review toko kamu. Tap sekali, review masuk. Datang siap pakai, garansi seumur hidup.">
+    <meta name="description" content="Card NFC + QR Code yang langsung membuka halaman ulasan Google usaha kamu. Pelanggan cukup tap HP atau scan QR. Datang siap pakai, garansi seumur hidup.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap">
@@ -110,7 +110,6 @@
     .np-links b { margin-left: auto; font-size: 20px; font-weight: 400; color: var(--fg3); line-height: 1 }
     .np-actions { display: grid; gap: 8px; padding: 10px 2px 2px; margin-top: 6px; border-top: 1px solid var(--border) }
     .np-buy { display: flex; align-items: center; justify-content: center; gap: 9px; padding: 14px; border-radius: 999px; background: linear-gradient(135deg,#FF6A3D,#EE4D2D); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; box-shadow: 0 12px 24px -12px rgba(238,77,45,.7) }
-    .np-cs { display: flex; align-items: center; justify-content: center; padding: 13px; border-radius: 999px; border: 1.5px solid #25D366; color: #15803D; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14.5px; font-weight: 700 }
     .np-note { display: flex; align-items: center; justify-content: center; gap: 7px; padding: 12px 0 4px; font-size: 12.5px; font-weight: 600; color: var(--fg2) }
     .np-note svg { width: 18px; height: 18px; padding: 3px; border-radius: 50%; color: #fff; background: linear-gradient(135deg,var(--blue),var(--green)) }
 
@@ -279,8 +278,6 @@
     .feat.wide .feat-icon { margin: 0; flex-shrink: 0; width: 52px; height: 52px; border-radius: 14px }
     .feat.wide .feat-icon svg { width: 25px; height: 25px }
     .feat.wide > div:not(.feat-icon) { flex: 1 }
-    .feat-wa { flex-shrink: 0; display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px; padding: 12px 22px; border-radius: 999px; box-shadow: 0 10px 22px -12px rgba(37,211,102,.8); transition: opacity .15s }
-    .feat-wa:hover { opacity: .88 }
     @media (prefers-reduced-motion: reduce) {
         .nfc-phone, .nfc-phone svg, .nfc-wave, .qr-scan { animation: none }
     }
@@ -604,12 +601,6 @@
     .foot-brand { display: inline-flex; align-items: center; gap: 9px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 19px; color: var(--fg); letter-spacing: -.03em }
     .foot-brand img { width: 30px; height: 30px }
     .foot-about p { font-size: 14px; color: var(--fg2); line-height: 1.7; max-width: 320px; margin: 14px 0 20px }
-    .foot-cta { display: flex; flex-wrap: wrap; gap: 10px }
-    .foot-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--white); border: 1px solid var(--border); color: var(--fg); font-size: 13.5px; font-weight: 600; padding: 8px 14px 8px 8px; border-radius: 999px; transition: border-color .15s, transform .15s, box-shadow .15s }
-    .foot-btn:hover { border-color: #CBD5E1; transform: translateY(-1px); box-shadow: 0 8px 18px -10px rgba(11,21,38,.25) }
-    .foot-btn .shp { background: #FFF4ED }
-    .foot-wa { width: 22px; height: 22px; border-radius: 6px; background: #25D366; color: #fff; display: inline-flex; align-items: center; justify-content: center }
-    .foot-wa svg { width: 14px; height: 14px }
     .foot-col { display: flex; flex-direction: column; gap: 11px }
     .foot-col h4 { font-size: 12px; font-weight: 700; color: var(--fg); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; font-family: 'Inter', sans-serif }
     .foot-col a, .foot-col span { font-size: 14px; color: var(--fg2); width: fit-content }
@@ -620,10 +611,6 @@
     .foot-badge svg { width: 20px; height: 20px; padding: 3px; border-radius: 50%; color: #fff; background: linear-gradient(135deg,var(--blue),var(--green)) }
 
     /* ─── WA FLOAT ─── */
-    .wa { position: fixed; bottom: 24px; right: 24px; z-index: 99 }
-    .wa-btn { width: 52px; height: 52px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 18px rgba(37,211,102,.35); transition: transform .2s }
-    .wa-btn:hover { transform: scale(1.1) }
-    .wa-btn svg { width: 26px; height: 26px; color: #fff }
 
     /* ─── REVEAL ─── */
     @keyframes up { from { opacity:0; transform:translateY(20px) } to { opacity:1; transform:none } }
@@ -635,6 +622,8 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 900px) {
+        .nav-links { display: none }
+        .nav-toggle { display: block }
         .feat-grid { grid-template-columns: repeat(2,1fr) }
         .order-layout { grid-template-columns: 1fr }
         .faq-layout { grid-template-columns: 1fr; gap: 32px }
@@ -674,8 +663,6 @@
         .stat:nth-child(2)::after { display: none }
     }
     @media (max-width: 640px) {
-        .nav-links { display: none }
-        .nav-toggle { display: block }
         .cta-long { display: none }
         .cta-short { display: inline }
         .nav { left: 10px; right: 10px }
@@ -747,7 +734,6 @@
         .feat.wide { display: grid; grid-template-columns: 48px 1fr; gap: 14px; align-items: center }
         .feat.wide .feat-icon { width: 48px; height: 48px }
         .feat.wide h3 { margin-bottom: 4px }
-        .feat-wa { grid-column: 1 / -1; justify-content: center; padding: 13px }
         /* Hero HP: tombol selebar penuh */
         .biz-label { font-size: 11px; margin-bottom: 14px }
         .biz-label::before, .biz-label::after { width: 24px }
@@ -812,12 +798,10 @@
         .testi-name { font-size: 13.5px }
         .testi-role { font-size: 12px }
         /* footer HP: brand rata tengah, Navigasi + Bantuan berdampingan, Produk disembunyikan (sudah dijelaskan di atas) */
-        .foot { padding: 48px 0 96px }
+        .foot { padding: 48px 0 32px }
         .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px 16px }
         .foot-about { grid-column: 1 / -1; text-align: center; padding-bottom: 28px; border-bottom: 1px solid var(--border) }
         .foot-about p { margin: 12px auto 18px; font-size: 13.5px }
-        .foot-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px }
-        .foot-btn { justify-content: center; padding: 10px 12px 10px 10px }
         .foot-prod { display: none }
         .foot-col { gap: 12px }
         .foot-col h4 { font-size: 11.5px }
@@ -825,6 +809,8 @@
         .foot-bottom { flex-direction: column-reverse; align-items: center; text-align: center; gap: 10px; margin-top: 32px; font-size: 12.5px }
     }
     </style>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
 
@@ -867,7 +853,6 @@
         </div>
         <div class="np-actions">
             <a href="{{ $shopee }}" target="_blank" rel="noopener" class="np-buy">{!! $shopeeLogo !!}Pesan di Shopee</a>
-            <a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20mau%20tanya%20tentang%20Provecho%20Card" target="_blank" rel="noopener" class="np-cs">Chat CS WhatsApp</a>
         </div>
         <div class="np-note">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
@@ -885,10 +870,10 @@
         </div>
         <h1 class="hi hi-1">
             Pelanggan tap HP.<br>
-            <span class="accent">Review langsung masuk.</span>
+            <span class="accent">Tinggal kasih bintang.</span>
         </h1>
         <p class="hero-sub hi hi-2">
-            Card akrilik premium dengan NFC dan QR Code yang membuka halaman Google Review toko kamu secara otomatis. Tanpa install, tanpa langkah rumit.
+            Card akrilik premium dengan NFC dan QR Code yang langsung membuka halaman ulasan Google usaha kamu, tanpa perlu dicari dulu di Maps.
         </p>
         <div class="hero-btns hi hi-3">
             <a href="{{ $shopee }}" class="btn-primary" target="_blank" rel="noopener">
@@ -1056,9 +1041,6 @@
                     <h3>Support WhatsApp langsung dari tim kami</h3>
                     <p>Ada pertanyaan atau kendala? Chat langsung ke WhatsApp. Dibalas oleh orang, bukan bot, dan gratis untuk semua pembeli.</p>
                 </div>
-                <a href="https://wa.me/6283842843671" target="_blank" class="feat-wa">Chat sekarang
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
             </div>
         </div>
     </div>
@@ -1336,7 +1318,6 @@
                         Pesan di Shopee
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </a>
-                    <a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20mau%20tanya%20tentang%20Provecho%20Card" class="btn-ghost" target="_blank" rel="noopener">Tanya CS dulu</a>
                 </div>
                 <ul class="cta-notes">
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Garansi seumur hidup</li>
@@ -1361,12 +1342,6 @@
                     Provecho
                 </a>
                 <p>Card NFC + QR Code yang membuka halaman ulasan Google usaha kamu. Datang siap pakai, bergaransi seumur hidup.</p>
-                <div class="foot-cta">
-                    <a href="{{ $shopee }}" target="_blank" rel="noopener" class="foot-btn">{!! $shopeeLogo !!}Toko Shopee</a>
-                    <a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20mau%20tanya%20tentang%20Provecho%20Card" target="_blank" rel="noopener" class="foot-btn">
-                        <span class="foot-wa"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span>CS WhatsApp
-                    </a>
-                </div>
             </div>
             <nav class="foot-col" aria-label="Navigasi">
                 <h4>Navigasi</h4>
@@ -1400,13 +1375,6 @@
         </div>
     </div>
 </footer>
-
-<!-- WA FLOAT -->
-<a href="https://wa.me/6283842843671?text=Halo%2C%20saya%20mau%20tanya%20tentang%20Provecho" class="wa" target="_blank" aria-label="WhatsApp">
-    <div class="wa-btn">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    </div>
-</a>
 
 <script>
 const io = new IntersectionObserver(es => {

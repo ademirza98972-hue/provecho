@@ -150,6 +150,7 @@
     .topbar-left { display: flex; align-items: center; gap: 12px; }
     .topbar h1 { font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
     .user   { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--muted); }
+    .role-tag { font-size: 11px; font-weight: 700; color: #6D28D9; background: #F5F3FF; padding: 2px 8px; border-radius: 99px; }
     .avatar { width: 28px; height: 28px; border-radius: 50%; background: #F3F4F6; border: 1px solid var(--border); display: grid; place-items: center; font-size: 11px; font-weight: 600; color: var(--muted); }
 
     .content { flex: 1; padding: 24px; overflow-y: auto; }
@@ -282,6 +283,8 @@
     }
     </style>
     @stack('styles')
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
 <div class="layout">
@@ -304,6 +307,12 @@
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 14.5h4"/></svg>
                     <span>Kelola Card</span>
                 </a>
+                @can('admin')
+                <a href="{{ route('dashboard.resellers.index') }}" class="{{ request()->routeIs('dashboard.resellers.*') ? 'active' : '' }}">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <span>Reseller</span>
+                </a>
+                @endcan
                 <a href="{{ route('dashboard.activity') }}" class="{{ request()->routeIs('dashboard.activity') ? 'active' : '' }}">
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
                     <span>Aktivitas</span>
@@ -337,6 +346,7 @@
             <div class="user">
                 <div class="avatar">{{ strtoupper(substr(auth()->user()->name ?? auth()->user()->username, 0, 1)) }}</div>
                 <span>{{ auth()->user()->name ?? auth()->user()->username }}</span>
+                @cannot('admin')<span class="role-tag">Reseller</span>@endcannot
             </div>
         </div>
 

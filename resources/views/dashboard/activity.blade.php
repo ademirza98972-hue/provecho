@@ -20,10 +20,12 @@
             <h2 class="page-title">Riwayat aktivitas</h2>
             <p class="page-sub">Setiap scan, aktivasi, perubahan data, dan cetak QR tercatat di sini.</p>
         </div>
+        @can('admin')
         <a href="{{ route('dashboard.activity.export') }}" class="btn btn-outline btn-sm">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
             Export semua (CSV)
         </a>
+        @endcan
     </div>
 
     <nav class="status-pills" aria-label="Filter jenis aktivitas">
