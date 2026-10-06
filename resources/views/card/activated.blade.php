@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
-    <title>Kartu Aktif — Provecho</title>
+    <title>Kartu Aktif — {{ $brand['name'] }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
@@ -13,7 +13,7 @@
         --surface: #FFFFFF; --bg: #F9FAFB;
         --border: #E5E7EB;
         --text: #111827; --muted: #6B7280; --faint: #9CA3AF;
-        --accent: #0EA5E9; --accent-dark: #0284C7;
+        --accent: {{ $brand['color'] }}; --accent-dark: {{ $brand['dark'] }}; --accent-soft: {{ $brand['soft'] }}; --on: {{ $brand['on'] }};
         --ok: #15803D; --ok-soft: #F0FDF4;
         color-scheme: light;
     }
@@ -57,7 +57,7 @@
         display: flex; align-items: center; justify-content: center; gap: 8px;
         width: 100%; padding: 14px; border-radius: 11px;
         font-size: 15px; font-weight: 600; font-family: inherit;
-        cursor: pointer; border: none; background: var(--accent); color: #fff;
+        cursor: pointer; border: none; background: var(--accent); color: var(--on);
         text-decoration: none; transition: background .12s;
     }
     .btn:hover { background: var(--accent-dark); }
@@ -70,7 +70,7 @@
 <body>
 <div class="wrap">
 
-    <img class="brand-mark" src="/img/logo.png" alt="Provecho">
+    <img class="brand-mark" src="{{ $brand['logo'] }}" alt="{{ $brand['name'] }}">
 
     <div class="panel">
         <div class="check-circle">
@@ -88,7 +88,7 @@
         </a>
     </div>
 
-    <p class="foot">PROVECHO GOOGLE REVIEW</p>
+    <p class="foot">{{ $brand['name'] }}</p>
 </div>
 </body>
 </html>

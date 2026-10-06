@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
-    <title>Aktifkan Kartu — Provecho</title>
+    <title>Aktifkan Kartu — {{ $brand['name'] }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
@@ -14,7 +14,7 @@
         --surface: #FFFFFF; --bg: #F9FAFB; --subtle: #FCFCFD;
         --border: #E5E7EB; --border-strong: #D4D7DD;
         --text: #111827; --muted: #6B7280; --faint: #9CA3AF;
-        --accent: #0EA5E9; --accent-dark: #0284C7; --accent-soft: #F0F9FF;
+        --accent: {{ $brand['color'] }}; --accent-dark: {{ $brand['dark'] }}; --accent-soft: {{ $brand['soft'] }}; --on: {{ $brand['on'] }};
         --ok: #15803D; --ok-soft: #F0FDF4;
         --bad: #B91C1C; --bad-soft: #FEF2F2;
         color-scheme: light;
@@ -70,7 +70,7 @@
         display: flex; align-items: center; justify-content: center; gap: 8px;
         width: 100%; padding: 14px; border-radius: 11px;
         font-size: 15px; font-weight: 600; font-family: inherit;
-        cursor: pointer; border: 1px solid transparent; background: var(--accent); color: #fff;
+        cursor: pointer; border: 1px solid transparent; background: var(--accent); color: var(--on);
         transition: background .12s;
     }
     .btn:hover { background: var(--accent-dark); }
@@ -98,7 +98,7 @@
 <div class="wrap">
 
     <div class="brand">
-        <img class="brand-mark" src="/img/logo.png" alt="Provecho">
+        <img class="brand-mark" src="{{ $brand['logo'] }}" alt="{{ $brand['name'] }}">
     </div>
 
     <div class="panel" x-data="activation()">
@@ -207,7 +207,7 @@
         </form>
     </div>
 
-    <p class="foot">PROVECHO GOOGLE REVIEW</p>
+    <p class="foot">{{ $brand['name'] }}</p>
 </div>
 
 <script>

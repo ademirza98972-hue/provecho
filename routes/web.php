@@ -64,6 +64,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
+    Route::put('/settings/brand', [SettingsController::class, 'updateBrand'])->name('settings.brand');
 
     Route::get('/places/search', [PlacesController::class, 'search'])->name('places.search');
     Route::post('/places/resolve-maps', [PlacesController::class, 'resolveMaps'])->name('places.resolve-maps');

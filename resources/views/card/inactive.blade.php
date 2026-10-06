@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kartu Tidak Aktif — Provecho</title>
+    <title>Kartu Tidak Aktif — {{ $brand['name'] }}</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,8 +45,8 @@
         </p>
     </div>
     <div class="brand">
-        <img class="brand-mark" src="/img/logo.png" alt="Provecho">
-        Provecho &mdash; Google Review Card
+        <img class="brand-mark" src="{{ $brand['logo'] }}" alt="{{ $brand['name'] }}">
+        {{ $brand['name'] }}
     </div>
 </div>
 </body>
