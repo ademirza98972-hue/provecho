@@ -53,6 +53,7 @@
                             <td>
                                 <div class="acts">
                                 <a href="{{ route('dashboard.cards.index', ['reseller' => $r->id]) }}" class="btn btn-ghost btn-sm">Lihat card</a>
+                                <a href="{{ route('dashboard.resellers.brand', $r) }}" class="btn btn-ghost btn-sm">Atur tampilan</a>
                                 <button type="button" class="btn btn-ghost btn-sm" @click="pw = !pw">Ganti password</button>
                                 <form method="POST" action="{{ route('dashboard.resellers.destroy', $r) }}"
                                       onsubmit="return confirm('Hapus akun {{ $r->name }}? {{ $r->cards_count }} card-nya kembali ke stok admin dan tetap berfungsi.')">

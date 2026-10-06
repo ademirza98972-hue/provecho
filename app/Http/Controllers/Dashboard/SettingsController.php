@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,9 +17,14 @@ class SettingsController extends Controller
 
     public function updateBrand(Request $request)
     {
-        $user = $request->user();
-        abort_if($user->isAdmin(), 403);
+        abort_if($request->user()->isAdmin(), 403);
 
+        return self::saveBrand($request, $request->user());
+    }
+
+    /** Dipakai reseller (Pengaturan) dan admin (Reseller → Atur tampilan). */
+    public static function saveBrand(Request $request, User $user)
+    {
         $data = $request->validate([
             'brand_name'  => 'nullable|string|max:40',
             'brand_color' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],

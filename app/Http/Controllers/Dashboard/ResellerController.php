@@ -103,6 +103,22 @@ class ResellerController extends Controller
         return array_values(array_unique($ids));
     }
 
+    public function brand(User $reseller)
+    {
+        abort_if($reseller->isAdmin(), 404);
+
+        $sampleCard = $reseller->cards()->where('status', 'inactive')->value('id');
+
+        return view('dashboard.reseller-brand', compact('reseller', 'sampleCard'));
+    }
+
+    public function updateBrand(Request $request, User $reseller)
+    {
+        abort_if($reseller->isAdmin(), 404);
+
+        return SettingsController::saveBrand($request, $reseller);
+    }
+
     public function password(Request $request, User $reseller)
     {
         abort_if($reseller->isAdmin(), 404);

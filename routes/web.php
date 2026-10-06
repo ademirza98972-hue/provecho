@@ -58,6 +58,8 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::get('/resellers', [ResellerController::class, 'index'])->name('resellers.index');
         Route::post('/resellers', [ResellerController::class, 'store'])->name('resellers.store');
         Route::post('/resellers/assign-ids', [ResellerController::class, 'assignIds'])->name('resellers.assign-ids');
+        Route::get('/resellers/{reseller}/brand', [ResellerController::class, 'brand'])->name('resellers.brand');
+        Route::put('/resellers/{reseller}/brand', [ResellerController::class, 'updateBrand'])->name('resellers.brand.update');
         Route::put('/resellers/{reseller}/password', [ResellerController::class, 'password'])->name('resellers.password');
         Route::delete('/resellers/{reseller}', [ResellerController::class, 'destroy'])->name('resellers.destroy');
     });

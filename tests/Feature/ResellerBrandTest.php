@@ -58,6 +58,27 @@ class ResellerBrandTest extends TestCase
         $this->actingAs($admin)->put('/dashboard/settings/brand', ['brand_name' => 'X'])->assertForbidden();
     }
 
+    public function test_admin_can_set_a_resellers_brand_but_resellers_cannot_touch_each_other(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $budi  = User::factory()->create(['role' => 'reseller', 'name' => 'Budi']);
+        $sari  = User::factory()->create(['role' => 'reseller']);
+
+        $this->actingAs($admin)->get("/dashboard/resellers/{$budi->id}/brand")->assertOk()->assertSee('Tampilan untuk Budi');
+        $this->put("/dashboard/resellers/{$budi->id}/brand", ['brand_name' => 'Budi Review', 'brand_color' => '#16A34A'])
+            ->assertRedirect()->assertSessionHasNoErrors();
+        $this->assertSame('Budi Review', $budi->fresh()->brand_name);
+        $this->assertSame('#16A34A', $budi->fresh()->brand_color);
+
+        $this->get("/dashboard/resellers/{$admin->id}/brand")->assertNotFound();
+
+        $this->actingAs($sari)->put("/dashboard/resellers/{$budi->id}/brand", ['brand_name' => 'Diambil Sari'])->assertForbidden();
+        $this->assertSame('Budi Review', $budi->fresh()->brand_name);
+
+        $this->actingAs($budi->fresh())->get('/dashboard/settings')->assertOk()->assertSee('Tampilan halaman aktivasi')->assertSee('Budi Review', false);
+        $this->actingAs($admin)->get('/dashboard/settings')->assertOk()->assertDontSee('Tampilan halaman aktivasi');
+    }
+
     public function test_button_text_stays_readable_on_light_colors(): void
     {
         $this->assertSame('#111827', Brand::make(null, '#FDE047', null)['on']);
