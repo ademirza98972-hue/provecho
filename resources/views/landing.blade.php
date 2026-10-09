@@ -814,10 +814,6 @@
 </head>
 <body>
 
-@php
-    $shopee = 'https://provecho.my.id'; /* TODO: ganti ke link toko Shopee */
-    $shopeeLogo = '<span class="shp"><img src="/img/shopee-seeklogo.png" alt="Shopee"></span>';
-@endphp
 <!-- NAV -->
 <nav class="nav" id="nav" x-data="{open:false}" :class="{open:open}" @click.outside="open=false" @keydown.escape.window="open=false">
     <div class="nav-inner">
@@ -834,7 +830,7 @@
             <a href="#faq">FAQ</a>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
-            <a href="{{ $shopee }}" class="nav-cta" target="_blank" rel="noopener">
+            <a href="{{ route('produk') }}" class="nav-cta">
                 <span class="cta-long">Pesan Sekarang</span><span class="cta-short">Pesan</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
@@ -852,7 +848,7 @@
             <a href="#faq" @click="open=false"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 015 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg></i>FAQ<b>›</b></a>
         </div>
         <div class="np-actions">
-            <a href="{{ $shopee }}" target="_blank" rel="noopener" class="np-buy">{!! $shopeeLogo !!}Pesan di Shopee</a>
+            <a href="{{ route('produk') }}" class="np-buy">Pesan sekarang</a>
         </div>
         <div class="np-note">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
@@ -876,9 +872,9 @@
             Card akrilik premium dengan NFC dan QR Code yang langsung membuka halaman ulasan Google usaha kamu, tanpa perlu dicari dulu di Maps.
         </p>
         <div class="hero-btns hi hi-3">
-            <a href="{{ $shopee }}" class="btn-primary" target="_blank" rel="noopener">
-                {!! $shopeeLogo !!}
-                Pesan di Shopee
+            <a href="{{ route('produk') }}" class="btn-primary">
+                Pesan sekarang
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
             <a href="#cara-kerja" class="btn-secondary">
                 Lihat cara kerjanya
@@ -1175,9 +1171,9 @@
                 <div class="buy-chips">
                     <span>Perlindungan pembeli</span><span>Banyak metode bayar</span><span>Bisa pakai voucher</span>
                 </div>
-                <a href="{{ $shopee }}" target="_blank" rel="noopener" class="buy-btn">
-                    {!! $shopeeLogo !!}
-                    Beli di Shopee
+                <a href="{{ route('produk') }}" class="buy-btn">
+                    Lihat produk &amp; pesan
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
             </div>
 
@@ -1313,9 +1309,8 @@
                 <h2>Mulai kumpulkan Google Review hari ini.</h2>
                 <p>Satu card, sekali bayar, bergaransi seumur hidup. Taruh di meja kasir dan biarkan pelanggan memberi ulasan sendiri.</p>
                 <div class="cta-btns">
-                    <a href="{{ $shopee }}" class="btn-white" target="_blank" rel="noopener">
-                        {!! $shopeeLogo !!}
-                        Pesan di Shopee
+                    <a href="{{ route('produk') }}" class="btn-white">
+                        Pesan sekarang
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </a>
                 </div>
@@ -1363,7 +1358,7 @@
                 <a href="https://wa.me/6283842843671" target="_blank" rel="noopener">Chat CS WhatsApp</a>
                 <a href="#faq">Ganti lokasi Google Maps</a>
                 <a href="#faq">Klaim garansi</a>
-                <a href="{{ $shopee }}" target="_blank" rel="noopener">Pesan di Shopee</a>
+                <a href="{{ route('produk') }}">Lihat produk</a>
             </div>
         </div>
         <div class="foot-bottom">

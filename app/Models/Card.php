@@ -12,6 +12,7 @@ class Card extends Model
     protected $fillable = [
         'id', 'status', 'google_url', 'place_id',
         'owner_name', 'owner_address', 'activated_at',
+        'order_number', 'buyer_name', 'buyer_phone',
         'disabled_at', 'printed_at', 'notes',
     ];
 
@@ -20,6 +21,7 @@ class Card extends Model
         'disabled_at' => 'datetime',
         'printed_at' => 'datetime',
         'reseller_id' => 'integer',
+        'archived_scans' => 'integer',
     ];
 
     public function logs()
@@ -32,6 +34,12 @@ class Card extends Model
         return $this->belongsTo(User::class, 'reseller_id');
     }
 
+    /** Scan yang masih punya detail (scan_count dari withCount) + scan lama yang sudah dibersihkan. */
+    public function getTotalScansAttribute(): int
+    {
+        return (int) ($this->scan_count ?? 0) + (int) $this->archived_scans;
+    }
+
     public function scopeVisibleTo($query, User $user)
     {
         return $user->isAdmin() ? $query : $query->where('reseller_id', $user->id);
@@ -40,6 +48,17 @@ class Card extends Model
     public function isActive(): bool
     {
         return $this->status === 'active';
+    }
+
+    /** Link chat WhatsApp ke pembeli; 08xx dan +62xx sama-sama jadi 62xx. */
+    public function getBuyerWhatsappAttribute(): ?string
+    {
+        $digits = preg_replace('/\D/', '', (string) $this->buyer_phone);
+        if ($digits === '') {
+            return null;
+        }
+
+        return 'https://wa.me/' . (str_starts_with($digits, '0') ? '62' . substr($digits, 1) : $digits);
     }
 
     public function getUrlAttribute(): string

@@ -5,61 +5,45 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Card;
 use App\Models\CardLog;
+use App\Support\ScanRange;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class StatsController extends Controller
 {
     public function index(Request $request)
     {
         $user = $request->user();
-        // Ringkasan global
-        $totalScans     = CardLog::visibleTo($user)->where('action', 'scan')->count();
-        $todayScans     = CardLog::visibleTo($user)->where('action', 'scan')->whereDate('created_at', today())->count();
-        $weekScans      = CardLog::visibleTo($user)->where('action', 'scan')->where('created_at', '>=', now()->subDays(7))->count();
-        $activeCards    = Card::visibleTo($user)->where('status', 'active')->count();
+        $days = ScanRange::fromRequest($request);
+        $from = ScanRange::start($days);
+        $scans = fn () => CardLog::visibleTo($user)->where('action', 'scan');
 
-        // Scan per toko (card aktif)
+        [$chartLabels, $chartValues] = ScanRange::daily($scans(), $days);
+        $rangeScans  = array_sum($chartValues);
+        $activeCards = Card::visibleTo($user)->where('status', 'active')->count();
+        $totalScans  = $scans()->count() + (int) Card::visibleTo($user)->sum('archived_scans');
+
         $query = Card::visibleTo($user)->where('status', 'active')
-            ->withCount(['logs as scan_count' => function ($q) {
-                $q->where('action', 'scan');
-            }])
-            ->withMax('logs as last_scan_at', 'created_at');
+            ->withCount([
+                'logs as range_count' => fn ($q) => $q->where('action', 'scan')->where('created_at', '>=', $from),
+                'logs as live_count'  => fn ($q) => $q->where('action', 'scan'),
+            ])
+            ->withMax(['logs as last_scan_at' => fn ($q) => $q->where('action', 'scan')], 'created_at');
 
-        // Sorting
-        $sort = $request->input('sort', 'scan_count');
-        $dir  = $request->input('dir', 'desc');
+        $sort = in_array($request->sort, ['name', 'range', 'total', 'last_scan', 'activated']) ? $request->sort : 'range';
+        $dir  = $request->dir === 'asc' ? 'asc' : 'desc';
 
-        if ($sort === 'name') {
-            $query->orderBy('owner_name', $dir);
-        } elseif ($sort === 'last_scan') {
-            $query->orderBy('last_scan_at', $dir);
-        } elseif ($sort === 'activated') {
-            $query->orderBy('activated_at', $dir);
-        } else {
-            $query->orderBy('scan_count', $dir);
-        }
+        match ($sort) {
+            'name'      => $query->orderBy('owner_name', $dir),
+            'total'     => $query->orderByRaw("live_count + archived_scans {$dir}"),
+            'last_scan' => $query->orderBy('last_scan_at', $dir),
+            'activated' => $query->orderBy('activated_at', $dir),
+            default     => $query->orderBy('range_count', $dir),
+        };
 
         $stores = $query->paginate(20)->withQueryString();
 
-        // Scan per hari (7 hari terakhir) untuk chart sederhana
-        $dailyScans = CardLog::visibleTo($user)->where('action', 'scan')
-            ->where('created_at', '>=', now()->subDays(6)->startOfDay())
-            ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as total'))
-            ->groupBy('date')
-            ->orderBy('date')
-            ->pluck('total', 'date');
-
-        // Lengkapi 7 hari (isi 0 untuk hari tanpa scan)
-        $chartData = collect();
-        for ($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i)->format('Y-m-d');
-            $chartData->put($date, $dailyScans->get($date, 0));
-        }
-
         return view('dashboard.stats', compact(
-            'totalScans', 'todayScans', 'weekScans', 'activeCards',
-            'stores', 'chartData', 'sort', 'dir'
+            'days', 'chartLabels', 'chartValues', 'rangeScans', 'activeCards', 'totalScans', 'stores', 'sort', 'dir'
         ));
     }
 }

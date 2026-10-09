@@ -49,7 +49,7 @@
                             </td>
                             <td class="num"><b>{{ number_format($r->cards_count) }}</b></td>
                             <td class="num">{{ number_format($r->active_count) }}</td>
-                            <td class="num">{{ number_format($scans[$r->id] ?? 0) }}</td>
+                            <td class="num">{{ number_format(($scans[$r->id] ?? 0) + (int) $r->archived_scans) }}</td>
                             <td>
                                 <div class="acts">
                                 <a href="{{ route('dashboard.cards.index', ['reseller' => $r->id]) }}" class="btn btn-ghost btn-sm">Lihat card</a>

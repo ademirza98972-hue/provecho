@@ -186,6 +186,11 @@
                             @csrf
                             <button type="submit" class="btn btn-danger btn-sm">Nonaktifkan</button>
                         </form>
+                    @elseif($card->printed_at)
+                        <div>
+                            <span class="choice-title">Card sudah dicetak, tidak bisa dihapus</span>
+                            <span class="choice-desc">QR di kartu fisik akan mati permanen kalau card ini dihapus. Pakai Reset kalau card perlu dipakai pembeli lain.</span>
+                        </div>
                     @else
                         <div>
                             <span class="choice-title">Hapus card</span>
@@ -228,6 +233,30 @@
                 </div>
             </div>
             @endif
+
+            <div class="panel">
+                <div class="panel-head">
+                    <span class="panel-title">Data pembeli</span>
+                    <a href="{{ route('dashboard.cards.buyer', $card) }}" class="btn btn-ghost btn-sm">
+                        {{ $card->order_number || $card->buyer_name || $card->buyer_phone ? 'Ubah' : 'Isi data' }}
+                    </a>
+                </div>
+                <div class="panel-body">
+                    <dl class="buyer-list">
+                        <div><dt>No. pesanan</dt><dd class="{{ $card->order_number ? 'mono' : 'faint' }}">{{ $card->order_number ?? 'Belum diisi' }}</dd></div>
+                        <div><dt>Nama</dt><dd class="{{ $card->buyer_name ? '' : 'faint' }}">{{ $card->buyer_name ?? 'Belum diisi' }}</dd></div>
+                        <div>
+                            <dt>No. HP</dt>
+                            <dd class="{{ $card->buyer_phone ? '' : 'faint' }}">
+                                {{ $card->buyer_phone ?? 'Belum diisi' }}
+                                @if($card->buyer_whatsapp)
+                                    <a href="{{ $card->buyer_whatsapp }}" target="_blank" rel="noopener" class="wa-link">Chat WhatsApp</a>
+                                @endif
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
 
             <div class="panel">
                 <div class="panel-head">
@@ -337,6 +366,17 @@
 .choice-desc { display: block; font-size: 12.5px; color: var(--muted); margin-top: 1px; }
 
 .danger-zone { border-color: #FECACA; }
+
+.buyer-list { display: flex; flex-direction: column; }
+.buyer-list > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; }
+.buyer-list > div + div { border-top: 1px solid #F3F4F6; }
+.buyer-list > div:first-child { padding-top: 0; }
+.buyer-list > div:last-child { padding-bottom: 0; }
+.buyer-list dt { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.buyer-list dd { font-size: 13.5px; font-weight: 600; text-align: right; word-break: break-word; }
+.buyer-list dd.faint { color: var(--faint); font-weight: 500; }
+.wa-link { display: block; margin-top: 2px; font-size: 12px; font-weight: 600; color: #15803D; }
+.wa-link:hover { text-decoration: underline; }
 .danger-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 
 .qr-frame { padding: 12px; border-radius: 12px; }

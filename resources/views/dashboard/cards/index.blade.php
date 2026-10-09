@@ -118,7 +118,7 @@
                     Cetak QR
                 </button>
                 <button type="button" class="btn btn-danger btn-sm"
-                        @click="if (confirm('Hapus ' + sel.length + ' card? Data dan riwayat scan-nya ikut terhapus dan tidak bisa dikembalikan.')) $refs.deleteForm.submit()">
+                        @click="if (confirm('Hapus ' + sel.length + ' card? Card yang sudah dicetak otomatis dilewati. Card lainnya beserta riwayat scan-nya terhapus dan tidak bisa dikembalikan.')) $refs.deleteForm.submit()">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
                     Hapus
                 </button>
@@ -199,7 +199,7 @@
                             </span>
                         </td>
                         <td class="num">
-                            <span class="scan-pill {{ $card->scan_count > 0 ? 'has-scans' : '' }}">{{ number_format($card->scan_count) }}</span>
+                            <span class="scan-pill {{ $card->total_scans > 0 ? 'has-scans' : '' }}">{{ number_format($card->total_scans) }}</span>
                         </td>
                         <td class="col-created muted-text">{{ $card->created_at->translatedFormat('j M Y') }}</td>
                         <td class="go">

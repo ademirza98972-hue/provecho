@@ -15,12 +15,15 @@ class ExportController extends Controller
         $cards = Card::where('status', 'active')
             ->withCount(['logs as scan_count' => fn ($q) => $q->where('action', 'scan')])
             ->withMax('logs as last_scan_at', 'created_at')
-            ->orderByDesc('scan_count')
+            ->orderByRaw('scan_count + archived_scans desc')
             ->get();
 
         $filename = 'provecho-cards-' . now()->format('Y-m-d') . '.csv';
 
-        return response()->streamDownload(function () use ($cards) {
+        // Teks ketikan pengguna yang diawali = + - @ dibaca Excel sebagai rumus.
+        $safe = fn (?string $v) => $v !== null && preg_match('/^[=+\-@]/', $v) ? "'" . $v : ($v ?? '');
+
+        return response()->streamDownload(function () use ($cards, $safe) {
             $out = fopen('php://output', 'w');
 
             // BOM untuk Excel supaya UTF-8 terbaca benar
@@ -35,6 +38,9 @@ class ExportController extends Controller
                 'Scan Terakhir',
                 'Diaktifkan',
                 'Link Google Review',
+                'No. Pesanan',
+                'Nama Pembeli',
+                'No. HP Pembeli',
             ]);
 
             foreach ($cards as $card) {
@@ -43,10 +49,13 @@ class ExportController extends Controller
                     $card->owner_name ?? '',
                     $card->owner_address ?? '',
                     $card->status,
-                    $card->scan_count,
+                    $card->total_scans,
                     $card->last_scan_at ?? '',
                     $card->activated_at?->format('Y-m-d H:i') ?? '',
                     $card->google_url ?? '',
+                    $safe($card->order_number),
+                    $safe($card->buyer_name),
+                    $safe($card->buyer_phone),
                 ]);
             }
 

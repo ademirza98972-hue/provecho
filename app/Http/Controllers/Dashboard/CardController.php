@@ -37,7 +37,10 @@ class CardController extends Controller
             $query->where(function ($q) use ($s) {
                 $q->where('id', 'like', "%{$s}%")
                   ->orWhere('owner_name', 'like', "%{$s}%")
-                  ->orWhere('owner_address', 'like', "%{$s}%");
+                  ->orWhere('owner_address', 'like', "%{$s}%")
+                  ->orWhere('order_number', 'like', "%{$s}%")
+                  ->orWhere('buyer_name', 'like', "%{$s}%")
+                  ->orWhere('buyer_phone', 'like', "%{$s}%");
             });
         }
 
@@ -99,7 +102,7 @@ class CardController extends Controller
 
         $scans = $card->logs()->where('action', 'scan');
         $scanStats = [
-            'total' => (clone $scans)->count(),
+            'total' => (clone $scans)->count() + $card->archived_scans,
             'week'  => (clone $scans)->where('created_at', '>=', now()->subDays(6)->startOfDay())->count(),
             'last'  => (clone $scans)->max('created_at'),
         ];
@@ -132,8 +135,30 @@ class CardController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        return redirect()->route('dashboard.cards.show', $card)
-            ->with('success', "Card {$card->id} berhasil diaktifkan.");
+        return redirect()->route('dashboard.cards.buyer', $card)
+            ->with('activated', true)
+            ->with('success', "Card {$card->id} berhasil diaktifkan. Lanjut isi data pembeli.");
+    }
+
+    public function buyer(Card $card)
+    {
+        return view('dashboard.cards.buyer', compact('card'));
+    }
+
+    public function updateBuyer(Request $request, Card $card)
+    {
+        $data = $request->validate([
+            'order_number' => 'nullable|string|max:50',
+            'buyer_name'   => 'nullable|string|max:100',
+            'buyer_phone'  => ['nullable', 'string', 'max:20', 'regex:/^\+?[0-9\s\-]{8,20}$/'],
+        ], [
+            'buyer_phone.regex' => 'Nomor HP hanya boleh angka, spasi, strip, atau diawali +.',
+            'order_number.max'  => 'Nomor pesanan maksimal 50 karakter.',
+        ]);
+
+        $card->update(array_map(fn ($v) => is_string($v) ? (trim($v) ?: null) : $v, $data));
+
+        return redirect()->route('dashboard.cards.show', $card)->with('success', 'Data pembeli disimpan.');
     }
 
     public function update(Request $request, Card $card)
@@ -209,6 +234,9 @@ class CardController extends Controller
             'owner_address' => null,
             'activated_at'  => null,
             'disabled_at'   => null,
+            'order_number'  => null,
+            'buyer_name'    => null,
+            'buyer_phone'   => null,
         ]);
 
         CardLog::create([
@@ -222,8 +250,13 @@ class CardController extends Controller
             ->with('success', "Card {$card->id} direset ke Belum Aktif.");
     }
 
+    // QR card yang sudah dicetak tidak bisa diubah; menghapusnya membuat kartu fisik mati permanen.
     public function destroy(Card $card)
     {
+        if ($card->printed_at) {
+            return back()->withErrors(['card' => "Card {$card->id} sudah dicetak, jadi tidak bisa dihapus. Pakai Reset atau Nonaktifkan."]);
+        }
+
         $id = $card->id;
         $card->logs()->delete();
         $card->delete();
@@ -235,13 +268,19 @@ class CardController extends Controller
     public function bulkDestroy(Request $request)
     {
         $ids = array_filter((array) $request->input('ids', []));
-        if ($ids) {
-            CardLog::whereIn('card_id', $ids)->delete();
-            Card::whereIn('id', $ids)->delete();
+        $deletable = Card::whereIn('id', $ids)->whereNull('printed_at')->pluck('id');
+        $skipped = count($ids) - $deletable->count();
+
+        if ($deletable->isNotEmpty()) {
+            CardLog::whereIn('card_id', $deletable)->delete();
+            Card::whereIn('id', $deletable)->delete();
         }
 
-        return redirect()->route('dashboard.cards.index')
-            ->with('success', count($ids) . ' card dihapus.');
+        $redirect = redirect()->route('dashboard.cards.index')->with('success', $deletable->count() . ' card dihapus.');
+
+        return $skipped
+            ? $redirect->withErrors(['card' => "{$skipped} card tidak dihapus karena sudah dicetak. Pakai Reset atau Nonaktifkan untuk card tersebut."])
+            : $redirect;
     }
 
     public function generate(Request $request)

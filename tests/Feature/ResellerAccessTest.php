@@ -60,7 +60,7 @@ class ResellerAccessTest extends TestCase
     {
         $this->actingAs($this->budi)->post('/dashboard/cards/PVBUDI01/activate', [
             'owner_name' => 'Kopi Budi', 'google_url' => 'https://search.google.com/local/writereview?placeid=x',
-        ])->assertRedirect('/dashboard/cards/PVBUDI01');
+        ])->assertRedirect('/dashboard/cards/PVBUDI01/buyer');
 
         $this->assertSame('active', $this->budiCard->fresh()->status);
     }

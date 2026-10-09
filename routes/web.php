@@ -38,6 +38,8 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::get('/', [CardController::class, 'show'])->name('show');
         Route::post('/activate', [CardController::class, 'activate'])->name('activate');
         Route::put('/update', [CardController::class, 'update'])->name('update');
+        Route::get('/buyer', [CardController::class, 'buyer'])->name('buyer');
+        Route::put('/buyer', [CardController::class, 'updateBuyer'])->name('buyer.update');
     });
 
     Route::middleware('can:admin')->group(function () {
@@ -73,3 +75,4 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
 });
 
 Route::get('/', fn() => view('landing'))->name('landing');
+Route::get('/produk', fn() => view('produk'))->name('produk');

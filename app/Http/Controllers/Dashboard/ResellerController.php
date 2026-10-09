@@ -19,6 +19,7 @@ class ResellerController extends Controller
                 'cards',
                 'cards as active_count' => fn ($q) => $q->where('status', 'active'),
             ])
+            ->withSum('cards as archived_scans', 'archived_scans')
             ->orderBy('name')
             ->get();
 

@@ -11,7 +11,8 @@
         ];
     };
     $dToday = $diff($todayScans, $yesterdayScans, 'kemarin');
-    $dWeek  = $diff($weekScans, $prevWeekScans, '7 hari sebelumnya');
+    $rangeLabel = \App\Support\ScanRange::OPTIONS[$days];
+    $dRange = $prevRangeScans === null ? null : $diff($rangeScans, $prevRangeScans, "{$rangeLabel} sebelumnya");
 
     $total = max($stats['total'], 1);
     $status = [
@@ -29,10 +30,7 @@
             <h2 class="dash-hello">Ringkasan Provecho</h2>
             <p class="dash-date">{{ now()->translatedFormat('l, j F Y') }}</p>
         </div>
-        <a href="{{ route('dashboard.cards.index') }}" class="btn btn-primary">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/></svg>
-            Kelola Card
-        </a>
+        @include('dashboard._range-pills', ['days' => $days, 'route' => 'dashboard.index'])
     </div>
 
     <div class="kpi-grid">
@@ -46,11 +44,15 @@
         </div>
         <div class="kpi">
             <div class="kpi-top">
-                <span class="kpi-label">Scan 7 hari</span>
+                <span class="kpi-label">Scan {{ $rangeLabel }}</span>
                 <span class="kpi-icon" style="--c:#8B5CF6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
             </div>
-            <span class="kpi-value">{{ number_format($weekScans) }}</span>
-            <span class="kpi-delta {{ $dWeek['cls'] }}">{{ $dWeek['text'] }}</span>
+            <span class="kpi-value">{{ number_format($rangeScans) }}</span>
+            @if($dRange)
+                <span class="kpi-delta {{ $dRange['cls'] }}">{{ $dRange['text'] }}</span>
+            @else
+                <span class="kpi-sub">Rentang terpanjang yang disimpan</span>
+            @endif
         </div>
         <div class="kpi">
             <div class="kpi-top">
@@ -73,11 +75,11 @@
     <div class="dash-row">
         <div class="panel">
             <div class="panel-head">
-                <span class="panel-title">Scan 7 hari terakhir</span>
-                <span class="hint">Rata-rata {{ number_format($weekScans / 7, 1, ',', '.') }} scan per hari</span>
+                <span class="panel-title">Scan {{ $rangeLabel }} terakhir</span>
+                <span class="hint">Rata-rata {{ number_format($rangeScans / $days, 1, ',', '.') }} scan per hari</span>
             </div>
             <div class="panel-body chart-box">
-                <canvas id="barChart" aria-label="Grafik scan harian 7 hari terakhir" role="img"></canvas>
+                @include('dashboard._scan-chart', ['id' => 'scanChart', 'labels' => $chartLabels, 'values' => $chartValues])
             </div>
         </div>
 
@@ -147,8 +149,8 @@
 
         <div class="panel">
             <div class="panel-head">
-                <span class="panel-title">Usaha paling banyak di-scan</span>
-                <a href="{{ route('dashboard.stats') }}" class="btn btn-ghost btn-sm">
+                <span class="panel-title">Paling banyak di-scan · {{ $rangeLabel }}</span>
+                <a href="{{ route('dashboard.stats', ['range' => $days]) }}" class="btn btn-ghost btn-sm">
                     Detail
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </a>
@@ -258,70 +260,6 @@
     td { padding: 11px 14px; }
 }
 </style>
-@endpush
-
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
-<script>
-(function () {
-    var labels = @json($chartLabels);
-    var values = @json($chartValues);
-    var last = values.length - 1;
-    var ctx = document.getElementById('barChart').getContext('2d');
-
-    var soft = ctx.createLinearGradient(0, 0, 0, 240);
-    soft.addColorStop(0, 'rgba(14,165,233,.45)');
-    soft.addColorStop(1, 'rgba(14,165,233,.12)');
-    var strong = ctx.createLinearGradient(0, 0, 0, 240);
-    strong.addColorStop(0, '#0EA5E9');
-    strong.addColorStop(1, '#22C55E');
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels.map(function (l, i) { return i === last ? 'Hari ini' : l; }),
-            datasets: [{
-                data: values,
-                backgroundColor: values.map(function (_, i) { return i === last ? strong : soft; }),
-                hoverBackgroundColor: '#0EA5E9',
-                borderRadius: 7,
-                borderSkipped: false,
-                maxBarThickness: 56,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#111827',
-                    titleFont: { size: 12, weight: '600' },
-                    bodyFont: { size: 14, weight: '700' },
-                    padding: { x: 14, y: 10 },
-                    cornerRadius: 8,
-                    displayColors: false,
-                    callbacks: { label: function (c) { return c.parsed.y + ' scan'; } }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { precision: 0, font: { size: 11 }, color: '#9CA3AF' },
-                    grid: { color: '#F3F4F6' },
-                    border: { display: false },
-                },
-                x: {
-                    ticks: { font: { size: 11, weight: '500' }, color: '#6B7280' },
-                    grid: { display: false },
-                    border: { display: false },
-                }
-            },
-            animation: { duration: 600, easing: 'easeOutQuart' }
-        }
-    });
-})();
-</script>
 @endpush
 
 @endsection
