@@ -147,16 +147,7 @@ class CardController extends Controller
 
     public function updateBuyer(Request $request, Card $card)
     {
-        $data = $request->validate([
-            'order_number' => 'nullable|string|max:50',
-            'buyer_name'   => 'nullable|string|max:100',
-            'buyer_phone'  => ['nullable', 'string', 'max:20', 'regex:/^\+?[0-9\s\-]{8,20}$/'],
-        ], [
-            'buyer_phone.regex' => 'Nomor HP hanya boleh angka, spasi, strip, atau diawali +.',
-            'order_number.max'  => 'Nomor pesanan maksimal 50 karakter.',
-        ]);
-
-        $card->update(array_map(fn ($v) => is_string($v) ? (trim($v) ?: null) : $v, $data));
+        $card->update(Card::cleanBuyer($request->validate(Card::BUYER_RULES, Card::BUYER_MESSAGES)));
 
         return redirect()->route('dashboard.cards.show', $card)->with('success', 'Data pembeli disimpan.');
     }

@@ -58,7 +58,27 @@ class CardRedirectController extends Controller
 
         $this->log($card, 'activated', $request);
 
-        return view('card.activated', compact('card'));
+        // Hanya HP yang barusan mengaktifkan yang boleh mengisi data pembeli, sekali saja.
+        $request->session()->put("buyer_ok.{$card->id}", true);
+
+        return view('card.activated', ['card' => $card, 'askBuyer' => true]);
+    }
+
+    public function buyer(Request $request, string $id)
+    {
+        $card = Card::find(strtoupper($id));
+        abort_unless($card && $card->isActive() && $request->session()->pull("buyer_ok.{$card->id}"), 403);
+
+        $validator = validator($request->all(), Card::BUYER_RULES, Card::BUYER_MESSAGES);
+        if ($validator->fails()) {
+            $request->session()->put("buyer_ok.{$card->id}", true);
+
+            return view('card.activated', ['card' => $card, 'askBuyer' => true, 'errors' => $validator->errors(), 'old' => $request->all()]);
+        }
+
+        $card->update(Card::cleanBuyer($validator->validated()));
+
+        return view('card.activated', ['card' => $card, 'askBuyer' => false, 'buyerSaved' => true]);
     }
 
     /**

@@ -61,6 +61,28 @@ class BuyerDataTest extends TestCase
         $this->assertNull($card->buyer_phone);
     }
 
+    public function test_scan_activation_asks_buyer_data_once_from_same_phone_only(): void
+    {
+        Card::forceCreate(['id' => 'PVPUB001', 'printed_at' => now()]);
+        $google = 'https://search.google.com/local/writereview?placeid=pub';
+
+        $this->post('/c/PVPUB001/activate', ['owner_name' => 'Warung Pub', 'google_url' => $google])
+            ->assertOk()->assertSee('Lengkapi data pembeli');
+
+        $this->post('/c/PVPUB001/buyer', ['buyer_phone' => 'bukan nomor'])->assertOk()->assertSee('Nomor HP hanya boleh angka');
+        $this->post('/c/PVPUB001/buyer', ['order_number' => 'SHP123', 'buyer_name' => 'Rina', 'buyer_phone' => '0813 1111 2222'])
+            ->assertOk()->assertSee('Data pembeli tersimpan');
+        $this->assertSame('Rina', Card::find('PVPUB001')->buyer_name);
+
+        $this->post('/c/PVPUB001/buyer', ['buyer_name' => 'Ganti lagi'])->assertForbidden();
+
+        $this->flushSession();
+        $this->post('/c/PVPUB001/buyer', ['buyer_name' => 'Orang lain'])->assertForbidden();
+        $this->assertSame('Rina', Card::find('PVPUB001')->buyer_name);
+
+        $this->get('/c/PVPUB001')->assertRedirect($google);
+    }
+
     public function test_csv_export_neutralises_formulas_in_buyer_data(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);

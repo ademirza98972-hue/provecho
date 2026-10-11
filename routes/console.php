@@ -28,3 +28,10 @@ Artisan::command('scans:prune', function () {
 
     $this->info("{$perCard->sum()} riwayat scan dari {$perCard->count()} card dibersihkan (sebelum {$cutoff->toDateString()}). Total scan tidak berubah.");
 })->purpose('Bersihkan detail riwayat scan yang lebih tua dari 6 bulan');
+
+// Lengkapi koordinat semua card sekaligus (biasanya cukup sekali setelah fitur peta dipasang).
+Artisan::command('cards:locate', function () {
+    $cards = Card::whereIn('status', ['active', 'disabled'])->whereNotNull('place_id')->whereNull('lat')->get();
+    $ok = $cards->filter(fn (Card $c) => App\Support\PlaceLocator::locate($c))->count();
+    $this->info("{$ok} dari {$cards->count()} card mendapat koordinat.");
+})->purpose('Ambil koordinat peta untuk card yang belum punya');

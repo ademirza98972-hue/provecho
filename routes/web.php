@@ -5,6 +5,7 @@ use App\Http\Controllers\Dashboard\CardController;
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ExportController;
+use App\Http\Controllers\Dashboard\MapController;
 use App\Http\Controllers\Dashboard\PlacesController;
 use App\Http\Controllers\Dashboard\ResellerController;
 use App\Http\Controllers\Dashboard\SettingsController;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/c/{id}', [CardRedirectController::class, 'redirect'])->name('card.redirect');
 Route::post('/c/{id}/activate', [CardRedirectController::class, 'activate'])
     ->middleware('throttle:10,1')->name('card.activate');
+Route::post('/c/{id}/buyer', [CardRedirectController::class, 'buyer'])
+    ->middleware('throttle:10,1')->name('card.buyer');
 Route::get('/c/{id}/places', [CardRedirectController::class, 'places'])
     ->middleware('throttle:20,1')->name('card.places');
 Route::post('/c/{id}/resolve-maps', [CardRedirectController::class, 'resolveMaps'])
@@ -57,6 +60,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
             Route::delete('/{card}', [CardController::class, 'destroy'])->name('destroy');
         });
 
+        Route::get('/peta', [MapController::class, 'index'])->name('map');
         Route::get('/resellers', [ResellerController::class, 'index'])->name('resellers.index');
         Route::post('/resellers', [ResellerController::class, 'store'])->name('resellers.store');
         Route::post('/resellers/assign-ids', [ResellerController::class, 'assignIds'])->name('resellers.assign-ids');

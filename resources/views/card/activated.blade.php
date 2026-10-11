@@ -63,6 +63,19 @@
     .btn:hover { background: var(--accent-dark); }
 
     .foot { text-align: center; font-size: 12.5px; color: var(--faint); }
+
+    .panel.buyer { align-items: stretch; text-align: left; gap: 0; }
+    .buyer h2 { font-size: 17px; font-weight: 700; text-align: left; }
+    .buyer .sub { font-size: 13px; color: var(--muted); margin-top: 4px; text-align: left; }
+    .buyer-form { display: flex; flex-direction: column; gap: 6px; margin-top: 16px; text-align: left; }
+    .buyer-form label { font-size: 13px; font-weight: 600; margin-top: 8px; }
+    .buyer-form input { width: 100%; padding: 11px 13px; font: inherit; font-size: 15px; border: 1px solid #D4D7DD; border-radius: 10px; background: #fff; color: inherit; }
+    .buyer-form input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft, rgba(14,165,233,.15)); }
+    .buyer-form .btn { margin-top: 14px; }
+    .skip { align-self: center; margin-top: 6px; font-size: 13.5px; font-weight: 600; color: var(--muted); text-decoration: none; }
+    .skip:hover { text-decoration: underline; }
+    .err { font-size: 13px; color: #B91C1C; }
+    .saved { text-align: center; font-size: 13.5px; font-weight: 600; color: #15803D; }
     </style>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -87,6 +100,32 @@
             Buka Halaman Review
         </a>
     </div>
+
+    @if(!empty($askBuyer))
+    <div class="panel buyer">
+        <h2>Lengkapi data pembeli</h2>
+        <p class="sub">Opsional. Dipakai untuk klaim garansi dan permintaan ganti lokasi.</p>
+        <form method="POST" action="{{ route('card.buyer', $card->id) }}" class="buyer-form">
+            @csrf
+            <label for="order_number">Nomor pesanan</label>
+            <input type="text" id="order_number" name="order_number" maxlength="50" autocomplete="off" value="{{ $old['order_number'] ?? '' }}" placeholder="mis. 2410098KQ7XJ3P">
+
+            <label for="buyer_name">Nama pembeli</label>
+            <input type="text" id="buyer_name" name="buyer_name" maxlength="100" autocomplete="name" value="{{ $old['buyer_name'] ?? '' }}">
+
+            <label for="buyer_phone">Nomor HP / WhatsApp</label>
+            <input type="tel" id="buyer_phone" name="buyer_phone" maxlength="20" inputmode="tel" autocomplete="tel" value="{{ $old['buyer_phone'] ?? '' }}" placeholder="mis. 0812 3456 7890">
+            @isset($errors)
+                @foreach($errors->all() as $e)<p class="err">{{ $e }}</p>@endforeach
+            @endisset
+
+            <button type="submit" class="btn">Simpan data pembeli</button>
+            <a href="{{ $card->google_url }}" class="skip">Lewati</a>
+        </form>
+    </div>
+    @elseif(!empty($buyerSaved))
+    <p class="saved">Data pembeli tersimpan.</p>
+    @endif
 
     <p class="foot">{{ $brand['name'] }}</p>
 </div>

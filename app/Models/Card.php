@@ -22,7 +22,20 @@ class Card extends Model
         'printed_at' => 'datetime',
         'reseller_id' => 'integer',
         'archived_scans' => 'integer',
+        'lat' => 'float',
+        'lng' => 'float',
     ];
+
+    protected static function booted(): void
+    {
+        // Lokasi diganti atau dikosongkan: koordinat lama tidak berlaku, diambil ulang saat peta dibuka.
+        static::saving(function (Card $card) {
+            if ($card->isDirty('place_id') && ! $card->isDirty('lat')) {
+                $card->lat = null;
+                $card->lng = null;
+            }
+        });
+    }
 
     public function logs()
     {
@@ -48,6 +61,24 @@ class Card extends Model
     public function isActive(): bool
     {
         return $this->status === 'active';
+    }
+
+    public const BUYER_RULES = [
+        'order_number' => 'nullable|string|max:50',
+        'buyer_name'   => 'nullable|string|max:100',
+        'buyer_phone'  => ['nullable', 'string', 'max:20', 'regex:/^\+?[0-9\s\-]{8,20}$/'],
+    ];
+
+    public const BUYER_MESSAGES = [
+        'buyer_phone.regex' => 'Nomor HP hanya boleh angka, spasi, strip, atau diawali +.',
+        'order_number.max'  => 'Nomor pesanan maksimal 50 karakter.',
+        'buyer_name.max'    => 'Nama pembeli maksimal 100 karakter.',
+    ];
+
+    /** Kosong/spasi disimpan sebagai null. */
+    public static function cleanBuyer(array $data): array
+    {
+        return array_map(fn ($v) => is_string($v) ? (trim($v) ?: null) : $v, $data);
     }
 
     /** Link chat WhatsApp ke pembeli; 08xx dan +62xx sama-sama jadi 62xx. */
