@@ -104,6 +104,11 @@
                 </select>
                 <button type="submit" class="btn btn-outline btn-sm">Simpan</button>
             </form>
+            <form method="POST" action="{{ route('dashboard.invoices.create') }}" class="sel-actions">
+                @csrf
+                <template x-for="id in sel"><input type="hidden" name="ids[]" :value="id"></template>
+                <button type="submit" class="btn btn-outline btn-sm">Buat nota</button>
+            </form>
             <form method="POST" action="{{ route('dashboard.cards.export.pdf') }}" class="sel-actions">
                 @csrf
                 <template x-for="id in sel"><input type="hidden" name="ids[]" :value="id"></template>

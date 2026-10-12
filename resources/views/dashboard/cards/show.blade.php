@@ -243,7 +243,10 @@
                 </div>
                 <div class="panel-body">
                     <dl class="buyer-list">
-                        <div><dt>No. pesanan</dt><dd class="{{ $card->order_number ? 'mono' : 'faint' }}">{{ $card->order_number ?? 'Belum diisi' }}</dd></div>
+                        @php $invoice = auth()->user()->isAdmin() && str_starts_with((string) $card->order_number, \App\Models\Invoice::PREFIX) ? \App\Models\Invoice::firstWhere('number', $card->order_number) : null; @endphp
+                        <div><dt>No. pesanan</dt><dd class="{{ $card->order_number ? 'mono' : 'faint' }}">
+                            @if($invoice)<a href="{{ route('dashboard.invoices.show', $invoice) }}" class="link">{{ $card->order_number }}</a>@else{{ $card->order_number ?? 'Belum diisi' }}@endif
+                        </dd></div>
                         <div><dt>Nama</dt><dd class="{{ $card->buyer_name ? '' : 'faint' }}">{{ $card->buyer_name ?? 'Belum diisi' }}</dd></div>
                         <div>
                             <dt>No. HP</dt>

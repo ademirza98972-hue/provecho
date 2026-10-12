@@ -84,7 +84,12 @@ class Card extends Model
     /** Link chat WhatsApp ke pembeli; 08xx dan +62xx sama-sama jadi 62xx. */
     public function getBuyerWhatsappAttribute(): ?string
     {
-        $digits = preg_replace('/\D/', '', (string) $this->buyer_phone);
+        return self::whatsappUrl($this->buyer_phone);
+    }
+
+    public static function whatsappUrl(?string $phone): ?string
+    {
+        $digits = preg_replace('/\D/', '', (string) $phone);
         if ($digits === '') {
             return null;
         }

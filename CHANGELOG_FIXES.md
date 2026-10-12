@@ -1,3 +1,17 @@
+### Fix #7 — Nota Tidak Bisa Diunduh di HP + Judul Harga Tidak Rata: Link Butuh Sesi & Specificity CSS
+
+| | |
+|---|---|
+| **Tanggal** | 2026-10-12 |
+| **File** | `app/Http/Controllers/Dashboard/InvoiceController.php`, `app/Models/Invoice.php`, `routes/web.php`, `resources/views/dashboard/invoices/_sheet.blade.php` (baru), `resources/views/dashboard/invoices/pdf.blade.php`, `resources/views/dashboard/invoices/show.blade.php`, `resources/views/invoice/public.blade.php` (baru), `tests/Feature/InvoiceTest.php` |
+| **Masalah** | (1) Tombol Unduh PDF di dashboard tidak mengunduh apa pun di HP. (2) Link nota yang dikirim ke pembeli via WA hanya menampilkan PDF, tanpa tombol unduh. (3) Judul kolom "HARGA" di nota rata kiri, sedangkan angkanya rata kanan. (4) Nota baru bisa dilihat setelah diunduh, tidak ada preview. |
+| **Akar** | (1) Route `dashboard.invoices.pdf` butuh sesi login. Pengelola unduhan di sebagian HP meminta ulang file tanpa cookie, jadi yang diterima redirect ke login. (2) Route publik memakai `->stream()` (inline), dan browser bawaan WA tidak menampilkan opsi unduh. (3) `.items th { text-align:left }` (0,1,1) lebih spesifik daripada `.num { text-align:right }` (0,1,0). |
+| **Fix** | Isi nota dipindah ke `_sheet.blade.php`, dipakai oleh PDF dan preview HTML. `/nota/{id}` (signed) sekarang membuka halaman HTML: preview + tombol Unduh PDF + petunjuk "Buka di Chrome" untuk browser WA. Unduhan lewat route baru `/nota/{id}/unduh` (signed, `Content-Disposition: attachment`, tanpa sesi), juga dipakai tombol di dashboard. Route `dashboard.invoices.pdf` dihapus. Halaman detail nota menampilkan preview langsung. Selector `.nota .items .right` (0,3,0) menang atas `th`. Style dibungkus `.nota` dan tabel global dashboard dinetralkan. Class `.brand` diganti `.nota-brand` karena bentrok dengan `.brand` di sidebar. |
+| **Verifikasi** | 38/38 test lolos (252 assertion): link unduh mengembalikan `application/pdf` + `attachment; filename=PV-20261012-001.pdf` (46.735 byte) tanpa login, dan link tanpa signature → 403. Di viewport 375px: judul HARGA rata kanan dengan angkanya, `scrollWidth` 375 = lebar layar (tidak ada geser horizontal). **PENDING verifikasi** di HP asli: unduhan dari dashboard dan dari browser bawaan WA. |
+| **Pelajaran** | File yang diunduh dari HP jangan bergantung pada cookie sesi; pakai signed URL. Partial yang di-include ke layout lain wajib di-scope (`.nota ...`) dan menetralkan gaya global `td`/`th`/class umum seperti `.brand`. |
+| **Log Keyword** | nota, invoice, unduh PDF, download HP, signed URL, `stream`, `attachment`, text-align, specificity, `.brand` |
+| **Deploy** | Tidak ada migrasi. Wajib `php artisan optimize:clear` (route `dashboard.invoices.pdf` dihapus). Link nota yang sudah terkirim ke pembeli tetap valid: nama route dan parameter sama, signature masih cocok. |
+
 ### Fix #6 — Simpan Data Usaha Menghapus Alamat & Place ID: Hidden Input Selalu Kosong
 
 | | |

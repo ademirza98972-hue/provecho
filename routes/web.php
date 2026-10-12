@@ -5,6 +5,7 @@ use App\Http\Controllers\Dashboard\CardController;
 use App\Http\Controllers\Dashboard\ActivityController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\ExportController;
+use App\Http\Controllers\Dashboard\InvoiceController;
 use App\Http\Controllers\Dashboard\MapController;
 use App\Http\Controllers\Dashboard\PlacesController;
 use App\Http\Controllers\Dashboard\ResellerController;
@@ -18,6 +19,10 @@ Route::post('/c/{id}/activate', [CardRedirectController::class, 'activate'])
     ->middleware('throttle:10,1')->name('card.activate');
 Route::post('/c/{id}/buyer', [CardRedirectController::class, 'buyer'])
     ->middleware('throttle:10,1')->name('card.buyer');
+Route::get('/nota/{invoice}', [InvoiceController::class, 'publicShow'])
+    ->middleware(['signed', 'throttle:30,1'])->name('invoice.public');
+Route::get('/nota/{invoice}/unduh', [InvoiceController::class, 'download'])
+    ->middleware(['signed', 'throttle:30,1'])->name('invoice.download');
 Route::get('/c/{id}/places', [CardRedirectController::class, 'places'])
     ->middleware('throttle:20,1')->name('card.places');
 Route::post('/c/{id}/resolve-maps', [CardRedirectController::class, 'resolveMaps'])
@@ -46,6 +51,14 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
     });
 
     Route::middleware('can:admin')->group(function () {
+        // Nota penjualan offline: khusus admin.
+        Route::get('/nota', [InvoiceController::class, 'index'])->name('invoices.index');
+        Route::match(['get', 'post'], '/nota/buat', [InvoiceController::class, 'create'])->name('invoices.create');
+        Route::post('/nota', [InvoiceController::class, 'store'])->name('invoices.store');
+        Route::get('/nota/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
+        Route::get('/nota/{invoice}/ubah', [InvoiceController::class, 'edit'])->name('invoices.edit');
+        Route::put('/nota/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
+
         Route::get('/export/cards', [ExportController::class, 'cards'])->name('stats.export');
         Route::get('/export/activity', [ExportController::class, 'activity'])->name('activity.export');
 
