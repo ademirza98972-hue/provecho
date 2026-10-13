@@ -75,6 +75,11 @@
     /* nav */
     .nav       { display: flex; flex-direction: column; gap: 2px; padding: 14px 10px 0; flex: 1; }
     .nav-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); padding: 8px 10px 4px; }
+    .nav-label:not(:first-child) { margin-top: 10px; }
+    /* Sidebar diciutkan: nama kategori diganti garis tipis supaya kelompok menu tetap terlihat. */
+    @media (min-width: 861px) {
+        .layout.collapsed .nav-label:not(:first-child) { display: block; height: 1px; padding: 0; margin: 8px 12px; background: var(--border); font-size: 0; }
+    }
     .nav a {
         display: flex; align-items: center; gap: 10px;
         padding: 9px 12px; border-radius: 8px;
@@ -298,35 +303,45 @@
             </div>
 
             <nav class="nav">
-                <span class="nav-label">Menu</span>
+                <span class="nav-label">Ringkasan</span>
                 <a href="{{ route('dashboard.index') }}" class="{{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
                     <span>Dashboard</span>
                 </a>
+                <a href="{{ route('dashboard.activity') }}" class="{{ request()->routeIs('dashboard.activity') ? 'active' : '' }}">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+                    <span>Aktivitas</span>
+                </a>
+                <span class="nav-label">Card</span>
                 <a href="{{ route('dashboard.cards.index') }}" class="{{ request()->routeIs('dashboard.cards.*') ? 'active' : '' }}">
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/><path d="M6 14.5h4"/></svg>
                     <span>Kelola Card</span>
                 </a>
-                @can('admin')
+                @can('map')
+                <a href="{{ route('dashboard.map') }}" class="{{ request()->routeIs('dashboard.map') ? 'active' : '' }}">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                    <span>Peta</span>
+                </a>
+                @endcan
+                @can('invoices')
+                <span class="nav-label">Penjualan</span>
                 <a href="{{ route('dashboard.invoices.index') }}" class="{{ request()->routeIs('dashboard.invoices.*') ? 'active' : '' }}">
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 7h6"/><path d="M9 11h6"/><path d="M9 15h4"/></svg>
                     <span>Nota</span>
                 </a>
                 @endcan
                 @can('admin')
+                <span class="nav-label">Manajemen</span>
                 <a href="{{ route('dashboard.resellers.index') }}" class="{{ request()->routeIs('dashboard.resellers.*') ? 'active' : '' }}">
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    <span>Reseller</span>
+                    <span>Pengguna</span>
                 </a>
-                <a href="{{ route('dashboard.map') }}" class="{{ request()->routeIs('dashboard.map') ? 'active' : '' }}">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                    <span>Peta</span>
+                <a href="{{ route('dashboard.roles.index') }}" class="{{ request()->routeIs('dashboard.roles.*') ? 'active' : '' }}">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    <span>Role</span>
                 </a>
                 @endcan
-                <a href="{{ route('dashboard.activity') }}" class="{{ request()->routeIs('dashboard.activity') ? 'active' : '' }}">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
-                    <span>Aktivitas</span>
-                </a>
+                <span class="nav-label">Akun</span>
                 <a href="{{ route('dashboard.settings') }}" class="{{ request()->routeIs('dashboard.settings*') ? 'active' : '' }}">
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     <span>Pengaturan</span>
@@ -356,7 +371,7 @@
             <div class="user">
                 <div class="avatar">{{ strtoupper(substr(auth()->user()->name ?? auth()->user()->username, 0, 1)) }}</div>
                 <span>{{ auth()->user()->name ?? auth()->user()->username }}</span>
-                @cannot('admin')<span class="role-tag">Reseller</span>@endcannot
+                @cannot('admin')<span class="role-tag">{{ auth()->user()->role_label }}</span>@endcannot
             </div>
         </div>
 

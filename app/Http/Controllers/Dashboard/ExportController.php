@@ -12,7 +12,7 @@ class ExportController extends Controller
     /** Export daftar card aktif beserta statistik scan ke CSV. */
     public function cards(Request $request): StreamedResponse
     {
-        $cards = Card::where('status', 'active')
+        $cards = Card::visibleTo($request->user())->where('status', 'active')
             ->withCount(['logs as scan_count' => fn ($q) => $q->where('action', 'scan')])
             ->withMax('logs as last_scan_at', 'created_at')
             ->orderByRaw('scan_count + archived_scans desc')
@@ -83,7 +83,7 @@ class ExportController extends Controller
                 'User Agent',
             ]);
 
-            \App\Models\CardLog::with('card')
+            \App\Models\CardLog::visibleTo($request->user())->with('card')
                 ->orderByDesc('created_at')
                 ->chunk(500, function ($logs) use ($out) {
                     foreach ($logs as $log) {

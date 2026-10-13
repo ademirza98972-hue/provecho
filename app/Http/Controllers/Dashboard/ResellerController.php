@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Card;
 use App\Models\CardLog;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +15,7 @@ class ResellerController extends Controller
 {
     public function index()
     {
-        $resellers = User::where('role', 'reseller')
+        $resellers = User::where('role', 'reseller')->with('accessRole')
             ->withCount([
                 'cards',
                 'cards as active_count' => fn ($q) => $q->where('status', 'active'),
@@ -29,7 +30,9 @@ class ResellerController extends Controller
             ->groupBy('cards.reseller_id')
             ->pluck(DB::raw('COUNT(*)'), 'cards.reseller_id');
 
-        return view('dashboard.resellers', compact('resellers', 'scans'));
+        $roles = Role::orderBy('name')->get(['id', 'name']);
+
+        return view('dashboard.resellers', compact('resellers', 'scans', 'roles'));
     }
 
     public function store(Request $request)
@@ -38,15 +41,28 @@ class ResellerController extends Controller
             'name'     => 'required|string|max:255',
             'username' => 'required|alpha_dash|max:50|unique:users,username',
             'password' => 'required|string|min:8',
+            'role_id'  => 'required|exists:roles,id',
         ], [
             'username.unique'     => 'Username sudah dipakai.',
             'username.alpha_dash' => 'Username hanya boleh huruf, angka, strip, dan garis bawah.',
             'password.min'        => 'Password minimal 8 karakter.',
+            'role_id.required'    => 'Pilih role untuk akun ini.',
         ]);
 
+        // role 'reseller' = bukan admin utama; aksesnya ditentukan role_id.
         User::create($data + ['role' => 'reseller']);
 
-        return back()->with('success', "Akun reseller {$data['name']} dibuat. Kirim username dan password-nya ke reseller.");
+        return back()->with('success', "Akun {$data['name']} dibuat. Kirim username dan password-nya ke pemilik akun.");
+    }
+
+    public function updateRole(Request $request, User $reseller)
+    {
+        abort_if($reseller->isAdmin(), 404);
+
+        $data = $request->validate(['role_id' => 'required|exists:roles,id']);
+        $reseller->update($data);
+
+        return back()->with('success', "Role {$reseller->name} diganti jadi {$reseller->fresh()->role_label}.");
     }
 
     public function assignIds(Request $request)

@@ -16,7 +16,7 @@ class InvoiceController extends Controller
 {
     public function index(Request $request)
     {
-        $invoices = Invoice::with('items', 'user:id,name')
+        $invoices = Invoice::visibleTo($request->user())->with('items', 'user:id,name')
             ->when($request->filled('search'), fn ($q) => $q->where(fn ($q) => $q
                 ->where('number', 'like', "%{$request->search}%")
                 ->orWhere('buyer_name', 'like', "%{$request->search}%")
@@ -33,8 +33,9 @@ class InvoiceController extends Controller
         return view('dashboard.invoices.form', ['ids' => $ids, 'invoice' => new Invoice]);
     }
 
-    public function edit(Invoice $invoice)
+    public function edit(Request $request, Invoice $invoice)
     {
+        $this->authorizeOwner($request, $invoice);
         $invoice->load('items');
 
         return view('dashboard.invoices.form', ['ids' => $invoice->items->pluck('card_id')->implode("\n"), 'invoice' => $invoice]);
@@ -49,6 +50,7 @@ class InvoiceController extends Controller
 
     public function update(Request $request, Invoice $invoice)
     {
+        $this->authorizeOwner($request, $invoice);
         $this->save($request, $invoice);
 
         return redirect()->route('dashboard.invoices.show', $invoice)->with('success', "Nota {$invoice->number} diperbarui.");
@@ -71,10 +73,10 @@ class InvoiceController extends Controller
         ]);
 
         $ids = array_values(array_unique(preg_split('/[\s,;]+/', strtoupper($data['card_ids']), -1, PREG_SPLIT_NO_EMPTY)));
-        $found = Card::whereIn('id', $ids)->pluck('id')->all();
+        $found = Card::visibleTo($request->user())->whereIn('id', $ids)->pluck('id')->all();
         $missing = array_diff($ids, $found);
         if ($missing) {
-            throw ValidationException::withMessages(['card_ids' => 'ID card tidak ditemukan: ' . implode(', ', $missing)]);
+            throw ValidationException::withMessages(['card_ids' => 'ID card tidak ditemukan atau bukan milikmu: ' . implode(', ', $missing)]);
         }
 
         $discount = (int) ($data['discount'] ?? 0);
@@ -110,8 +112,9 @@ class InvoiceController extends Controller
         });
     }
 
-    public function show(Invoice $invoice)
+    public function show(Request $request, Invoice $invoice)
     {
+        $this->authorizeOwner($request, $invoice);
         $brand = $this->brand($invoice);
 
         return view('dashboard.invoices.show', compact('invoice', 'brand'));
@@ -140,6 +143,11 @@ class InvoiceController extends Controller
         return Pdf::loadView('dashboard.invoices.pdf', compact('invoice', 'brand'))->setPaper('a5')
             ->setOption('isFontSubsettingEnabled', true) // tanpa ini font DejaVu ikut utuh, PDF jadi >1 MB
             ->download($invoice->number . '.pdf');
+    }
+
+    private function authorizeOwner(Request $request, Invoice $invoice): void
+    {
+        abort_unless($request->user()->isAdmin() || $invoice->user_id === $request->user()->id, 403);
     }
 
     private function brand(Invoice $invoice): array

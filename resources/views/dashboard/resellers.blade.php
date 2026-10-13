@@ -1,13 +1,13 @@
 @extends('layouts.app')
-@section('title', 'Reseller')
+@section('title', 'Pengguna')
 @section('content')
 
 <div class="stack">
 
     <div class="page-head">
         <div>
-            <h2 class="page-title">Reseller</h2>
-            <p class="page-sub">Buat akun reseller, lalu berikan card dari halaman Kelola Card. Reseller hanya bisa melihat dan mengaktifkan card miliknya.</p>
+            <h2 class="page-title">Pengguna</h2>
+            <p class="page-sub">Buat akun, pilih role-nya, lalu berikan card. Setiap akun hanya melihat card yang kamu berikan ke dia. Hak akses tiap role diatur di halaman <a href="{{ route('dashboard.roles.index') }}" class="link">Role</a>.</p>
         </div>
     </div>
 
@@ -15,14 +15,14 @@
 
         <div class="panel">
             <div class="panel-head">
-                <span class="panel-title">Daftar reseller</span>
-                <span class="hint">{{ $resellers->count() }} reseller</span>
+                <span class="panel-title">Daftar akun</span>
+                <span class="hint">{{ $resellers->count() }} akun</span>
             </div>
             <div class="table-wrap">
                 <table class="res-table">
                     <thead>
                         <tr>
-                            <th>Reseller</th>
+                            <th>Akun</th>
                             <th class="num">Card</th>
                             <th class="num">Aktif</th>
                             <th class="num">Scan</th>
@@ -38,6 +38,15 @@
                                     <div>
                                         <span class="res-name">{{ $r->name }}</span>
                                         <span class="res-user">{{ $r->username }}</span>
+                                        <form method="POST" action="{{ route('dashboard.resellers.role', $r) }}" class="role-form">
+                                            @csrf @method('PUT')
+                                            <select name="role_id" onchange="this.form.submit()" aria-label="Role {{ $r->name }}" class="role-select">
+                                                @unless($r->role_id)<option value="" selected disabled>Pilih role</option>@endunless
+                                                @foreach($roles as $role)
+                                                    <option value="{{ $role->id }}" @selected($r->role_id === $role->id)>{{ $role->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </form>
                                     </div>
                                 </div>
                                 <form x-show="pw" x-cloak method="POST" action="{{ route('dashboard.resellers.password', $r) }}" class="pw-inline">
@@ -64,7 +73,7 @@
                             </td>
                         </tr>
                         @empty
-                        <tr><td colspan="5" class="empty">Belum ada reseller. Buat akun pertama lewat form di samping.</td></tr>
+                        <tr><td colspan="5" class="empty">Belum ada akun. Buat lewat form di samping.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -77,7 +86,7 @@
         <div class="panel" x-data="{ text: @js(old('ids_text', '')) }">
             <div class="panel-head">
                 <div>
-                    <span class="panel-title">Kirim card ke reseller</span>
+                    <span class="panel-title">Kirim card ke akun</span>
                     <p class="panel-sub">Ambil kartu fisik dari stok, ketik atau scan ID yang tercetak di setiap kartu, lalu simpan.</p>
                 </div>
             </div>
@@ -85,9 +94,9 @@
                 <form method="POST" action="{{ route('dashboard.resellers.assign-ids') }}" class="form-stack">
                     @csrf
                     <div class="field">
-                        <label for="a-reseller">Reseller tujuan</label>
+                        <label for="a-reseller">Akun tujuan</label>
                         <select id="a-reseller" name="reseller_id" required>
-                            <option value="" disabled @selected(! old('reseller_id'))>Pilih reseller</option>
+                            <option value="" disabled @selected(! old('reseller_id'))>Pilih akun</option>
                             @foreach($resellers as $r)
                                 <option value="{{ $r->id }}" @selected(old('reseller_id') == $r->id)>{{ $r->name }}</option>
                             @endforeach
@@ -103,7 +112,7 @@
                         <span class="hint">Satu ID per baris. Link hasil scan QR juga bisa ditempel langsung.</span>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-primary">Pindahkan ke reseller</button>
+                        <button type="submit" class="btn btn-primary">Pindahkan card</button>
                     </div>
                 </form>
             </div>
@@ -113,15 +122,15 @@
         <div class="panel">
             <div class="panel-head">
                 <div>
-                    <span class="panel-title">Tambah reseller</span>
-                    <p class="panel-sub">Kirim username dan password ke reseller. Mereka login di halaman yang sama dengan kamu.</p>
+                    <span class="panel-title">Tambah akun</span>
+                    <p class="panel-sub">Kirim username dan password ke pemilik akun. Mereka login di halaman yang sama dengan kamu.</p>
                 </div>
             </div>
             <div class="panel-body">
                 <form method="POST" action="{{ route('dashboard.resellers.store') }}" class="form-stack">
                     @csrf
                     <div class="field">
-                        <label for="r-name">Nama reseller</label>
+                        <label for="r-name">Nama</label>
                         <input type="text" id="r-name" name="name" value="{{ old('name') }}" required maxlength="255" placeholder="mis. Budi Banjarmasin">
                     </div>
                     <div class="field">
@@ -132,10 +141,20 @@
                     <div class="field">
                         <label for="r-password">Password</label>
                         <input type="text" id="r-password" name="password" required minlength="8" autocomplete="off">
-                        <span class="hint">Minimal 8 karakter. Reseller bisa menggantinya sendiri di Pengaturan.</span>
+                        <span class="hint">Minimal 8 karakter. Pemilik akun bisa menggantinya sendiri di Pengaturan.</span>
+                    </div>
+                    <div class="field">
+                        <label for="r-role">Role</label>
+                        <select id="r-role" name="role_id" required>
+                            <option value="" disabled @selected(! old('role_id'))>Pilih role</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}" @selected(old('role_id') == $role->id)>{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                        <span class="hint">Belum ada role yang cocok? Buat dulu di halaman <a href="{{ route('dashboard.roles.index') }}" class="link">Role</a>.</span>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-primary">Buat akun reseller</button>
+                        <button type="submit" class="btn btn-primary">Buat akun</button>
                     </div>
                 </form>
             </div>
@@ -172,6 +191,9 @@
 .acts .del:hover { color: var(--bad); background: var(--bad-soft); }
 .pw-inline { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
 .pw-inline input { flex: 1; min-width: 180px; }
+
+.role-form { margin-top: 6px; }
+.role-select { width: auto; min-width: 140px; padding: 4px 8px; font-size: 12.5px; }
 
 @media (max-width: 1000px) {
     .detail-grid { grid-template-columns: minmax(0, 1fr); }

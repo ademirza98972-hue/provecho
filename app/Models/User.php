@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'username', 'password', 'role'])]
+#[Fillable(['name', 'username', 'password', 'role', 'role_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -26,6 +26,22 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
+    }
+
+    /** Relasi ke tabel roles. Kolom string `role` tetap dipakai untuk membedakan admin utama. */
+    public function accessRole()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        return $this->isAdmin() || in_array($permission, $this->accessRole?->permissions ?? [], true);
+    }
+
+    public function getRoleLabelAttribute(): string
+    {
+        return $this->isAdmin() ? 'Admin' : ($this->accessRole?->name ?? 'Tanpa role');
     }
 
     public function cards()

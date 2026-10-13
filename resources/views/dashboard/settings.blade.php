@@ -77,7 +77,7 @@
                         <span class="account-ava">{{ strtoupper(mb_substr($user->name ?? $user->username, 0, 1)) }}</span>
                         <div>
                             <span class="account-name">{{ $user->name ?? $user->username }}</span>
-                            <span class="account-user">Login sebagai <b>{{ $user->username }}</b> · {{ $user->isAdmin() ? 'Admin' : 'Reseller' }}</span>
+                            <span class="account-user">Login sebagai <b>{{ $user->username }}</b> · {{ $user->role_label }}</span>
                         </div>
                     </div>
                 </div>

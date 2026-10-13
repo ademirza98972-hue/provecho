@@ -259,7 +259,7 @@ class CardController extends Controller
     public function bulkDestroy(Request $request)
     {
         $ids = array_filter((array) $request->input('ids', []));
-        $deletable = Card::whereIn('id', $ids)->whereNull('printed_at')->pluck('id');
+        $deletable = Card::visibleTo($request->user())->whereIn('id', $ids)->whereNull('printed_at')->pluck('id');
         $skipped = count($ids) - $deletable->count();
 
         if ($deletable->isNotEmpty()) {
@@ -291,9 +291,10 @@ class CardController extends Controller
     {
         $ids = array_filter((array) $request->input('ids', []));
 
+        $mine = Card::visibleTo($request->user());
         $cards = $ids
-            ? Card::whereIn('id', $ids)->orderBy('id')->get()
-            : Card::where('status', 'inactive')->orderBy('id')->limit(100)->get();
+            ? $mine->whereIn('id', $ids)->orderBy('id')->get()
+            : $mine->where('status', 'inactive')->orderBy('id')->limit(100)->get();
 
         $mode = $request->input('mode', 'a4');
 

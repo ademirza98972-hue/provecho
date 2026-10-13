@@ -9,6 +9,7 @@ use App\Http\Controllers\Dashboard\InvoiceController;
 use App\Http\Controllers\Dashboard\MapController;
 use App\Http\Controllers\Dashboard\PlacesController;
 use App\Http\Controllers\Dashboard\ResellerController;
+use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\SettingsController;
 use App\Http\Controllers\Dashboard\StatsController;
 use Illuminate\Support\Facades\Route;
@@ -50,30 +51,43 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::put('/buyer', [CardController::class, 'updateBuyer'])->name('buyer.update');
     });
 
-    Route::middleware('can:admin')->group(function () {
-        // Nota penjualan offline: khusus admin.
+    // Fitur yang bisa diberikan per role (lihat Role::PERMISSIONS). Data user non-admin tetap terbatas ke card miliknya.
+    Route::middleware('can:invoices')->group(function () {
         Route::get('/nota', [InvoiceController::class, 'index'])->name('invoices.index');
         Route::match(['get', 'post'], '/nota/buat', [InvoiceController::class, 'create'])->name('invoices.create');
         Route::post('/nota', [InvoiceController::class, 'store'])->name('invoices.store');
         Route::get('/nota/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
         Route::get('/nota/{invoice}/ubah', [InvoiceController::class, 'edit'])->name('invoices.edit');
         Route::put('/nota/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
+    });
 
+    Route::middleware('can:export')->group(function () {
         Route::get('/export/cards', [ExportController::class, 'cards'])->name('stats.export');
         Route::get('/export/activity', [ExportController::class, 'activity'])->name('activity.export');
+    });
 
-        Route::prefix('cards')->name('cards.')->group(function () {
-            Route::match(['get', 'post'], '/export/pdf', [CardController::class, 'exportPdf'])->name('export.pdf');
-            Route::post('/generate', [CardController::class, 'generate'])->name('generate');
-            Route::post('/bulk-delete', [CardController::class, 'bulkDestroy'])->name('bulk-destroy');
-            Route::post('/assign', [CardController::class, 'assign'])->name('assign');
-            Route::post('/{card}/disable', [CardController::class, 'disable'])->name('disable');
-            Route::post('/{card}/reactivate', [CardController::class, 'reactivate'])->name('reactivate');
-            Route::post('/{card}/reset', [CardController::class, 'reset'])->name('reset');
-            Route::delete('/{card}', [CardController::class, 'destroy'])->name('destroy');
-        });
+    Route::get('/peta', [MapController::class, 'index'])->middleware('can:map')->name('map');
 
-        Route::get('/peta', [MapController::class, 'index'])->name('map');
+    Route::prefix('cards')->name('cards.')->group(function () {
+        Route::match(['get', 'post'], '/export/pdf', [CardController::class, 'exportPdf'])->middleware('can:cards-print')->name('export.pdf');
+        Route::post('/bulk-delete', [CardController::class, 'bulkDestroy'])->middleware('can:cards-delete')->name('bulk-destroy');
+        Route::post('/{card}/disable', [CardController::class, 'disable'])->middleware(['can:manage-card,card', 'can:cards-disable'])->name('disable');
+        Route::post('/{card}/reactivate', [CardController::class, 'reactivate'])->middleware(['can:manage-card,card', 'can:cards-disable'])->name('reactivate');
+        Route::post('/{card}/reset', [CardController::class, 'reset'])->middleware(['can:manage-card,card', 'can:cards-reset'])->name('reset');
+        Route::delete('/{card}', [CardController::class, 'destroy'])->middleware(['can:manage-card,card', 'can:cards-delete'])->name('destroy');
+    });
+
+    // Khusus admin utama: stok pusat dan pengelolaan pengguna/role.
+    Route::middleware('can:admin')->group(function () {
+        Route::post('/cards/generate', [CardController::class, 'generate'])->name('cards.generate');
+        Route::post('/cards/assign', [CardController::class, 'assign'])->name('cards.assign');
+
+        Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+        Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+        Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+        Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
+        Route::put('/resellers/{reseller}/role', [ResellerController::class, 'updateRole'])->name('resellers.role');
+
         Route::get('/resellers', [ResellerController::class, 'index'])->name('resellers.index');
         Route::post('/resellers', [ResellerController::class, 'store'])->name('resellers.store');
         Route::post('/resellers/assign-ids', [ResellerController::class, 'assignIds'])->name('resellers.assign-ids');

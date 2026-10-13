@@ -23,6 +23,11 @@ class Invoice extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function scopeVisibleTo($query, User $user)
+    {
+        return $user->isAdmin() ? $query : $query->where('user_id', $user->id);
+    }
+
     public function getSubtotalAttribute(): int
     {
         return (int) $this->items->sum('price');

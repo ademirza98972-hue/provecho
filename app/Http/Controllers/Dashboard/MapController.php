@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Card;
 use App\Support\PlaceLocator;
+use Illuminate\Http\Request;
 
 class MapController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $mine = fn () => Card::visibleTo($request->user())->whereIn('status', ['active', 'disabled']);
+
         // Lengkapi koordinat yang belum ada, dibatasi supaya halaman tidak lambat.
         $started = microtime(true);
-        $pending = Card::whereIn('status', ['active', 'disabled'])
+        $pending = $mine()
             ->whereNotNull('place_id')->whereNull('lat')
             ->limit(15)->get();
         foreach ($pending as $card) {
@@ -22,7 +25,7 @@ class MapController extends Controller
             PlaceLocator::locate($card);
         }
 
-        $cards = Card::whereIn('status', ['active', 'disabled'])->with('reseller:id,name')->get();
+        $cards = $mine()->with('reseller:id,name')->get();
 
         $markers = $cards->whereNotNull('lat')->map(fn (Card $c) => [
             'id'       => $c->id,

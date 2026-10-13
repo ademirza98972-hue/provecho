@@ -135,10 +135,16 @@ class ResellerAccessTest extends TestCase
     {
         $this->actingAs($this->admin)->post('/dashboard/resellers', [
             'name' => 'Andi', 'username' => 'andi', 'password' => 'rahasia123',
-        ])->assertRedirect();
+        ])->assertSessionHasErrors('role_id');
+
+        $role = \App\Models\Role::firstOrCreate(['name' => 'Reseller'], ['permissions' => []]);
+        $this->post('/dashboard/resellers', [
+            'name' => 'Andi', 'username' => 'andi', 'password' => 'rahasia123', 'role_id' => $role->id,
+        ])->assertRedirect()->assertSessionHasNoErrors();
 
         $andi = User::where('username', 'andi')->first();
         $this->assertSame('reseller', $andi->role);
+        $this->assertSame('Reseller', $andi->role_label);
 
         auth()->logout();
         $this->post('/login', ['username' => 'andi', 'password' => 'rahasia123'])->assertRedirect('/dashboard');

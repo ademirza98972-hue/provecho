@@ -4,6 +4,9 @@
 
 @php
     $isAdmin = auth()->user()->isAdmin();
+    $u = auth()->user();
+    // Kotak centang hanya muncul kalau ada aksi massal yang boleh dipakai.
+    $canSelect = $isAdmin || $u->can('invoices') || $u->can('cards-print') || $u->can('cards-delete');
     $pills = array_values(array_filter([
         ['key' => null,        'label' => 'Semua',         'n' => $counts['total'],     'tone' => ''],
         ['key' => 'active',    'label' => 'Aktif',         'n' => $counts['active'],    'tone' => 'ok'],
@@ -13,7 +16,7 @@
     ]));
     $statusLabel = ['active' => 'Aktif', 'inactive' => 'Belum aktif', 'disabled' => 'Nonaktif'];
     $filtered = request('search') || request('generated') || request('reseller');
-    $cols = $isAdmin ? 8 : 6;
+    $cols = 6 + ($isAdmin ? 1 : 0) + ($canSelect ? 1 : 0);
 @endphp
 
 <div class="stack">
@@ -88,10 +91,11 @@
             <span class="hint">{{ number_format($cards->total()) }} card</span>
         </div>
 
-        @if($isAdmin)
+        @if($canSelect)
         <div class="panel-head sel-bar" x-show="sel.length" x-cloak>
             <span class="sel-count"><b x-text="sel.length"></b> card dipilih</span>
             <button type="button" class="btn btn-ghost btn-sm" @click="sel = []">Batal</button>
+            @if($isAdmin)
             <form method="POST" action="{{ route('dashboard.cards.assign') }}" class="sel-actions assign-form">
                 @csrf
                 <template x-for="id in sel"><input type="hidden" name="ids[]" :value="id"></template>
@@ -104,11 +108,15 @@
                 </select>
                 <button type="submit" class="btn btn-outline btn-sm">Simpan</button>
             </form>
+            @endif
+            @can('invoices')
             <form method="POST" action="{{ route('dashboard.invoices.create') }}" class="sel-actions">
                 @csrf
                 <template x-for="id in sel"><input type="hidden" name="ids[]" :value="id"></template>
                 <button type="submit" class="btn btn-outline btn-sm">Buat nota</button>
             </form>
+            @endcan
+            @can('cards-print')
             <form method="POST" action="{{ route('dashboard.cards.export.pdf') }}" class="sel-actions">
                 @csrf
                 <template x-for="id in sel"><input type="hidden" name="ids[]" :value="id"></template>
@@ -122,12 +130,17 @@
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-1"/><rect x="6" y="14" width="12" height="7" rx="1.5"/></svg>
                     Cetak QR
                 </button>
+            </form>
+            @endcan
+            @can('cards-delete')
+            <div class="sel-actions">
                 <button type="button" class="btn btn-danger btn-sm"
                         @click="if (confirm('Hapus ' + sel.length + ' card? Card yang sudah dicetak otomatis dilewati. Card lainnya beserta riwayat scan-nya terhapus dan tidak bisa dikembalikan.')) $refs.deleteForm.submit()">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
                     Hapus
                 </button>
-            </form>
+            </div>
+            @endcan
         </div>
         @endif
 
@@ -135,7 +148,7 @@
             <table class="card-table">
                 <thead>
                     <tr>
-                        @if($isAdmin)
+                        @if($canSelect)
                         <th class="check">
                             <input type="checkbox" aria-label="Pilih semua di halaman ini"
                                    :checked="ids.length > 0 && sel.length === ids.length"
@@ -154,7 +167,7 @@
                 <tbody>
                     @forelse($cards as $card)
                     <tr :class="sel.includes('{{ $card->id }}') && 'is-sel'">
-                        @if($isAdmin)
+                        @if($canSelect)
                         <td class="check">
                             <input type="checkbox" value="{{ $card->id }}" x-model="sel" aria-label="Pilih {{ $card->id }}">
                         </td>
@@ -238,12 +251,12 @@
         @endif
     </div>
 
-    @if($isAdmin)
+    @can('cards-delete')
     <form x-ref="deleteForm" method="POST" action="{{ route('dashboard.cards.bulk-destroy') }}" hidden>
         @csrf
         <template x-for="id in sel"><input type="hidden" name="ids[]" :value="id"></template>
     </form>
-    @endif
+    @endcan
     </div>
 
 </div>

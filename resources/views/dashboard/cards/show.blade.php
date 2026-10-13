@@ -5,6 +5,10 @@
 @php
     $statusLabel = ['active' => 'Aktif', 'inactive' => 'Belum aktif', 'disabled' => 'Nonaktif'][$card->status];
     $isAdmin = auth()->user()->isAdmin();
+    $canDisable = auth()->user()->can('cards-disable');
+    $canReset = auth()->user()->can('cards-reset');
+    $canDelete = auth()->user()->can('cards-delete');
+    $canPrint = auth()->user()->can('cards-print');
     $lastScan = $scanStats['last'] ? \Illuminate\Support\Carbon::parse($scanStats['last']) : null;
 @endphp
 
@@ -141,10 +145,11 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    @unless($isAdmin)
+                    @if(! $canDisable && ! $canReset)
                     <p class="hint">Card ini dinonaktifkan oleh admin Provecho. Hubungi admin kalau card perlu diaktifkan kembali.</p>
                     @else
                     <div class="choice-list">
+                        @if($canDisable)
                         <div class="choice">
                             <div>
                                 <span class="choice-title">Aktifkan kembali</span>
@@ -156,6 +161,8 @@
                                 <button type="submit" class="btn btn-primary btn-sm">Aktifkan kembali</button>
                             </form>
                         </div>
+                        @endif
+                        @if($canReset)
                         <div class="choice">
                             <div>
                                 <span class="choice-title">Reset card</span>
@@ -167,26 +174,46 @@
                                 <button type="submit" class="btn btn-outline btn-sm">Reset</button>
                             </form>
                         </div>
+                        @endif
                     </div>
-                    @endunless
+                    @endif
                 </div>
             </div>
             @endif
 
-            @if($isAdmin)
+            @if($card->isActive() && ($canDisable || $canReset))
+            <div class="panel danger-zone">
+                @if($canDisable)
+                <div class="panel-body danger-row">
+                    <div>
+                        <span class="choice-title">Nonaktifkan card</span>
+                        <span class="choice-desc">Scan tidak lagi diarahkan ke halaman ulasan. Bisa diaktifkan kembali kapan saja.</span>
+                    </div>
+                    <form method="POST" action="{{ route('dashboard.cards.disable', $card) }}"
+                          onsubmit="return confirm('Nonaktifkan card {{ $card->id }}? Pelanggan yang scan tidak akan diarahkan ke halaman ulasan.')">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-sm">Nonaktifkan</button>
+                    </form>
+                </div>
+                @endif
+                @if($canReset)
+                <div class="panel-body danger-row">
+                    <div>
+                        <span class="choice-title">Reset card</span>
+                        <span class="choice-desc">Data usaha dan pembeli dihapus, status kembali ke Belum aktif. Berguna kalau card terlanjur diaktifkan untuk tes.</span>
+                    </div>
+                    <form method="POST" action="{{ route('dashboard.cards.reset', $card) }}"
+                          onsubmit="return confirm('Reset card {{ $card->id }}? Data usaha dan pembeli akan dihapus dan tidak bisa dikembalikan.')">
+                        @csrf
+                        <button type="submit" class="btn btn-outline btn-sm">Reset</button>
+                    </form>
+                </div>
+                @endif
+            </div>
+            @elseif(! $card->isActive() && $canDelete)
             <div class="panel danger-zone">
                 <div class="panel-body danger-row">
-                    @if($card->isActive())
-                        <div>
-                            <span class="choice-title">Nonaktifkan card</span>
-                            <span class="choice-desc">Scan tidak lagi diarahkan ke halaman ulasan. Bisa diaktifkan kembali kapan saja.</span>
-                        </div>
-                        <form method="POST" action="{{ route('dashboard.cards.disable', $card) }}"
-                              onsubmit="return confirm('Nonaktifkan card {{ $card->id }}? Pelanggan yang scan tidak akan diarahkan ke halaman ulasan.')">
-                            @csrf
-                            <button type="submit" class="btn btn-danger btn-sm">Nonaktifkan</button>
-                        </form>
-                    @elseif($card->printed_at)
+                    @if($card->printed_at)
                         <div>
                             <span class="choice-title">Card sudah dicetak, tidak bisa dihapus</span>
                             <span class="choice-desc">QR di kartu fisik akan mati permanen kalau card ini dihapus. Pakai Reset kalau card perlu dipakai pembeli lain.</span>
@@ -243,7 +270,7 @@
                 </div>
                 <div class="panel-body">
                     <dl class="buyer-list">
-                        @php $invoice = auth()->user()->isAdmin() && str_starts_with((string) $card->order_number, \App\Models\Invoice::PREFIX) ? \App\Models\Invoice::firstWhere('number', $card->order_number) : null; @endphp
+                        @php $invoice = auth()->user()->can('invoices') && str_starts_with((string) $card->order_number, \App\Models\Invoice::PREFIX) ? \App\Models\Invoice::visibleTo(auth()->user())->firstWhere('number', $card->order_number) : null; @endphp
                         <div><dt>No. pesanan</dt><dd class="{{ $card->order_number ? 'mono' : 'faint' }}">
                             @if($invoice)<a href="{{ route('dashboard.invoices.show', $invoice) }}" class="link">{{ $card->order_number }}</a>@else{{ $card->order_number ?? 'Belum diisi' }}@endif
                         </dd></div>
@@ -280,14 +307,14 @@
                         <p class="hint qr-hint">
                             @if($card->isActive())
                                 Tap NFC atau scan QR langsung membuka halaman ulasan {{ $card->owner_name }}.
-                            @elseif($isAdmin)
+                            @elseif($canPrint)
                                 QR sudah bisa dicetak. Selama card belum aktif, scan menampilkan halaman "Kartu belum aktif".
                             @else
                                 Selama card belum aktif, scan menampilkan halaman "Kartu belum aktif".
                             @endif
                         </p>
                     </div>
-                    @if($isAdmin)
+                    @if($canPrint)
                     <form method="POST" action="{{ route('dashboard.cards.export.pdf') }}" class="print-row">
                         @csrf
                         <input type="hidden" name="ids[]" value="{{ $card->id }}">
@@ -369,6 +396,7 @@
 .choice-desc { display: block; font-size: 12.5px; color: var(--muted); margin-top: 1px; }
 
 .danger-zone { border-color: #FECACA; }
+.danger-zone .danger-row + .danger-row { border-top: 1px solid #FECACA; }
 
 .buyer-list { display: flex; flex-direction: column; }
 .buyer-list > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 0; }
